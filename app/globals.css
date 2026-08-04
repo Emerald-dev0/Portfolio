@@ -1,0 +1,511 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------ *
+ * ENGINEER'S JOURNAL — design tokens
+ * The whole page is built from five materials (Part 3). Colors are
+ * deliberately few: paper, ink, and exactly two marker colors.
+ * ------------------------------------------------------------------ */
+@theme {
+  /* Paper — aged newsprint, warm and low-key */
+  --color-paper: #ece3d0;
+  --color-paper-raised: #f4ecda;
+  --color-paper-shadow: #d8cbaf;
+
+  /* Ink — warm near-black, like old letterpress. Never pure #000 */
+  --color-ink: #22201a;
+  --color-ink-muted: #5b5344;
+  --color-ink-faint: #938870;
+
+  /* Aged editorial accents — muted, cohesive, low-contrast */
+  --color-accent: #a4432f; /* faded oxblood / vintage comic red */
+  --color-accent-2: #3c6067; /* dusty teal */
+  --color-marker: #d19a3f; /* aged mustard highlighter */
+  --color-accent-soft: #e6d8c0;
+
+  /* Rules / hairlines */
+  --color-rule: #c8b99a;
+
+  /* Fonts — loaded at runtime via <link> in layout.tsx */
+  --font-marker: "Permanent Marker", "Comic Sans MS", cursive;
+  --font-pen: "Caveat", "Segoe Script", cursive;
+  --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "Courier New", monospace;
+
+  /* Motion — borrowed timing/easing (approved) */
+  --ease-out-soft: cubic-bezier(0, 0, 0.2, 1);
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --dur-underline: 300ms;
+  --dur-settle: 350ms;
+  --dur-type: 500ms;
+  --dur-hover-card: 300ms;
+  --dur-hover-sticker: 200ms;
+  --dur-hover-base: 150ms;
+}
+
+/* ------------------------------------------------------------------ *
+ * Base
+ * ------------------------------------------------------------------ */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--color-marker);
+  color: var(--color-ink);
+}
+
+body {
+  font-size: 15px;
+}
+
+/* Section vertical rhythm — editorial, lots of air */
+.section-pad {
+  padding-inline: 1.5rem;
+  padding-block: 6rem;
+}
+@media (min-width: 640px) {
+  .section-pad {
+    padding-block: 8rem;
+  }
+}
+@media (min-width: 1024px) {
+  .section-pad {
+    padding-inline: 2.5rem;
+    padding-block: 10rem;
+  }
+}
+@media (min-width: 1280px) {
+  .section-pad {
+    padding-inline: 3.5rem;
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * BUTTON: the one pill language, used everywhere.
+ * ------------------------------------------------------------------ */
+.pill {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+  padding: 0.7rem 1.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    transform 0.25s var(--ease-out-soft),
+    box-shadow 0.25s var(--ease-out-soft),
+    background-color 0.2s var(--ease-standard),
+    color 0.2s var(--ease-standard);
+  will-change: transform;
+}
+.pill--ink {
+  background: var(--color-ink);
+  color: var(--color-paper);
+  box-shadow: 0 2px 0 rgba(34, 32, 26, 0.25);
+}
+.pill--ink:hover {
+  transform: translateY(-2px) rotate(-1deg);
+  box-shadow: 0 6px 16px -6px rgba(34, 32, 26, 0.55);
+}
+.pill--paper {
+  background: var(--color-paper-raised);
+  color: var(--color-ink);
+  border: 1.5px solid var(--color-ink);
+}
+.pill--paper:hover {
+  transform: translateY(-2px) rotate(1deg);
+  background: var(--color-paper);
+  box-shadow: 0 6px 14px -6px rgba(34, 32, 26, 0.35);
+}
+.pill--accent {
+  background: var(--color-accent);
+  color: #fff;
+  box-shadow: 0 2px 0 rgba(120, 40, 25, 0.35);
+}
+.pill--accent:hover {
+  transform: translateY(-2px) rotate(-1deg);
+  box-shadow: 0 6px 16px -6px rgba(164, 67, 47, 0.6);
+}
+.pill:active {
+  transform: translateY(0) rotate(0);
+}
+/* the little arrow nudges on hover */
+.pill .pill-arrow {
+  transition: transform 0.25s var(--ease-out-soft);
+}
+.pill:hover .pill-arrow {
+  transform: translateX(3px);
+}
+
+/* ------------------------------------------------------------------ *
+ * MATERIAL: Paper — grain overlay
+ * A very subtle fixed noise layer. Not visible as "static"; just
+ * breaks up flat digital color.
+ * ------------------------------------------------------------------ */
+.paper-grain::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.045;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Faint ruled-notebook lines behind everything (architect paper feel) */
+.paper-ruled {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 31px,
+    color-mix(in srgb, var(--color-rule) 55%, transparent) 31px,
+    color-mix(in srgb, var(--color-rule) 55%, transparent) 32px
+  );
+}
+
+/* ------------------------------------------------------------------ *
+ * MATERIAL: Marker — highlighter bar
+ * A slightly skewed, uneven-edged band sitting *behind* text.
+ * ------------------------------------------------------------------ */
+.marker-highlight {
+  position: relative;
+  display: inline;
+  white-space: pre-wrap;
+}
+.marker-highlight > .marker-highlight__bar {
+  position: absolute;
+  left: -0.15em;
+  right: -0.15em;
+  top: 0.15em;
+  bottom: 0.02em;
+  z-index: -1;
+  background: var(--color-marker);
+  opacity: 0.55;
+  transform: skewX(-3deg) rotate(-0.6deg);
+  border-radius: 0.15em 0.35em 0.2em 0.3em;
+}
+.marker-highlight--purple > .marker-highlight__bar {
+  background: var(--color-accent);
+  opacity: 0.14;
+}
+
+/* ------------------------------------------------------------------ *
+ * MATERIAL: Stamp/Sticker — irregular rubber-stamp border.
+ * Never a clean rounded rectangle. We fake the roughness with a
+ * multi-radius border + a subtle double outline.
+ * ------------------------------------------------------------------ */
+.stamp {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: 2.5px solid var(--color-ink);
+  border-radius: 14px 10px 13px 9px / 9px 13px 10px 14px;
+  padding: 0.7rem 1.15rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  transition: transform var(--dur-hover-sticker) var(--ease-standard);
+  will-change: transform;
+}
+.stamp::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  border: 1px solid color-mix(in srgb, var(--color-ink) 35%, transparent);
+  border-radius: 12px 9px 11px 8px / 8px 11px 9px 12px;
+  pointer-events: none;
+}
+.stamp--ink {
+  background: var(--color-ink);
+  color: var(--color-paper);
+}
+.stamp--marker {
+  background: var(--color-marker);
+  color: var(--color-ink);
+}
+.stamp--accent {
+  background: var(--color-accent);
+  color: #fff;
+}
+.stamp--paper {
+  background: var(--color-paper-raised);
+  color: var(--color-ink);
+}
+a.stamp:hover,
+button.stamp:hover {
+  transform: translateY(-2px) rotate(-1deg);
+}
+a.stamp:active,
+button.stamp:active {
+  transform: translateY(0) rotate(0deg);
+}
+
+/* ------------------------------------------------------------------ *
+ * MATERIAL: Sticky note & cards
+ * ------------------------------------------------------------------ */
+.sticky-tab {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+  background: var(--color-marker);
+  padding: 0.3rem 0.7rem;
+  border-radius: 3px 3px 2px 2px;
+  box-shadow: 0 2px 5px -2px #26221b40;
+}
+.sticky-tab--purple {
+  background: var(--color-accent);
+  color: #fff;
+}
+
+.card-hand {
+  background: var(--color-paper-raised);
+  border: 1.5px solid var(--color-ink);
+  border-radius: 10px 8px 11px 7px / 7px 11px 8px 10px;
+  box-shadow: 0 1px 1px #26221b12, 0 8px 20px -8px #26221b30;
+}
+
+/* ------------------------------------------------------------------ *
+ * MATERIAL: folded paper corner (dog-ear).
+ * A turned-up bottom-right corner that reveals the back of the page and
+ * casts a soft inner shadow. Peels a little further on hover — tactile.
+ * ------------------------------------------------------------------ */
+.dogear {
+  position: relative;
+}
+.dogear .fold {
+  position: absolute;
+  right: -1px;
+  bottom: -1px;
+  width: 26px;
+  height: 26px;
+  background: linear-gradient(
+    135deg,
+    transparent 0 46%,
+    var(--color-paper-shadow) 46% 100%
+  );
+  clip-path: polygon(100% 0, 0 100%, 100% 100%);
+  border-bottom-right-radius: 8px;
+  box-shadow: -3px -3px 6px -2px rgba(34, 32, 26, 0.22);
+  transition:
+    width 0.35s var(--ease-out-soft),
+    height 0.35s var(--ease-out-soft);
+  pointer-events: none;
+}
+@media (min-width: 768px) {
+  .dogear:hover .fold {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* Card hover-settle (borrowed 300ms ease-out) */
+.card-tilt {
+  transition:
+    transform var(--dur-hover-card) var(--ease-out-soft),
+    box-shadow var(--dur-hover-card) var(--ease-out-soft);
+  will-change: transform;
+}
+@media (min-width: 768px) {
+  .card-tilt:hover {
+    transform: translateY(-4px) rotate(-0.8deg);
+    box-shadow: 0 2px 3px #26221b18, 0 18px 34px -12px #26221b40;
+  }
+}
+
+/* Global baseline micro-transition (borrowed 150ms) */
+.t-base {
+  transition:
+    color var(--dur-hover-base) var(--ease-standard),
+    background-color var(--dur-hover-base) var(--ease-standard),
+    border-color var(--dur-hover-base) var(--ease-standard),
+    opacity var(--dur-hover-base) var(--ease-standard);
+}
+
+/* Hand-drawn nav underline */
+.nav-underline {
+  position: relative;
+}
+.nav-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 3px;
+  background: var(--color-accent);
+  border-radius: 2px;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--dur-underline) var(--ease-out-soft);
+}
+.nav-underline:hover::after,
+.nav-underline[data-active="true"]::after {
+  transform: scaleX(1);
+}
+
+/* ------------------------------------------------------------------ *
+ * DEPTH: layered paper, imperfect ink borders, halftone, grain
+ * ------------------------------------------------------------------ */
+
+/* Hand-inked border via SVG filter displacement feel (faked with layered
+   box-shadows + uneven radius). Reusable across cards/notes. */
+.ink-edge {
+  position: relative;
+  border: 1.5px solid var(--color-ink);
+  border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+}
+.ink-edge--soft {
+  border-width: 1.25px;
+  border-radius: 14px 8px 16px 10px / 10px 16px 8px 14px;
+}
+
+/* Halftone dot field — vintage comic shading. Apply as a decorative layer. */
+.halftone {
+  background-image: radial-gradient(
+    var(--color-ink) 22%,
+    transparent 23%
+  );
+  background-size: 6px 6px;
+  opacity: 0.08;
+}
+
+/* Layered-paper drop: makes an element feel stacked on the desk. */
+.paper-stack {
+  box-shadow:
+    0 1px 0 var(--color-paper-shadow),
+    0 2px 2px rgba(34, 32, 26, 0.06),
+    0 10px 22px -10px rgba(34, 32, 26, 0.28);
+}
+
+/* ------------------------------------------------------------------ *
+ * MOTION: keyframes for hand-drawn reveals
+ * ------------------------------------------------------------------ */
+@keyframes ink-bleed {
+  0% { opacity: 0; filter: blur(4px); transform: translateY(6px); }
+  100% { opacity: 1; filter: blur(0); transform: translateY(0); }
+}
+@keyframes scribble-in {
+  0% { stroke-dashoffset: var(--dash, 400); }
+  100% { stroke-dashoffset: 0; }
+}
+@keyframes stamp-down {
+  0% { opacity: 0; transform: scale(1.25) rotate(-6deg); }
+  60% { opacity: 1; transform: scale(0.94) rotate(1deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0); }
+}
+@keyframes float-soft {
+  0%, 100% { transform: translateY(0) rotate(var(--r, 0deg)); }
+  50% { transform: translateY(-5px) rotate(var(--r, 0deg)); }
+}
+@keyframes drift {
+  0%, 100% { transform: translate(0, 0) rotate(var(--r, 0deg)); }
+  33% { transform: translate(4px, -6px) rotate(calc(var(--r, 0deg) + 2deg)); }
+  66% { transform: translate(-3px, -3px) rotate(calc(var(--r, 0deg) - 1.5deg)); }
+}
+@keyframes sway {
+  0%, 100% { transform: rotate(var(--r, 0deg)); }
+  50% { transform: rotate(calc(var(--r, 0deg) + 3deg)); }
+}
+@keyframes breathe {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.04); }
+}
+@keyframes dash-march {
+  to { stroke-dashoffset: -24; }
+}
+
+/* chibi character motion */
+@keyframes chibi-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+@keyframes chibi-blink {
+  0%, 90%, 100% { transform: scaleY(1); }
+  95% { transform: scaleY(0.1); }
+}
+@keyframes chibi-wave {
+  0%, 100% { transform: rotate(6deg); }
+  50% { transform: rotate(-26deg); }
+}
+@keyframes chibi-legL {
+  0%, 100% { transform: rotate(16deg); }
+  50% { transform: rotate(-16deg); }
+}
+@keyframes chibi-legR {
+  0%, 100% { transform: rotate(-16deg); }
+  50% { transform: rotate(16deg); }
+}
+
+.animate-float {
+  animation: float-soft 6s ease-in-out infinite;
+}
+.animate-drift {
+  animation: drift 11s ease-in-out infinite;
+}
+.animate-sway {
+  transform-origin: top center;
+  animation: sway 7s ease-in-out infinite;
+}
+.animate-breathe {
+  animation: breathe 8s ease-in-out infinite;
+}
+
+/* marquee — infinite horizontal scroll, pauses on hover */
+@keyframes marquee-left {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes marquee-right {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+.marquee {
+  animation: marquee-left 38s linear infinite;
+}
+.marquee-rev {
+  animation: marquee-right 44s linear infinite;
+}
+.marquee-wrap:hover .marquee,
+.marquee-wrap:hover .marquee-rev {
+  animation-play-state: paused;
+}
+/* staggered starts so ambient elements never move in lockstep */
+.delay-1 { animation-delay: -2s; }
+.delay-2 { animation-delay: -4s; }
+.delay-3 { animation-delay: -6s; }
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
