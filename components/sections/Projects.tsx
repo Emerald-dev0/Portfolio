@@ -21,7 +21,7 @@ import InkBleed from "@/components/motion/InkBleed";
 import Chibi from "@/components/motion/Chibi";
 import ChibiWalker from "@/components/motion/ChibiWalker";
 import { Reveal } from "@/components/motion/Reveal";
-import { journal, showcase as copy, type Project } from "@/lib/content";
+import { showcase as copy, type Project } from "@/lib/content";
 import { matchesFilter, type Showcase } from "@/lib/projects";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
@@ -62,8 +62,6 @@ export default function Projects({
             sticky={copy.sticky}
             heading={copy.heading}
             scribble="underline"
-            date={journal.entries.work.date}
-            page={journal.entries.work.page}
           />
           <div className="relative mb-1 hidden shrink-0 sm:block">
             <Doodle
@@ -72,7 +70,7 @@ export default function Projects({
               className="animate-sway -scale-x-100 text-ink-faint"
             />
             <span className="absolute -top-4 right-9 whitespace-nowrap font-pen text-base text-accent-2">
-              {pinnedCount} pinned on GitHub
+              {pinnedCount} pinned repos
             </span>
           </div>
         </div>
@@ -90,7 +88,7 @@ export default function Projects({
                 className="text-accent underline decoration-dotted underline-offset-2"
               >
                 github.com/{login}
-              </a>{" "}
+              </a>
               {copy.liveSuffix}
             </p>
             <span className="ml-auto whitespace-nowrap font-mono text-[10px] uppercase tracking-[0.12em] text-ink-faint">
@@ -174,8 +172,9 @@ export default function Projects({
               <div className="flex flex-wrap items-center gap-3">
                 <span className="sticky-tab">ARCHIVE</span>
                 <h3 className="font-marker text-2xl text-ink sm:text-3xl">
-                  And {Math.max(showcase.totals.publicRepos - visible.length, 0)} more
-                  in the pile.
+                  {copy.archiveHeading(
+                    Math.max(showcase.totals.publicRepos - visible.length, 0),
+                  )}
                 </h3>
               </div>
               <p className="mt-2 text-[13.5px] leading-relaxed text-ink-muted">

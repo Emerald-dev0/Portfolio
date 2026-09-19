@@ -2,16 +2,13 @@
 
 import { motion } from "framer-motion";
 import Pill from "@/components/ui/Pill";
-import { Sticker } from "@/components/materials/Sticker";
-import { Tape } from "@/components/materials/Tape";
 import Doodle from "@/components/materials/Doodle";
 import Scribble from "@/components/motion/Scribble";
 import RotatingText from "@/components/motion/RotatingText";
 import AmbientField from "@/components/motion/AmbientField";
-import { Character, Dog } from "@/components/motion/Chibi";
-import { PageHeader } from "@/components/materials/PageHeader";
+import { Character } from "@/components/motion/Chibi";
 import { Reveal } from "@/components/motion/Reveal";
-import { hero, insideCover, journal } from "@/lib/content";
+import { hero } from "@/lib/content";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -24,21 +21,18 @@ export type HeroLive = {
 } | null;
 
 /**
- * Hero — the first page of the notebook.
+ * Hero. No portrait: type is the composition. Dual-identity intro (Daniel /
+ * Emerald), a rotating "Building ___" line that keeps rewriting itself, one
+ * live number from GitHub, and ambient doodles drifting behind.
  *
- * No portrait: type is the composition. A dated journal header up top, the
- * dual-identity intro (Daniel / Emerald), a rotating "Building ___" line that
- * keeps rewriting itself, and a taped index card in the margin holding the
- * page number, the mood, and a figure who is definitely not done yet.
- *
- * The stat row mixes the fixed facts with one live GitHub number, because a
- * portfolio that can read its own stats should.
+ * The stat row mixes the fixed facts with a figure the API just told us,
+ * because a portfolio that can read its own stats should.
  */
 export default function Hero({ live }: { live?: HeroLive }) {
   return (
     <section
       id="top"
-      className="section-pad relative flex min-h-[94svh] items-center overflow-hidden !pt-28"
+      className="section-pad relative flex min-h-[92svh] items-center overflow-hidden !pt-32"
     >
       {/* ambient background life */}
       <div
@@ -57,34 +51,7 @@ export default function Hero({ live }: { live?: HeroLive }) {
         ]}
       />
 
-      {/* someone's dog got loose at the bottom of the page */}
-      <span
-        aria-hidden
-        className="pointer-events-none absolute bottom-6 left-[4%] hidden opacity-70 xl:block"
-      >
-        <span className="crayon-mustard inline-block animate-sway-body">
-          <Dog size={70} />
-        </span>
-      </span>
-
-      <div className="relative z-10 mx-auto w-full max-w-4xl xl:pr-56">
-        {/* the running head of the book, then the date of this entry */}
-        <Reveal dir="up" blur={false}>
-          <PageHeader
-            date={journal.entries.hero.date}
-            page={journal.entries.hero.page}
-            className="mb-6"
-          />
-          <p className="mb-5 flex flex-wrap items-center gap-x-3 gap-y-1">
-            <span className="font-pen text-lg leading-none text-ink-muted">
-              {hero.journalLine}
-            </span>
-            <span className="font-pen text-base leading-none text-accent-2">
-              {hero.journalNote}
-            </span>
-          </p>
-        </Reveal>
-
+      <div className="relative z-10 mx-auto w-full max-w-4xl">
         {/* animated eyebrow */}
         <Reveal dir="up" blur delay={0.05}>
           <p className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.28em] text-ink-faint">
@@ -139,7 +106,7 @@ export default function Hero({ live }: { live?: HeroLive }) {
           </p>
         </Reveal>
 
-        {/* rotating build line — the continuously-rewriting statement */}
+        {/* rotating build line, the continuously-rewriting statement */}
         <Reveal dir="up" delay={0.6}>
           <p className="mt-6 text-[clamp(1.1rem,2.2vw,1.6rem)] font-medium leading-snug text-ink">
             {hero.buildingPrefix}{" "}
@@ -151,7 +118,6 @@ export default function Hero({ live }: { live?: HeroLive }) {
           </p>
         </Reveal>
 
-        {/* favorite line — kept verbatim */}
         <Reveal dir="up" delay={0.7}>
           <p className="mt-3 max-w-lg text-[15px] font-medium leading-relaxed text-ink-muted">
             {hero.tagline}
@@ -160,7 +126,10 @@ export default function Hero({ live }: { live?: HeroLive }) {
 
         <Reveal dir="up" delay={0.82}>
           <div className="mt-8 flex flex-wrap items-center gap-5">
-            <Pill href="#contact" variant="ink">
+            <Pill href="#work" variant="ink">
+              {hero.ctaWork}
+            </Pill>
+            <Pill href="#contact" variant="paper">
               {hero.cta}
             </Pill>
             <span className="flex items-center gap-1.5 font-pen text-lg text-ink-muted">
@@ -174,7 +143,7 @@ export default function Hero({ live }: { live?: HeroLive }) {
           </div>
         </Reveal>
 
-        {/* stats — the fixed facts, plus one the API just told us */}
+        {/* stats: the fixed facts, plus one the API just told us */}
         <Reveal dir="up" delay={0.92}>
           <dl className="mt-10 flex flex-wrap items-end gap-x-9 gap-y-4 border-t border-rule/70 pt-5">
             {hero.stats.map((s) => (
@@ -202,58 +171,15 @@ export default function Hero({ live }: { live?: HeroLive }) {
         </Reveal>
       </div>
 
-      {/* ---------------- the inside front cover ---------------- */}
-      <div className="pointer-events-none absolute inset-0 mx-auto hidden max-w-6xl xl:block">
-        <motion.div
-          initial={{ opacity: 0, x: 24, rotate: 5 }}
-          animate={{ opacity: 1, x: 0, rotate: 2.2 }}
-          transition={{ duration: 0.8, ease: EASE, delay: 1.1 }}
-          className="pointer-events-auto absolute right-4 top-[20%] w-[15.5rem]"
-        >
-          <div className="crayon-oxblood relative">
-            <div className="ink-edge paper-stack relative bg-paper-raised p-4">
-              <Tape
-                className="absolute -top-3 left-6 z-10"
-                rotate={-7}
-                tone="yellow"
-                width={76}
-              />
-
-              {/* the nameplate */}
-              <p className="text-center font-mono text-[9.5px] uppercase tracking-[0.34em] text-ink-faint">
-                {insideCover.label}
-              </p>
-              <p className="mt-1.5 text-center font-marker text-[1.35rem] leading-tight text-ink">
-                {insideCover.name}
-              </p>
-              <p className="text-center font-pen text-lg leading-none text-crayon">
-                {insideCover.sub}
-              </p>
-
-              <div className="ink-rule my-3 opacity-70" />
-
-              <p className="font-pen text-[1.05rem] leading-snug text-ink-muted">
-                {insideCover.warning}
-              </p>
-
-              <p className="mt-3 font-mono text-[10px] uppercase leading-relaxed tracking-[0.1em] text-ink-faint">
-                {insideCover.note}
-              </p>
-
-              <div className="mt-3 flex items-end justify-between gap-2">
-                <Sticker crayon="oxblood" rotate={-6}>
-                  {insideCover.stamp}
-                </Sticker>
-                <Character id="dash" size={58} />
-              </div>
-            </div>
-
-            <span aria-hidden className="absolute -bottom-6 -left-5 hidden 2xl:block">
-              <Character id="pip" size={52} busy />
-            </span>
-          </div>
-        </motion.div>
-      </div>
+      {/* one ink figure, low and out of the way */}
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, ease: EASE, delay: 1.5 }}
+        className="pointer-events-none absolute bottom-10 right-[7%] hidden text-ink/60 lg:block"
+      >
+        <Character id="dash" size={68} />
+      </motion.div>
     </section>
   );
 }

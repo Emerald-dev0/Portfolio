@@ -11,7 +11,7 @@
  */
 
 import Link from "next/link";
-import { Character, Dog } from "@/components/motion/Chibi";
+import { Character } from "@/components/motion/Chibi";
 import { Sticker } from "@/components/materials/Sticker";
 import { FillLine } from "@/components/materials/Handwritten";
 import { identity } from "@/lib/content";
@@ -44,7 +44,7 @@ export default function BookCover({
         className="absolute -right-3 -top-3 z-20 text-[10px]"
         rotate={-7}
       >
-        keep out
+        404
       </Sticker>
 
       <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
@@ -65,7 +65,7 @@ export default function BookCover({
           <p className="mt-4 max-w-md text-[13px] leading-relaxed text-paper/70">
             {blurb ?? (
               <>
-                {identity.realName} — {identity.personaHandle}. Notes, decisions,
+                {identity.realName}, {identity.personaHandle}. Notes, decisions
                 and the occasional mistake, written down as they happened.
               </>
             )}
@@ -86,15 +86,7 @@ export default function BookCover({
 
         <div className="relative shrink-0 self-end sm:self-center">
           <span aria-hidden className="block">
-            <Character id="dash" size={104} />
-          </span>
-          <span
-            aria-hidden
-            className="absolute -right-6 -bottom-1 hidden opacity-80 sm:block"
-          >
-            <span className="crayon-mustard inline-block -scale-x-100">
-              <Dog size={62} />
-            </span>
+            <Character id="dash" size={96} />
           </span>
         </div>
       </div>

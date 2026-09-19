@@ -5,9 +5,8 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import SectionHeader from "@/components/ui/SectionHeader";
 import Doodle from "@/components/materials/Doodle";
 import { Tape } from "@/components/materials/Tape";
-import { Reveal } from "@/components/motion/Reveal";
 import { Character } from "@/components/motion/Chibi";
-import { journal, journey, type Chapter } from "@/lib/content";
+import { journey, type Chapter } from "@/lib/content";
 
 /**
  * Journey — the engineer's notebook. Not a flat year list: each era is a page
@@ -33,8 +32,6 @@ export default function Journey() {
           sticky={journey.sticky}
           heading={journey.heading}
           scribble="underline"
-          date={journal.entries.journey.date}
-          page={journal.entries.journey.page}
         />
 
         <div ref={ref} className="relative mt-10 pl-8 sm:pl-12">
@@ -57,28 +54,6 @@ export default function Journey() {
           </div>
         </div>
 
-        {/* stat receipts — pulled from the story */}
-        <Reveal dir="up" delay={0.1}>
-          <div className="mt-10 grid grid-cols-3 gap-3">
-            {[
-              { value: "1,600+", label: "commits since Dec 2025" },
-              { value: "3", label: "production systems shipped" },
-              { value: "20+", label: "full-stack projects built" },
-            ].map((s) => (
-              <div
-                key={s.label}
-                className="ink-edge--soft bg-paper-raised p-3 text-center sm:p-4"
-              >
-                <div className="font-marker text-2xl leading-none text-ink sm:text-3xl">
-                  {s.value}
-                </div>
-                <div className="mt-1.5 font-mono text-[9.5px] uppercase leading-tight tracking-[0.1em] text-ink-faint">
-                  {s.label}
-                </div>
-              </div>
-            ))}
-          </div>
-        </Reveal>
       </div>
     </section>
   );
@@ -176,9 +151,6 @@ function ChapterPage({ chapter, index }: { chapter: Chapter; index: number }) {
           </p>
         )}
 
-        <span className="page-num absolute -bottom-5 right-1 opacity-70">
-          PAGE {String(index + 2).padStart(2, "0")}
-        </span>
       </div>
 
       {/* whoever belongs to this era loiters on the corner of the page */}

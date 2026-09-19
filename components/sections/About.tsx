@@ -2,14 +2,13 @@
 
 import { StickyTab } from "@/components/materials/StickyNote";
 import { Tape } from "@/components/materials/Tape";
-import { PageHeader } from "@/components/materials/PageHeader";
 import { Checkbox, FillLine, FoldedCorner } from "@/components/materials/Handwritten";
 import Doodle from "@/components/materials/Doodle";
 import Scribble from "@/components/motion/Scribble";
 import AmbientField from "@/components/motion/AmbientField";
 import { Character } from "@/components/motion/Chibi";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion/Reveal";
-import { about, journal } from "@/lib/content";
+import { about } from "@/lib/content";
 
 /**
  * About — "Monday, later."
@@ -33,7 +32,7 @@ export default function About() {
   /** The things that keep being true, in the order they became true. */
   const learned = [
     "JavaScript, then React, then everything underneath it",
-    "Node, Express, MongoDB — the backend I said I'd avoid",
+    "Node, Express, MongoDB: the backend I said I'd avoid",
     "Flutter, when something needs to live on a phone",
     "Databases, auth, deployment, and why the build breaks at 2am",
     "AI tooling, MCP, and context layers for agents",
@@ -51,10 +50,6 @@ export default function About() {
       <div className="relative z-10 mx-auto grid w-full max-w-5xl grid-cols-1 items-start gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:gap-12">
         {/* ---------------- the entry ---------------- */}
         <div className="relative">
-          <PageHeader
-            date={journal.entries.about.date}
-            page={journal.entries.about.page}
-          />
 
           <div className="mb-4 flex items-center gap-3">
             <StickyTab>{about.tag}</StickyTab>
@@ -110,9 +105,6 @@ export default function About() {
               <p className="font-marker text-lg leading-none text-ink">
                 Things I&rsquo;ve learned so far
               </p>
-              <p className="mt-1 font-pen text-lg leading-none text-accent-2">
-                (ticked off properly, not just claimed)
-              </p>
 
               <ul className="mt-4 space-y-2.5">
                 {learned.map((item) => (
@@ -148,7 +140,7 @@ export default function About() {
               <p className="font-marker text-lg leading-none text-ink">
                 The short version
               </p>
-              <span className="page-num">FILLED IN HONESTLY</span>
+              <span className="page-num">AT A GLANCE</span>
             </div>
 
             <dl className="mt-5 grid grid-cols-1 gap-x-8 gap-y-3 sm:grid-cols-2">

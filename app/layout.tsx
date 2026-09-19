@@ -2,14 +2,14 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Daniel Oluwadare (Emerald) — Software Engineer",
+  title: "Daniel Oluwadare (Emerald) | Software Engineer",
   description:
-    "Daniel Oluwadare — Emerald online. Building AI developer infrastructure, production web applications, and tools developers actually enjoy using. An engineer's notebook, drawn as comic panels, fed live by GitHub.",
+    "Daniel Oluwadare is a software engineer building AI developer infrastructure and production web applications. Full-stack work in TypeScript, React and Node, with projects pulled live from GitHub.",
   metadataBase: new URL("https://danieloluwadare.dev"),
   openGraph: {
-    title: "Daniel Oluwadare (Emerald) — Software Engineer",
+    title: "Daniel Oluwadare (Emerald) | Software Engineer",
     description:
-      "Full-stack by trade. Backend by circumstance. 1,600+ commits since December 2025 — probably an unhealthy amount.",
+      "Full-stack by trade. Backend by circumstance. AI developer infrastructure, production web applications, and tools developers actually enjoy using.",
     type: "website",
   },
   robots: { index: true, follow: true },

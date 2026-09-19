@@ -3,7 +3,7 @@
 import SectionHeader from "@/components/ui/SectionHeader";
 import AmbientField from "@/components/motion/AmbientField";
 import { Reveal } from "@/components/motion/Reveal";
-import { journal, whatIDo } from "@/lib/content";
+import { whatIDo } from "@/lib/content";
 
 /**
  * What I Do. Compact icon + label + one dry line, in the hand-bordered card
@@ -24,8 +24,6 @@ export default function WhatIDo() {
           tag={whatIDo.tag}
           heading={whatIDo.heading}
           tagColor="purple"
-          date={journal.entries.services.date}
-          page={journal.entries.services.page}
         />
 
         <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">

@@ -85,9 +85,6 @@ export default function Footer() {
 
           <div className="flex flex-col gap-2 border-t border-paper/15 pt-6 sm:flex-row sm:items-center sm:justify-between">
             <p className="font-pen text-lg text-marker">{footer.signoff}</p>
-            <p className="font-pen text-base text-paper/50">
-              {footer.theEnd}
-            </p>
             <p className="font-mono text-[12px] text-paper/50">
               {footer.copyright}
             </p>

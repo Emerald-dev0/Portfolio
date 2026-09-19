@@ -205,6 +205,12 @@ const PINS_QUERY = /* GraphQL */ `
       location
       followers { totalCount }
       repositories(privacy: PUBLIC, ownerAffiliations: OWNER) { totalCount }
+      contributionsCollection {
+        contributionCalendar {
+          totalContributions
+          weeks { contributionDays { date contributionCount } }
+        }
+      }
       pinnedItems(first: $count, types: REPOSITORY) {
         nodes {
           ... on Repository {
@@ -381,6 +387,54 @@ async function accountStats() {
 }
 
 /* --------------------------------------------------------------------------
+ * Contributions — the green squares, as raw numbers.
+ * A year of daily counts, plus the streaks you would otherwise have to count by
+ * eye. Only days with activity are stored; the renderer fills the blank squares
+ * back in, which keeps the committed snapshot about a quarter of the size.
+ * ------------------------------------------------------------------------ */
+function shapeContributions(calendar) {
+  if (!calendar?.weeks) return null;
+
+  const days = calendar.weeks.flatMap((w) => w.contributionDays ?? []);
+  if (!days.length) return null;
+
+  let longest = 0;
+  let run = 0;
+  for (const day of days) {
+    run = day.contributionCount > 0 ? run + 1 : 0;
+    if (run > longest) longest = run;
+  }
+
+  let current = 0;
+  for (let i = days.length - 1; i >= 0; i--) {
+    if (days[i].contributionCount > 0) current += 1;
+    else break;
+  }
+
+  const busiest = days.reduce(
+    (best, d) => (d.contributionCount > (best?.contributionCount ?? -1) ? d : best),
+    null,
+  );
+
+  return {
+    from: days[0].date,
+    to: days[days.length - 1].date,
+    total: calendar.totalContributions ?? 0,
+    activeDays: days.filter((d) => d.contributionCount > 0).length,
+    totalDays: days.length,
+    longestStreak: longest,
+    currentStreak: current,
+    busiestDay: busiest
+      ? { date: busiest.date, count: busiest.contributionCount }
+      : null,
+    /* compact form: [["2026-07-07", 145], ...] */
+    active: days
+      .filter((d) => d.contributionCount > 0)
+      .map((d) => [d.date, d.contributionCount]),
+  };
+}
+
+/* --------------------------------------------------------------------------
  * main
  * ------------------------------------------------------------------------ */
 async function main() {
@@ -396,6 +450,7 @@ async function main() {
 
   const nodes = (user.pinnedItems.nodes ?? []).filter(Boolean);
   const account = await accountStats();
+  const contributions = shapeContributions(user.contributionsCollection?.contributionCalendar);
 
   const pins = [];
   for (const node of nodes) {
@@ -429,6 +484,7 @@ async function main() {
       followers: user.followers?.totalCount ?? 0,
       publicRepos: user.repositories?.totalCount ?? account.publicRepos,
     },
+    contributions,
     stats: {
       pinned: pins.length,
       starsPinned: pins.reduce((sum, p) => sum + (p.stars ?? 0), 0),
@@ -450,8 +506,16 @@ async function main() {
   await writeFile(OUT, `${JSON.stringify(snapshot, null, 2)}\n`, "utf8");
 
   const rel = OUT.replace(`${ROOT}/`, "");
-  console.log(`\n  ✓  ${pins.length} repos → ${rel}`);
-  console.log(`     stars: ${snapshot.stats.stars} · commits(pins): ${snapshot.stats.commitsPinned} · latest push: ${snapshot.stats.pushed ?? "—"}\n`);
+  console.log(`\n  ✓  ${pins.length} repos -> ${rel}`);
+  console.log(
+    `     stars: ${snapshot.stats.stars} · commits in pins: ${snapshot.stats.commitsPinned}`,
+  );
+  console.log(
+    contributions
+      ? `     contributions: ${contributions.total} in the last year (longest streak ${contributions.longestStreak} days)`
+      : "     contributions: unavailable, needs a token",
+  );
+  console.log(`     latest push: ${snapshot.stats.pushed ?? "n/a"}\n`);
 }
 
 main();

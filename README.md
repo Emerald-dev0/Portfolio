@@ -1,101 +1,91 @@
 <div align="center">
 
-# The Engineer's Journal
+# Daniel Oluwadare — Portfolio
 
-### Daniel Oluwadare — *also known as Emerald*
+**Software engineer. Building AI developer infrastructure and production web
+applications.**
 
-A portfolio that behaves less like a landing page and more like a spiral-bound
-engineering notebook someone left open on a desk. Aged newsprint, hand-drawn
-ink, comic panels, a dog on the cover — and a work section that reads itself
-off GitHub.
-
-**Building AI developer infrastructure, production web applications, and tools developers actually enjoy using.**
-
-`Next.js 15` · `React 19` · `TypeScript` · `Tailwind CSS v4` · `Framer Motion` · `GitHub GraphQL`
+`Next.js 15` · `React 19` · `TypeScript` · `Tailwind CSS v4` · `Framer Motion` · `GitHub API`
 
 </div>
 
 ---
 
-## The idea
+## What this is
 
-Most developer portfolios are a template with a different coat of paint. This
-one is built around a single, committed metaphor: **paper**.
+A personal portfolio that reads its own project data from GitHub, so the work
+section can't go stale. It's styled as a paper notebook: aged newsprint, ruled
+lines, ink borders, hand-drawn doodles, and a few small illustrations in the
+margins.
 
-Every element maps to one of five physical materials — so as the site grows it
-stays coherent instead of turning into a pile of unrelated UI.
-
-| Material | What it is |
-| --- | --- |
-| **Paper** | Warm newsprint base, faint ruled lines, a subtle grain overlay |
-| **Ink** | Headlines, hand-drawn doodles, self-drawing scribble lines — always `#22201a`, never pure black |
-| **Crayon** | A small box of muted colours for comic panels, stickers and characters |
-| **Tape / paperclip / dog-ear** | Small graphics that signal something is physically stuck (or folded) down |
-| **Comic panel / sticker / speech bubble** | How work and characters are framed and quoted |
-
-The visuals are loud and textured on purpose; the writing is the opposite —
-quiet, dry, specific. Roughly 80% engineer, 20% personality.
+The project grid is driven by the repositories pinned on
+[github.com/Emerald-dev0](https://github.com/Emerald-dev0). Pin a repository and
+it appears; unpin it and it leaves. Star counts, commit counts, languages and
+last-push dates come from the API, not from hard-coded copy.
 
 ---
 
-## The work section reads itself off GitHub
+## The work section reads itself from GitHub
 
-**This is the part that changed.** The projects section is no longer a
-hand-maintained list. It is driven by the repos pinned on
-[github.com/Emerald-dev0](https://github.com/Emerald-dev0).
+The projects grid is generated at render time from the pinned repositories on
+the profile, in pin order. Each card shows the repository's real language, star
+count, commit count and last-push date, and the page revalidates every 3 hours.
 
-**Pin a repo → it appears here, in pin order, with its real numbers. Unpin it →
-it leaves.** No code change, no redeploy, no copy-paste. The panel shows the
-repo's own primary language, star count, commit count and last-push date, and
-the whole page re-renders itself every three hours.
-
-### Four layers, so it can never break
+### Four layers, so it can't break
 
 | # | Layer | When it's used |
 | --- | --- | --- |
-| 1 | **Live** — one GraphQL call reads the profile + pinned items | whenever `GITHUB_TOKEN` is set |
-| 2 | **Snapshot** — `lib/github.snapshot.json`, committed | no token, or the API is unhappy |
-| 3 | **Merged** — live fields (stars, pushes, topics, commits) are merged *over* the snapshot, so nothing the snapshot knows (language breakdowns, README ledes) is ever lost | always |
-| 4 | **Curated** — `curatedProjects` in `lib/content.ts` | for work that isn't pinned at all |
+| 1 | **Live** — one GraphQL call reads the profile, the pins and the contribution calendar | when `GITHUB_TOKEN` is set |
+| 2 | **Snapshot** — `lib/github.snapshot.json`, committed to the repo | no token, or the API is unavailable |
+| 3 | **Merged** — live fields are merged over the snapshot, so nothing the snapshot knows is lost | always |
+| 4 | **Curated** — `curatedProjects` in `lib/content.ts` | work that isn't pinned at all |
 
-If GitHub is down, rate-limited, or the token is wrong, the page renders from
-the committed snapshot and labels itself honestly instead of showing an empty
-grid or a spinner. A repo with no description and no README still renders —
-with an honest placeholder, never invented copy.
+If GitHub is down, rate-limited, or the token is missing, the page renders from
+the committed snapshot and labels the source honestly instead of showing an
+empty grid. A repository with no description and no README still renders, with
+real numbers and an honest placeholder rather than invented copy.
 
-### Setting it up
+### Setup
 
-Nothing is required — the committed snapshot works out of the box and the
-scheduled Action keeps it current.
+Nothing is required. The committed snapshot works out of the box, and a
+scheduled workflow keeps it current.
 
-To turn layer 1 on (fully live, no redeploy):
+To enable the live read (no redeploy needed):
 
 ```bash
 # .env.local
-GITHUB_TOKEN=ghp_…        # read-only is enough; pins are public data
-GITHUB_LOGIN=Emerald-dev0 # optional, this is the default
+GITHUB_TOKEN=ghp_...        # read-only is enough, pins are public data
+GITHUB_LOGIN=Emerald-dev0   # optional, this is the default
 ```
 
-Add the same two variables in **Vercel → Settings → Environment Variables** and
-the site will read your pins at render time, freshly cached every 3 hours.
+Add the same variables in **Vercel → Settings → Environment Variables**.
 
-To refresh the committed snapshot by hand:
+To refresh the committed snapshot manually:
 
 ```bash
 GITHUB_TOKEN=$(gh auth token) npm run sync:github
-# no token? it falls back to your most recently pushed public repos and says so
+
+# without a token it falls back to your most recently pushed public repos,
+# and records that in the snapshot so the UI can say so
 npm run sync:github
 ```
 
-`.github/workflows/sync-github.yml` runs the same script twice a week, commits
-the new snapshot, and lets Vercel redeploy — so even a completely token-less
-deployment stays up to date.
+`.github/workflows/sync-github.yml` runs the same script twice a week and
+commits the result, so even a deployment with no token stays up to date.
+
+### What gets synced
+
+- the pinned repositories, in pin order, with stars, forks, commits and language
+- each repository's language breakdown and the first paragraph of its README
+- the contribution calendar for the last year, with streaks and totals
+- account totals: public repositories, stars, followers, language distribution
 
 ### Where the words come from
 
-GitHub can tell you *what* a repo is called. It cannot tell you *why it
-matters*. So copy lives in `githubOverlay` in [`lib/content.ts`](lib/content.ts),
-keyed by `"owner/name"` or just `"name"` (case-insensitive):
+GitHub can tell you what a repository is called. It can't tell you why it
+matters, so that copy lives in `githubOverlay` in
+[`lib/content.ts`](lib/content.ts), keyed by `"owner/name"` or just `"name"`,
+case-insensitively:
 
 ```ts
 export const githubOverlay: Record<string, ProjectOverlay> = {
@@ -104,145 +94,79 @@ export const githubOverlay: Record<string, ProjectOverlay> = {
     oneLiner: "Git forensics for the file everyone's afraid to touch.",
     note: "reads history, not vibes",
     crayon: "purple",
-    character: "pip",
-    // everything else — stars, language, commits — comes from GitHub
+    // stars, language and commits still come from GitHub
   },
 };
 ```
 
-Delete a key and that panel falls back to the repo's own description, then to
-the first real paragraph of its README. Add one and the panel sounds like you.
+Remove a key and that card falls back to the repository's own description, then
+to its README. Nothing is ever invented.
 
-`showcase.order` decides how the grid is assembled:
+`showcase.order` controls how the grid is assembled:
 
 ```ts
-order: "pins-first"   // pinned repos, then curated work  ← default
-//     "pins-only"    // strictly what's pinned
+order: "pins-first"   // pinned repos followed by curated work (default)
+//     "pins-only"    // strictly the pins
 //     "curated-only" // ignore GitHub entirely
 ```
 
-### Hiding a pin from the site
-
-```ts
-"github-owner/repo": { hidden: true },   // pinned on GitHub, not on the page
-```
+To keep a pinned repository off the site: `{ hidden: true }`.
 
 ---
 
-## It's a book, and it reads in order
+## The GitHub section
 
-The metaphor isn't just the texture — the whole page is laid out as one week of
-diary entries. Every section opens with a **running head** (`The Engineer's
-Journal · Daniel Oluwadare ———— PAGE 03`), the **date it was written**, and a
-tag:
+Below the work grid, `components/sections/GithubActivity.tsx` shows the numbers
+behind the claims:
 
-| Page | Entry | Section |
-| --- | --- | --- |
-| 01 | MONDAY | the cover and the first entry |
-| 02 | MONDAY, LATER | about, with a ticked checklist |
-| 03 | TUESDAY | the work — comic panels, live from GitHub |
-| 04 | WEDNESDAY | the receipts and the language bar |
-| 05 | WEDNESDAY, 11:47 PM | the comic strip |
-| 06 | THURSDAY | what I do |
-| 07 | FRIDAY | the journey, chapter by chapter |
-| 08 | SATURDAY | how to reach me |
+- **Contribution graph** — a year of daily commits drawn as ink squares, with
+  total contributions, active days, longest and current streaks, and the
+  busiest day. Only active days are stored in the snapshot; blank squares are
+  generated at render time, which keeps the committed file small.
+- **Totals** — public repositories, stars, commits in pinned work, followers.
+- **Languages** — the primary language of every public repository, as a
+  proportional bar and a ranked list.
 
-All of it is configured in one place, so the week can be re-cut without touching
-a component:
+Every figure is read from the API. Nothing in this section is typed in by hand.
 
-```ts
-export const journal = {
-  runningHead: "The Engineer's Journal",
-  owner: "Daniel Oluwadare",
-  entries: {
-    hero:  { date: "MONDAY",   page: 1 },
-    about: { date: "MONDAY, LATER", page: 2 },
-    // …
-  },
-};
-```
-
-**Page 5 is a real comic strip.** Three hand-drawn panels of the same desk, one
-evening: 9:00 PM ("one small feature, two hours, tops"), 11:30 PM ("the tests
-have opinions"), 11:47 PM ("it was a comma"). Only three things change between
-panels — the screen, the arms, and what's floating over the figure's head —
-which is how the books do it too. Captions sit in a bar at the bottom; the
-clock on the wall is the setup.
-
-Also borrowed from the books: an **inside front cover** on the hero ("PROPERTY
-OF Daniel Oluwadare", a KEEP OUT sticker, one illustration), ticked
-**checkboxes** drawn with a tick that overshoots the box, **fill-in-the-blank
-lines**, **binder holes**, and a **folded corner** on the page someone wanted to
-remember.
-
-The illustrations are ink figures with poses and accessories, not characters
-with names — they stand on the corner of a project panel, walk along the footer
-tear, and otherwise stay out of the way. `components/motion/Chibi.tsx` has ten
-poses; adding one adds it to every figure at once.
-
-## What makes it feel alive
-
-The brief was simple: *it should never feel static.* Motion runs on several
-layers that keep going long after the page loads.
-
-- **Live numbers** — the language bar, star counts, commit counts and "updated
-  3 weeks ago" labels are read from the GitHub API, not typed by hand.
-- **Re-triggering reveals** — sections ink-bleed back in every time they
-  re-enter the viewport, not just on first load.
-- **Self-drawing scribbles** — SVG underlines and arrows draw themselves with
-  `pathLength` as you scroll to them.
-- **Rotating typewriter copy** — the hero continuously rewrites its "Building
-  ___" line and cycles personality asides.
-- **Ambient doodles** — stars, sparks, lightbulbs and coffee cups drift on
-  independent loops with light scroll parallax, so nothing moves in lockstep.
-- **Comic-panel filtering** — the work grid filters by technology with layout
-  animation; panels reflow instead of jumping.
-- **A drawn comic strip** — three panels of hand-built SVG, where only the
-  screen, the arms and the thought bubble change between frames.
-- **A scroll-scrubbed timeline** — the journey "notebook spine" inks itself in
-  as you read down the chapters.
-- **Tactile hovers** — panels lift, figures hop, paper corners peel, the nav's
-  ink highlight glides between links.
-
-All of it respects `prefers-reduced-motion`, and everything interactive is
-reachable by keyboard with a visible focus ring.
+---
 
 ## Tech stack
 
-- **[Next.js 15](https://nextjs.org/)** (App Router, ISR) + **React 19**
+- **[Next.js 15](https://nextjs.org/)** (App Router, ISR) with **React 19**
 - **TypeScript** (strict)
 - **[Tailwind CSS v4](https://tailwindcss.com/)** (CSS-first `@theme` tokens)
-- **[Framer Motion](https://www.framer.com/motion/)** for all motion
-- **GitHub GraphQL / REST** for the pinned work and the receipts
-- **Google Fonts** loaded at runtime via `<link>` — Permanent Marker (marker),
-  Caveat (pen), Inter (body), JetBrains Mono (labels)
+- **[Framer Motion](https://www.framer.com/motion/)** for motion
+- **GitHub GraphQL and REST** for project and activity data
+- **Google Fonts** via `<link>`: Permanent Marker, Caveat, Inter, JetBrains Mono
 
 ## Project structure
 
 ```
 app/
-  layout.tsx            # fonts + metadata
-  page.tsx              # server component: reads GitHub, sets ISR, scroll order
-  not-found.tsx         # a page that fell out of the notebook
-  globals.css           # design tokens, materials, crayons, keyframes
+  layout.tsx            # fonts and metadata
+  page.tsx              # server component: reads GitHub, sets ISR
+  not-found.tsx
+  globals.css           # design tokens, materials, keyframes
 components/
-  materials/            # PaperBackground, PageHeader, Tape, StickyNote, Sticker,
-                        #   TornEdge, Doodle, Handwritten, BookCover
+  materials/            # PaperBackground, Tape, StickyNote, Sticker, TornEdge,
+                        #   Doodle, Handwritten, BookCover
   motion/               # Reveal, Scribble, RotatingText, InkBleed, Parallax,
-                        #   AmbientField, Chibi (the whole cast), ChibiWalker
-  sections/             # Nav, Hero, About, Projects, Receipts, ComicStrip,
+                        #   AmbientField, Chibi, ChibiWalker
+  sections/             # Nav, Hero, About, Projects, GithubActivity,
                         #   LogoMarquee, WhatIDo, Journey, Connect, Footer
-  ui/                   # ProjectPanel, SectionHeader, Pill, SocialIcon
+  ui/                   # ProjectPanel, ContributionGraph, SectionHeader,
+                        #   Pill, SocialIcon
 lib/
-  content.ts            # ← all copy, the cast, curated work, the overlay
-  github.ts             # GitHub read + the four layers         [server only]
-  github.snapshot.json  # committed pins — what the site falls back to
-  projects.ts           # merges pins + overlay + curated work
-  format.ts             # relative time / compact numbers
+  content.ts            # all copy, curated work, the overlay, the palette
+  github.ts             # GitHub reads and the four fallback layers (server only)
+  github.snapshot.json  # committed pins and contributions
+  projects.ts           # merges pins, overlay and curated work
+  format.ts             # relative dates, compact numbers
 scripts/
-  sync-github.mjs       # refreshes the snapshot (npm run sync:github)
+  sync-github.mjs       # refreshes the snapshot
 .github/workflows/
-  sync-github.yml       # keeps the snapshot fresh, twice a week
+  sync-github.yml       # keeps the snapshot fresh twice a week
 ```
 
 ## Getting started
@@ -253,39 +177,33 @@ npm install
 npm run dev            # http://localhost:3000
 npm run build && npm start
 
-npm run typecheck      # tsc --noEmit
+npm run typecheck
 npm run lint
 npm run sync:github    # refresh lib/github.snapshot.json
 ```
 
 ## Editing the content
 
-**Everything you'd want to change lives in [`lib/content.ts`](lib/content.ts)** —
-copy, projects, the cast, the overlay, stats, timeline chapters and social
-links. No component edits needed for day-to-day updates.
+All copy lives in [`lib/content.ts`](lib/content.ts).
 
 - **Projects** — pin them on GitHub; write the words in `githubOverlay`. Work
   that isn't on GitHub goes in `curatedProjects`.
-- **The week** — `journal.entries` holds each section's day and page number;
-  `comicStrip.panels` holds the captions for page 5.
-- **Cover** — `insideCover` is the label, warning and stamp on the hero card.
+- **The palette** — eight muted inks defined once in `globals.css` as
+  `--color-crayon-*`. Each one sets `--crayon` and `--crayon-on`, so a single
+  `.crayon-*` class re-inks a whole card, including its sticker and its
+  illustration.
 - **Social links** — real destinations live in `socials`.
-- **Timeline** — edit the `chapters` array; each renders as a notebook page
-  with its own crayon and cast member.
-- **Logos** — the marquee renders monogram chips by default. Drop real SVGs in
-  `public/logos/` to upgrade them later.
+- **Timeline** — edit the `chapters` array; each renders as a notebook page.
 
-## Design system at a glance
+## Design notes
 
 Tokens are defined once in `globals.css` under `@theme`:
 
 ```css
-/* paper + ink */
---color-paper:  #ece3d0;   /* aged newsprint            */
---color-ink:    #22201a;   /* warm near-black           */
+--color-paper: #ece3d0;   /* paper        */
+--color-ink:   #22201a;   /* ink          */
+--color-rule:  #c8b99a;   /* hairlines    */
 
-/* the crayon box — every coloured element reads --crayon / --crayon-on,
-   set by a .crayon-* class, so one class re-inks a whole panel */
 --color-crayon-oxblood: #a4432f;
 --color-crayon-teal:    #3c6067;
 --color-crayon-mustard: #d19a3f;
@@ -296,28 +214,28 @@ Tokens are defined once in `globals.css` under `@theme`:
 --color-crayon-pink:    #a84f6b;
 ```
 
-Materials you can compose with: `.panel` (+ `__spine`, `__shade`, `__num`),
-`.bubble`, `.sticker`, `.sticky-tab`, `.ink-edge`, `.dogear`, `.paper-stack`,
-`.halftone`, `.crosshatch`, `.ink-rule`, `.page-num`, `.margin-note`,
-`.live-dot`. Hand-drawn paper bits (`Checkbox`, `FillLine`, `BinderHole`,
-`FoldedCorner`) live in `components/materials/Handwritten.tsx`.
+Composable materials: `.panel` (with `__spine`, `__shade`, `__num`), `.bubble`,
+`.sticker`, `.sticky-tab`, `.ink-edge`, `.dogear`, `.paper-stack`, `.halftone`,
+`.ink-rule`, `.live-dot`. Hand-drawn paper parts (`Checkbox`, `FillLine`,
+`BinderHole`, `FoldedCorner`) are in `components/materials/Handwritten.tsx`.
+
+Motion is progressive and respects `prefers-reduced-motion`; everything
+interactive is reachable by keyboard with a visible focus ring.
 
 ## Deployment
 
-Optimised for **[Vercel](https://vercel.com/)** — import the repo and it builds
-with zero config. Add `GITHUB_TOKEN` (and optionally `GITHUB_LOGIN`) to make the
-work section fully live; without them it runs on the committed snapshot and the
-scheduled Action keeps that fresh.
+Built for **[Vercel](https://vercel.com/)**. Import the repository and it builds
+with no configuration. Add `GITHUB_TOKEN` (and optionally `GITHUB_LOGIN`) to
+enable the live read; without them the site runs on the committed snapshot.
 
-> The one thing that will break it: making `GITHUB_TOKEN` **required**. It isn't,
-> deliberately. Every path through `lib/github.ts` falls back to something real.
+`GITHUB_TOKEN` is deliberately optional. Every path through `lib/github.ts`
+falls back to real data.
 
 ## Credits
 
-- Design, engineering & copy — **Daniel Oluwadare** (Emerald)
-- **TestFlow** built in collaboration with
-  [Feranmi Oresajo](https://feranmi.appmd.dev) (frontend), whose site was the
-  tonal reference for the writing voice.
+- Design, engineering and copy — **Daniel Oluwadare**
+- **TestFlow** was built with [Feranmi Oresajo](https://feranmi.appmd.dev)
+  (frontend).
 
 ---
 

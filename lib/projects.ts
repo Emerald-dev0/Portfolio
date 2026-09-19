@@ -26,7 +26,7 @@ import {
   type Project,
   type ProjectOverlay,
 } from "./content";
-import type { GithubSnapshot, LanguageShare, PinnedRepo } from "./github";
+import type { Contributions, GithubSnapshot, LanguageShare, PinnedRepo } from "./github";
 import { relativeTime } from "./format";
 
 const CRAYONS: Crayon[] = [
@@ -159,6 +159,8 @@ export type Showcase = {
   pinned: Project[];
   curated: Project[];
   filters: ShowcaseFilter[];
+  /** the contribution calendar, when it could be read */
+  contributions: Contributions | null;
   /** Real numbers for the receipts strip. */
   totals: {
     pinned: number;
@@ -217,6 +219,7 @@ export function buildShowcase(snapshot: GithubSnapshot): Showcase {
     pinned,
     curated,
     filters,
+    contributions: snapshot.contributions ?? null,
     totals: {
       pinned: pinned.length,
       publicRepos: snapshot.stats?.publicRepos ?? snapshot.user?.publicRepos ?? 0,

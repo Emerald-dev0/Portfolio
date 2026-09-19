@@ -30,38 +30,6 @@ export const identity = {
   github: "Emerald-dev0",
 };
 
-/* ---------------------------------------------------------------------------
- * THE JOURNAL — the shape of the book itself.
- * Every section is a diary entry: a day, a page number, and a running head at
- * the top of the page. That's the whole trick of the thing the site is copying
- * — a week of entries, read in order.
- * ------------------------------------------------------------------------- */
-export const journal = {
-  /** printed at the top of every page, like a book's running head */
-  runningHead: "The Engineer's Journal",
-  owner: "Daniel Oluwadare",
-  entries: {
-    hero: { date: "MONDAY", page: 1 },
-    about: { date: "MONDAY, LATER", page: 2 },
-    work: { date: "TUESDAY", page: 3 },
-    stack: { date: "WEDNESDAY", page: 4 },
-    comic: { date: "WEDNESDAY, 11:47 PM", page: 5 },
-    services: { date: "THURSDAY", page: 6 },
-    journey: { date: "FRIDAY", page: 7 },
-    connect: { date: "SATURDAY", page: 8 },
-  } satisfies Record<string, { date: string; page: number }>,
-};
-
-/** The inside front cover: a label, a name, and a warning. */
-export const insideCover = {
-  label: "PROPERTY OF",
-  name: "Daniel Oluwadare",
-  sub: "Year 2026 · Emerald",
-  warning: "If found, please return. Do not read the commit messages.",
-  note: "This is not a résumé. It's a notebook that got out.",
-  stamp: "KEEP OUT",
-};
-
 export type NavLink = { label: string; href: string };
 
 export const nav = {
@@ -81,12 +49,12 @@ export const hero = {
   kickerRotation: [
     "SOFTWARE ENGINEER",
     "AI INFRASTRUCTURE BUILDER",
-    "FULL-STACK · NIGERIA",
+    "FULL-STACK, NIGERIA",
     "ALSO KNOWN AS EMERALD",
   ],
   greeting: "Hi, I'm",
   realName: "Daniel Oluwadare.",
-  personaLine: "— but online, I go by Emerald.",
+  personaLine: "Online, I go by Emerald.",
   // The rotating verb-phrase that rewrites itself under the name.
   buildingPrefix: "Building",
   buildingRotation: [
@@ -97,21 +65,18 @@ export const hero = {
     "products from raw ideas.",
     "the future of AI engineering.",
   ],
-  // Personality one-liners that cycle in the margin.
+  /** Cycles in the margin. Facts, not bits. */
   personaRotation: [
-    "Probably coding when I should be sleeping.",
-    "Slightly obsessed with turning ideas into software.",
-    "1,600+ commits later… still not done.",
-    "Still building. Still learning.",
+    "Most of my commits land after midnight.",
+    "Currently building Contextly and Blueprint.",
+    "Backend, despite my best efforts.",
+    "Still learning. Still shipping.",
   ],
   tagline: "Full-stack by trade. Backend by circumstance.",
-  /** Journal-header line, Wimpy-Kid style: a date and a mood. */
-  journalLine: "Monday. Still building.",
-  journalNote: "(and the build finally passed)",
-  cta: "Let's Build Something",
+  cta: "Get in touch",
+  ctaWork: "See the work",
   scrollNote: "scroll to explore",
-  // Stats marked `live` are replaced with real numbers from GitHub at render
-  // time — never hard-code a number you can read off the API instead.
+  // Facts, kept deliberately small and checkable.
   stats: [
     { value: "1,600+", label: "commits since Dec 2025" },
     { value: "3", label: "production systems shipped" },
@@ -125,10 +90,10 @@ export const about = {
   heading: "Started with curiosity and a lot of broken builds.",
   body: [
     "Started teaching myself programming in 2024 while studying Computer Science. The degree gives me the theory; the late nights taught me why the build broke, then why the fix broke too.",
-    "I naturally gravitate toward frontend experiences, but most projects eventually pull me into backend architecture and infrastructure — and I've learned to enjoy that.",
+    "I gravitate toward frontend work, but most projects pull me into backend architecture and infrastructure too, and I've learned to enjoy that part.",
     "Recently, that curiosity has shifted toward AI developer infrastructure: building tools that help engineers and AI systems work together more effectively.",
   ],
-  building: "Studying at Obafemi Awolowo University. Based in Osun State, Nigeria.",
+  building: "Studying Computer Science at Obafemi Awolowo University, based in Osun State, Nigeria.",
   pullQuote: "Code is how I find out if the idea actually works.",
 };
 
@@ -239,8 +204,8 @@ export const githubOverlay: Record<string, ProjectOverlay> = {
     name: "Contextly",
     oneLiner: "A universal context layer for AI coding agents.",
     blurb:
-      "Persistent project memory across Claude Code, Cursor, Copilot — every MCP-compatible assistant. It captures the decisions, history, and knowledge behind a codebase, so agents grasp not just what changed, but why.",
-    role: "Solo — architecture, backend, MCP.",
+      "Persistent project memory across Claude Code, Cursor, Copilot and any other MCP-compatible assistant. It captures the decisions, history, and knowledge behind a codebase, so agents grasp not just what changed, but why.",
+    role: "Solo: architecture, backend, MCP.",
     tag: "BUILDING",
     crayon: "teal",
     tech: ["TypeScript", "MCP", "Node.js", "Supabase", "Postgres"],
@@ -253,7 +218,7 @@ export const githubOverlay: Record<string, ProjectOverlay> = {
     oneLiner: "An economic layer for autonomous AI agents.",
     blurb:
       "Agents that discover, hire, and pay for each other's capabilities: an AXC ledger with atomic transactions and cryptographic receipts, an x402 payment engine, a capability registry, reputation scoring, and a conductor that plans a goal then hires the sub-agents to reach it.",
-    role: "Solo — protocol, ledger, monorepo.",
+    role: "Solo: protocol, ledger, monorepo.",
     tag: "BUILDING",
     crayon: "blue",
     tech: ["TypeScript", "Node.js", "Express", "Prisma", "Neon Postgres", "React"],
@@ -265,7 +230,7 @@ export const githubOverlay: Record<string, ProjectOverlay> = {
     oneLiner: "Your PC, driven from your phone. No cloud, no accounts.",
     blurb:
       "A local-network remote control: live desktop streaming, screen recording at up to 60fps, two-way clipboard sync, chunked file transfer, power and process control. A Flutter Android app talking to a Python/Flask agent over WebSockets, found by mDNS, unlocked by a rotating six-digit pairing code.",
-    role: "Solo — mobile app, PC agent, protocol.",
+    role: "Solo: mobile app, PC agent, protocol.",
     tag: "LIVE",
     crayon: "green",
     tech: ["Flutter", "Dart", "Python", "Flask", "WebSocket", "OpenCV"],
@@ -276,8 +241,8 @@ export const githubOverlay: Record<string, ProjectOverlay> = {
     name: "Commitgraph",
     oneLiner: "Git forensics for the file everyone's afraid to touch.",
     blurb:
-      "A CLI that mines repository history instead of guessing at it: file hotspots, knowledge distribution, and logical coupling — the hidden dependency between files that always change together. Markdown and JSON output, so it can run in CI beside the tests.",
-    role: "Solo — CLI, analyzers, tests.",
+      "A CLI that mines repository history instead of guessing at it: file hotspots, knowledge distribution, and logical coupling, meaning the hidden dependency between files that always change together. Markdown and JSON output, so it can run in CI beside the tests.",
+    role: "Solo: CLI, analyzers, tests.",
     tag: "BUILDING",
     crayon: "purple",
     tech: ["TypeScript", "Node.js", "Commander", "Vitest"],
@@ -288,8 +253,8 @@ export const githubOverlay: Record<string, ProjectOverlay> = {
     name: "Axon",
     oneLiner: "A collaborative API workspace with the plumbing already in.",
     blurb:
-      "Collections, environments, request history, API keys, shared workspaces, and team roles behind an Express/Supabase API — plus Stripe billing, an admin surface, and a VS Code extension speaking to the same endpoints.",
-    role: "Solo — backend, Next.js client, extension.",
+      "Collections, environments, request history, API keys, shared workspaces, and team roles behind an Express/Supabase API, plus Stripe billing, an admin surface, and a VS Code extension speaking to the same endpoints.",
+    role: "Solo: backend, Next.js client, extension.",
     tag: "BUILDING",
     crayon: "orange",
     tech: ["TypeScript", "Next.js", "Express", "Supabase", "Stripe", "VS Code API"],
@@ -300,7 +265,7 @@ export const githubOverlay: Record<string, ProjectOverlay> = {
     name: "Noon Digital",
     oneLiner: "A name I parked before it became anything.",
     blurb:
-      "The repository is empty on purpose — no commits, just the spot held. It stays pinned because that's where it lives until it turns into the thing I keep sketching on paper.",
+      "The repository is empty on purpose. No commits, just the name held. It stays pinned because that's where it lives until it turns into the thing I keep sketching on paper.",
     role: "Eventually.",
     tag: "PARKED",
     crayon: "mustard",
@@ -320,8 +285,8 @@ export const curatedProjects: Project[] = [
     name: "Blueprint",
     oneLiner: "An AI engineering command center.",
     blurb:
-      "An operating system for AI-assisted software engineering: Tree-sitter semantic analysis of a whole repository, architecture decision records linked to the code they explain, and AI orchestration across editors — in one local-first workspace.",
-    role: "Solo — product & architecture.",
+      "An operating system for AI-assisted software engineering: Tree-sitter semantic analysis of a whole repository, architecture decision records linked to the code they explain, and AI orchestration across editors, in one local-first workspace.",
+    role: "Solo: product and architecture.",
     tech: ["TypeScript", "Tauri", "Rust", "SQLite"],
     href: "https://github.com/Emerald-dev0/Blueprint",
     codeHref: "https://github.com/Emerald-dev0/Blueprint",
@@ -357,7 +322,7 @@ export const curatedProjects: Project[] = [
     name: "LifeLink",
     oneLiner: "An emergency health identity platform.",
     blurb:
-      "When you can't speak for yourself, your Digital Twin does. Responders scan a grant code and get only the health data you authorized — instantly, time-limited, and logged. Patient-owned consent, always.",
+      "When you can't speak for yourself, your Digital Twin does. A responder scans a grant code and gets only the health data you authorized: instantly, time-limited, and logged. Consent stays with the patient.",
     role: "Built for a hackathon.",
     tech: ["Next.js", "TypeScript", "Tailwind"],
     href: "https://lifelink-rho.vercel.app/",
@@ -391,7 +356,7 @@ export const curatedProjects: Project[] = [
     name: "Mukhtar Salvage",
     oneLiner: "A YouTube packaging studio on the TKO Framework.",
     blurb:
-      "Psychological thumbnail and title packaging that turns the videos creators already make into consistent wins. I built the platform — results showcase, system breakdown, and application funnel.",
+      "Psychological thumbnail and title packaging that turns the videos creators already make into consistent wins. I built the platform: results showcase, system breakdown, and the application funnel.",
     role: "Built the website / platform.",
     tech: ["Next.js", "Tailwind", "Framer Motion"],
     href: "https://www.mukhtarsalvage.com/",
@@ -420,22 +385,37 @@ export const showcase = {
    */
   order: "pins-first" as "pins-first" | "pins-only" | "curated-only",
   /** Live line under the header, filled with real numbers at render time. */
-  livePrefix: "Read live from",
-  liveSuffix: "— pin something new and it shows up here.",
-  /** Shown when a repo insists on being empty. */
-  emptyNote: "this page intentionally left blank",
-  closing: "MORE ON GITHUB",
+  livePrefix: "Pulled live from",
+  liveSuffix: ". Pin a repository and it appears here automatically.",
+  /** Shown when a pinned repository has no commits in it. */
+  emptyNote: "Name reserved. Nothing shipped here yet.",
+  closing: "BROWSE EVERYTHING ON GITHUB",
   archiveNote:
-    "Sixty-plus public repositories covering client work, experiments, hackathons, and products. Not everything deserves the spotlight — but every one taught me something.",
-  allLabel: "everything",
-  filterHint: "filter the pile",
-  statsHeading: "the receipts",
+    "Client work, experiments, hackathons and products. Not everything makes the shortlist, but everything on this list taught me something.",
+  allLabel: "all",
+  filterHint: "filter by tech",
+  archiveHeading: (more: number) => `${more} more public repositories.`,
+};
+
+/* ---------------------------------------------------------------------------
+ * GITHUB — the section that shows live activity rather than claiming it.
+ * Every figure below is read from the API. Nothing here is typed in by hand.
+ * ------------------------------------------------------------------------- */
+export const githubSection = {
+  tag: "GITHUB",
+  heading: "What the commit graph says.",
+  note: "read from the API, not typed in by hand",
+  contributionsLabel: "Contributions, last 12 months",
+  languagesLabel: "Languages",
+  languagesNote: "Primary language across every public repository.",
+  activityLabel: "Activity",
+  lastPushPrefix: "Last push",
 };
 
 export const stack = {
   tag: "STACK",
   heading: "What I actually reach for.",
-  note: "MERN most often. AI tooling in the workflow, not as a gimmick — Claude Code included.",
+  note: "MERN most often, with AI tooling in the workflow rather than as a gimmick.",
   groups: [
     {
       label: "Frontend",
@@ -451,35 +431,6 @@ export const stack = {
   ],
 };
 
-/* ---------------------------------------------------------------------------
- * COMIC STRIP — one evening, in three panels. Captions are the joke; the
- * drawing carries the rest. Keep the copy short enough to fit a caption bar.
- * ------------------------------------------------------------------------- */
-export const comicStrip = {
-  tag: "COMIC",
-  heading: "One evening, in three panels.",
-  note: "based on a true story, unfortunately",
-  panels: [
-    {
-      caption: "9:00 PM — one small feature. Two hours, tops.",
-      mood: "typing" as const,
-      time: "9:00",
-    },
-    {
-      caption: "11:30 PM — the tests have opinions.",
-      mood: "error" as const,
-      time: "11:30",
-    },
-    {
-      caption: "11:47 PM — it was a comma.",
-      mood: "aha" as const,
-      time: "11:47",
-      bubble: "nine hours of my life.",
-    },
-  ],
-  moral: "moral: read the error message.",
-};
-
 export const whatIDo = {
   tag: "SERVICES",
   heading: "What I do, when someone asks.",
@@ -488,7 +439,7 @@ export const whatIDo = {
     { title: "Mobile Apps", line: "Flutter, when it needs to live on a phone." },
     {
       title: "Backend & APIs",
-      line: "The part I keep saying I won't touch — and always end up owning.",
+      line: "The part I keep saying I won't touch, and always end up owning.",
     },
     { title: "AI Infrastructure", line: "Context layers and tooling agents rely on." },
   ],
@@ -548,7 +499,7 @@ const chapters: Chapter[] = [
   {
     era: "2025",
     title: "From learning to serious building.",
-    body: "Moved beyond tutorials and started building more complex full-stack applications — improving my engineering workflow and developing a stronger understanding of building complete products.",
+    body: "Moved beyond tutorials and started building more complex full-stack applications, improving my workflow and my understanding of what goes into a complete product.",
     listLabel: "Focused on",
     items: [
       "React and Next.js",
@@ -563,7 +514,7 @@ const chapters: Chapter[] = [
   {
     era: "Early 2026",
     title: "Started shipping production software.",
-    body: "Moved from experimental projects into real-world products used by actual people. This phase taught me what it means to build beyond code — thinking about users, reliability, deployment, maintenance, and real-world requirements.",
+    body: "Moved from experimental projects into real products used by actual people. This phase taught me what building beyond code involves: users, reliability, deployment, maintenance, and requirements that change.",
     listLabel: "Production systems shipped",
     items: ["ORVN Labs", "TestFlow", "Mukhtar Salvage"],
     annotation: "1,600+ commits since December",
@@ -573,9 +524,9 @@ const chapters: Chapter[] = [
     character: "nova",
   },
   {
-    era: "2026 — now",
+    era: "2026 – present",
     title: "Building AI developer infrastructure.",
-    body: "The focus shifted from only building applications to building tools that improve how developers build software. Contextly gives AI agents persistent memory of a codebase; Blueprint unifies project intelligence, architectural memory, and AI orchestration. The goal is no longer just building software — it's building the tools that shape how software gets built.",
+    body: "The focus shifted from only building applications to building tools that improve how developers build software. Contextly gives AI agents persistent memory of a codebase; Blueprint unifies project intelligence, architectural memory, and AI orchestration. The goal is no longer just building software, but building the tools that shape how software gets built.",
     annotation: "the questions got bigger",
     doodle: "brain",
     crayon: "purple",
@@ -627,7 +578,7 @@ export const connect = {
   tag: "CONTACT",
   heading: "Have an idea worth building?",
   bubble:
-    "I'm usually building something. If you've got an ambitious idea — or an impossible deadline — I'd love to hear about it.",
+    "I'm usually building something. If you have an ambitious idea, or a deadline that looks impossible, I'd like to hear about it.",
   emailHref: "mailto:oluwadare458@gmail.com",
   socials,
 };
@@ -635,17 +586,15 @@ export const connect = {
 export const footer = {
   lines: ["Keep building.", "Keep learning.", "Keep shipping."],
   emphasis: "shipping",
-  signoff: "Daniel Oluwadare — building as Emerald.",
-  theEnd: "— the end —",
+  signoff: "Daniel Oluwadare, building as Emerald.",
   copyright: "© 2026 Daniel Oluwadare. All rights reserved.",
-  builtNote: "Built in Next.js, on a page that thinks it's paper.",
+  builtNote: "Built with Next.js, React and Tailwind CSS.",
 };
 
 /* ---- 404 — a torn-out page ------------------------------------------- */
 export const notFound = {
-  sticky: "LOST PAGE",
-  heading: "This page fell out of the notebook.",
-  body: "Either the link is wrong, or I tore this page out because it was embarrassing. Most likely the first one.",
-  cta: "back to the notebook",
-  margin: "if found, please return",
+  sticky: "404",
+  heading: "That page isn't here.",
+  body: "The link may be out of date, or the page may have moved. The work and the contact details are both a click away.",
+  cta: "back to the portfolio",
 };

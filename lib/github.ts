@@ -72,6 +72,19 @@ export type GithubUser = {
 
 export type LanguageShare = { name: string; repos: number; color: string | null };
 
+export type Contributions = {
+  from: string;
+  to: string;
+  total: number;
+  activeDays: number;
+  totalDays: number;
+  longestStreak: number;
+  currentStreak: number;
+  busiestDay: { date: string; count: number } | null;
+  /** days that had activity: [["2026-07-07", 145], ...] */
+  active: [string, number][];
+};
+
 export type GithubStats = {
   pinned: number;
   starsPinned: number;
@@ -85,6 +98,8 @@ export type GithubStats = {
 
 export type GithubSnapshot = {
   generatedAt: string;
+  /** the contribution calendar; null when it could never be read */
+  contributions?: Contributions | null;
   source: "pinned" | "recent-pushed";
   version: number;
   user: GithubUser;
@@ -124,6 +139,12 @@ const PINS_QUERY = /* GraphQL */ `
       location
       followers { totalCount }
       repositories(privacy: PUBLIC, ownerAffiliations: OWNER) { totalCount }
+      contributionsCollection {
+        contributionCalendar {
+          totalContributions
+          weeks { contributionDays { date contributionCount } }
+        }
+      }
       pinnedItems(first: $count, types: REPOSITORY) {
         nodes {
           ... on Repository {
@@ -165,6 +186,9 @@ type GqlNode = {
   defaultBranchRef: { target: { history?: { totalCount: number } } | null } | null;
 };
 
+type GqlCalendarDay = { date: string; contributionCount: number };
+type GqlCalendarWeek = { contributionDays: GqlCalendarDay[] };
+
 type GqlUser = {
   login: string;
   name: string | null;
@@ -173,8 +197,57 @@ type GqlUser = {
   location: string | null;
   followers: { totalCount: number };
   repositories: { totalCount: number };
+  contributionsCollection?: {
+    contributionCalendar?: {
+      totalContributions: number;
+      weeks: GqlCalendarWeek[];
+    } | null;
+  } | null;
   pinnedItems: { nodes: (GqlNode | null)[] };
 };
+
+/**
+ * Same shape as the sync script produces, so a live read and the committed
+ * snapshot are interchangeable. Returns null rather than throwing.
+ */
+function shapeContributions(
+  calendar: { totalContributions: number; weeks: GqlCalendarWeek[] } | null | undefined,
+): Contributions | null {
+  const days = calendar?.weeks?.flatMap((w) => w.contributionDays ?? []) ?? [];
+  if (!days.length) return null;
+
+  let longest = 0;
+  let run = 0;
+  for (const day of days) {
+    run = day.contributionCount > 0 ? run + 1 : 0;
+    if (run > longest) longest = run;
+  }
+
+  let current = 0;
+  for (let i = days.length - 1; i >= 0; i--) {
+    if (days[i].contributionCount > 0) current += 1;
+    else break;
+  }
+
+  const busiest = days.reduce<GqlCalendarDay | null>(
+    (best, d) => (d.contributionCount > (best?.contributionCount ?? -1) ? d : best),
+    null,
+  );
+
+  return {
+    from: days[0].date,
+    to: days[days.length - 1].date,
+    total: calendar?.totalContributions ?? 0,
+    activeDays: days.filter((d) => d.contributionCount > 0).length,
+    totalDays: days.length,
+    longestStreak: longest,
+    currentStreak: current,
+    busiestDay: busiest ? { date: busiest.date, count: busiest.contributionCount } : null,
+    active: days
+      .filter((d) => d.contributionCount > 0)
+      .map((d) => [d.date, d.contributionCount] as [string, number]),
+  };
+}
 
 function shapeLiveRepo(node: GqlNode, known?: PinnedRepo): PinnedRepo {
   const [owner, name] = node.nameWithOwner.split("/");
@@ -245,6 +318,10 @@ async function readLive(): Promise<GithubSnapshot | null> {
       generatedAt: new Date().toISOString(),
       source: "pinned",
       live: true,
+      contributions:
+        shapeContributions(user.contributionsCollection?.contributionCalendar) ??
+        SNAPSHOT.contributions ??
+        null,
       user: {
         login: user.login,
         name: user.name,

@@ -7,7 +7,7 @@ import Doodle from "@/components/materials/Doodle";
 import Scribble from "@/components/motion/Scribble";
 import AmbientField from "@/components/motion/AmbientField";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion/Reveal";
-import { connect, journal } from "@/lib/content";
+import { connect } from "@/lib/content";
 
 /**
  * Let's Connect. Real social rows with icons (email, GitHub, Instagram, TikTok,
@@ -29,8 +29,6 @@ export default function Connect() {
             tag={connect.tag}
             heading={connect.heading}
             scribble="underline"
-            date={journal.entries.connect.date}
-            page={journal.entries.connect.page}
           />
 
           <Stagger className="mt-8 divide-y divide-rule border-y border-rule">

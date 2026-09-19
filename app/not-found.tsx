@@ -3,12 +3,11 @@ import Link from "next/link";
 import PaperBackground from "@/components/materials/PaperBackground";
 import TornEdge from "@/components/materials/TornEdge";
 import { Sticker } from "@/components/materials/Sticker";
-import Doodle from "@/components/materials/Doodle";
 import BookCover from "@/components/materials/BookCover";
 import { notFound } from "@/lib/content";
 
 export const metadata: Metadata = {
-  title: "Lost page — Daniel Oluwadare",
+  title: "Page not found | Daniel Oluwadare",
   robots: { index: false, follow: true },
 };
 
@@ -42,17 +41,16 @@ export default function NotFound() {
           </h1>
 
           <div className="mt-8 flex flex-wrap items-center gap-5">
-            <Link
-              href="/"
-              className="pill pill--ink"
-            >
+            <Link href="/" className="pill pill--ink">
               {notFound.cta}
               <span className="pill-arrow">→</span>
             </Link>
-            <span className="flex items-center gap-2 font-pen text-lg text-accent-2">
-              <Doodle name="arrow-curve" size={26} className="animate-float -scale-x-100" />
-              {notFound.margin}
-            </span>
+            <Link
+              href="/#work"
+              className="font-mono text-[12px] uppercase tracking-[0.12em] text-ink-muted underline decoration-dotted underline-offset-4 hover:text-ink"
+            >
+              see the work
+            </Link>
           </div>
 
         </main>

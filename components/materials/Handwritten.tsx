@@ -2,8 +2,7 @@
  * MATERIAL: Hand-drawn paper widgets.
  * The small things a real notebook has that a web page usually fakes with
  * rounded rectangles: a checkbox with a tick that overhangs the box, a ruled
- * fill-in line, a binder hole, a corner somebody folded over instead of using
- * a bookmark.
+ * fill-in line, and a corner somebody folded over instead of using a bookmark.
  *
  * All of them are SVG or clipped divs, sized relative to their container, and
  * all of them inherit `currentColor`.
@@ -54,20 +53,6 @@ export function FillLine({ className = "" }: { className?: string }) {
   );
 }
 
-/** A binder hole punched through the page, with the dark of the desk behind. */
-export function BinderHole({ className = "" }: { className?: string }) {
-  return (
-    <span
-      aria-hidden
-      className={`pointer-events-none absolute h-[15px] w-[15px] rounded-full ${className}`}
-      style={{
-        background: "radial-gradient(circle at 35% 30%, #6a6152, #2b2822)",
-        boxShadow: "inset 0 1px 2px rgba(0,0,0,0.55), 0 1px 0 var(--color-paper-raised)",
-      }}
-    />
-  );
-}
-
 /** A corner folded over to mark the page. Top-right by default. */
 export function FoldedCorner({
   size = 34,
@@ -90,22 +75,5 @@ export function FoldedCorner({
         boxShadow: "-2px 2px 5px -1px rgba(34,32,26,0.3)",
       }}
     />
-  );
-}
-
-/** "PAGE 3 OF 8" style marginalia, plus the little pen flourish. */
-export function MarginMark({ label }: { label: string }) {
-  return (
-    <span className="inline-flex items-center gap-2">
-      <svg width="18" height="10" viewBox="0 0 18 10" fill="none" aria-hidden>
-        <path
-          d="M1 6 C5 2.5 9 3 12 5.5 C14 7.2 16 7 17 6.4"
-          stroke="currentColor"
-          strokeWidth="1.4"
-          strokeLinecap="round"
-        />
-      </svg>
-      <span className="page-num">{label}</span>
-    </span>
   );
 }

@@ -2,9 +2,8 @@ import PaperBackground from "@/components/materials/PaperBackground";
 import Nav from "@/components/sections/Nav";
 import Hero from "@/components/sections/Hero";
 import About from "@/components/sections/About";
-import ComicStrip from "@/components/sections/ComicStrip";
 import Projects from "@/components/sections/Projects";
-import Receipts from "@/components/sections/Receipts";
+import GithubActivity from "@/components/sections/GithubActivity";
 import LogoMarquee from "@/components/sections/LogoMarquee";
 import WhatIDo from "@/components/sections/WhatIDo";
 import Journey from "@/components/sections/Journey";
@@ -51,8 +50,7 @@ export default async function Home() {
           />
           <About />
           <Projects showcase={showcase} githubUrl={githubUrl} login={snapshot.user.login} />
-          <Receipts showcase={showcase} />
-          <ComicStrip />
+          <GithubActivity showcase={showcase} />
           <LogoMarquee />
           <WhatIDo />
           <Journey />

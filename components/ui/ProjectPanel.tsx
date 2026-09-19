@@ -58,11 +58,10 @@ export default function ProjectPanel({
         </span>
       )}
 
-      {/* margin: panel number + status sticker */}
+      {/* margin: where it lives on GitHub, then the status sticker */}
       <div className="flex items-start justify-between gap-3">
-        <span className="panel__num">
-          PANEL {String(index).padStart(2, "0")}
-          {project.source === "pinned" && <span className="ml-2 text-crayon">◆ PINNED</span>}
+        <span className="truncate font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint">
+          {project.live ? project.slug : "selected work"}
         </span>
         <Sticker crayon={project.crayon} rotate={index % 2 ? 1.6 : -1.6}>
           {project.tag}
