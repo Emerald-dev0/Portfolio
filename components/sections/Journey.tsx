@@ -7,7 +7,7 @@ import Doodle from "@/components/materials/Doodle";
 import { Tape } from "@/components/materials/Tape";
 import { Reveal } from "@/components/motion/Reveal";
 import { Character } from "@/components/motion/Chibi";
-import { journey, type Chapter } from "@/lib/content";
+import { journal, journey, type Chapter } from "@/lib/content";
 
 /**
  * Journey — the engineer's notebook. Not a flat year list: each era is a page
@@ -33,6 +33,8 @@ export default function Journey() {
           sticky={journey.sticky}
           heading={journey.heading}
           scribble="underline"
+          date={journal.entries.journey.date}
+          page={journal.entries.journey.page}
         />
 
         <div ref={ref} className="relative mt-10 pl-8 sm:pl-12">

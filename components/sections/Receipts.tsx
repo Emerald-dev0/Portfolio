@@ -17,7 +17,7 @@ import Doodle from "@/components/materials/Doodle";
 import { Character } from "@/components/motion/Chibi";
 import AmbientField from "@/components/motion/AmbientField";
 import { Reveal } from "@/components/motion/Reveal";
-import { stack } from "@/lib/content";
+import { journal, stack } from "@/lib/content";
 import type { Showcase } from "@/lib/projects";
 
 export default function Receipts({ showcase }: { showcase: Showcase }) {
@@ -49,6 +49,8 @@ export default function Receipts({ showcase }: { showcase: Showcase }) {
           heading={stack.heading}
           sticky={stack.note}
           scribble="zigzag"
+          date={journal.entries.stack.date}
+          page={journal.entries.stack.page}
         />
 
         <div className="mt-10 grid grid-cols-1 gap-5 lg:grid-cols-[1.05fr_0.95fr]">

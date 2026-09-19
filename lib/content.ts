@@ -30,6 +30,38 @@ export const identity = {
   github: "Emerald-dev0",
 };
 
+/* ---------------------------------------------------------------------------
+ * THE JOURNAL — the shape of the book itself.
+ * Every section is a diary entry: a day, a page number, and a running head at
+ * the top of the page. That's the whole trick of the thing the site is copying
+ * — a week of entries, read in order.
+ * ------------------------------------------------------------------------- */
+export const journal = {
+  /** printed at the top of every page, like a book's running head */
+  runningHead: "The Engineer's Journal",
+  owner: "Daniel Oluwadare",
+  entries: {
+    hero: { date: "MONDAY", page: 1 },
+    about: { date: "MONDAY, LATER", page: 2 },
+    work: { date: "TUESDAY", page: 3 },
+    stack: { date: "WEDNESDAY", page: 4 },
+    comic: { date: "WEDNESDAY, 11:47 PM", page: 5 },
+    services: { date: "THURSDAY", page: 6 },
+    journey: { date: "FRIDAY", page: 7 },
+    connect: { date: "SATURDAY", page: 8 },
+  } satisfies Record<string, { date: string; page: number }>,
+};
+
+/** The inside front cover: a label, a name, and a warning. */
+export const insideCover = {
+  label: "PROPERTY OF",
+  name: "Daniel Oluwadare",
+  sub: "Year 2026 · Emerald",
+  warning: "If found, please return. Do not read the commit messages.",
+  note: "This is not a résumé. It's a notebook that got out.",
+  stamp: "KEEP OUT",
+};
+
 export type NavLink = { label: string; href: string };
 
 export const nav = {
@@ -98,9 +130,6 @@ export const about = {
   ],
   building: "Studying at Obafemi Awolowo University. Based in Osun State, Nigeria.",
   pullQuote: "Code is how I find out if the idea actually works.",
-  /** The cast page — a roster, like the inside cover of a comic. */
-  castHeading: "the cast",
-  castNote: "they live in the margins. they have opinions.",
 };
 
 /* ---------------------------------------------------------------------------
@@ -120,56 +149,12 @@ export type Crayon =
   | "ink";
 
 /* ---------------------------------------------------------------------------
- * CAST — the characters who live on the page.
- * Each one is a drawing (see components/motion/Chibi.tsx) plus a personality.
+ * DRAWINGS — keys for the ink figures in components/motion/Chibi.tsx.
+ * They are illustrations, not characters with backstories: they stand on the
+ * corner of a panel, walk along the footer tear, and otherwise stay out of the
+ * way. Nothing here is shown to the reader.
  * ------------------------------------------------------------------------- */
 export type CharacterId = "dash" | "pip" | "nova" | "biscuit" | "moss";
-
-export type CastMember = {
-  id: CharacterId;
-  name: string;
-  role: string;
-  line: string;
-  crayon: Crayon;
-};
-
-export const cast: CastMember[] = [
-  {
-    id: "dash",
-    name: "Dash",
-    role: "the one who ships",
-    line: "Says “one more commit” at 2am. Means it. Regrets it at 9am.",
-    crayon: "oxblood",
-  },
-  {
-    id: "pip",
-    name: "Pip",
-    role: "the one with the headphones",
-    line: "Puts music on, runs the tests, stares at the wall until the red goes away.",
-    crayon: "purple",
-  },
-  {
-    id: "nova",
-    name: "Nova",
-    role: "the one who reads the error",
-    line: "Reads the actual error message. Wild concept. Works every time.",
-    crayon: "teal",
-  },
-  {
-    id: "biscuit",
-    name: "Biscuit",
-    role: "the one on the keyboard",
-    line: "Paws on the trackpad, still counts as pair programming.",
-    crayon: "mustard",
-  },
-  {
-    id: "moss",
-    name: "Moss",
-    role: "the one who asks why",
-    line: "Has never once accepted “because it works” as an answer.",
-    crayon: "green",
-  },
-];
 
 /* ---------------------------------------------------------------------------
  * PROJECTS — the data contract everything else agrees on.
@@ -197,7 +182,7 @@ export type ProjectOverlay = {
   cta?: string;
   metric?: string;
   credit?: { linkText: string; href: string };
-  /** Which cast member loiters on this panel. */
+  /** Which illustration loiters on this panel. */
   character?: CharacterId;
   /** Large panel spanning two columns. */
   flagship?: boolean;
@@ -466,6 +451,35 @@ export const stack = {
   ],
 };
 
+/* ---------------------------------------------------------------------------
+ * COMIC STRIP — one evening, in three panels. Captions are the joke; the
+ * drawing carries the rest. Keep the copy short enough to fit a caption bar.
+ * ------------------------------------------------------------------------- */
+export const comicStrip = {
+  tag: "COMIC",
+  heading: "One evening, in three panels.",
+  note: "based on a true story, unfortunately",
+  panels: [
+    {
+      caption: "9:00 PM — one small feature. Two hours, tops.",
+      mood: "typing" as const,
+      time: "9:00",
+    },
+    {
+      caption: "11:30 PM — the tests have opinions.",
+      mood: "error" as const,
+      time: "11:30",
+    },
+    {
+      caption: "11:47 PM — it was a comma.",
+      mood: "aha" as const,
+      time: "11:47",
+      bubble: "nine hours of my life.",
+    },
+  ],
+  moral: "moral: read the error message.",
+};
+
 export const whatIDo = {
   tag: "SERVICES",
   heading: "What I do, when someone asks.",
@@ -509,7 +523,7 @@ export type Chapter = {
   commits?: string;
   doodle: DoodleName;
   crayon: Crayon;
-  /** Which cast member appears in the margin of this chapter. */
+  /** Which illustration appears in the margin of this chapter. */
   character?: CharacterId;
   flagship?: boolean;
 };
@@ -622,6 +636,7 @@ export const footer = {
   lines: ["Keep building.", "Keep learning.", "Keep shipping."],
   emphasis: "shipping",
   signoff: "Daniel Oluwadare — building as Emerald.",
+  theEnd: "— the end —",
   copyright: "© 2026 Daniel Oluwadare. All rights reserved.",
   builtNote: "Built in Next.js, on a page that thinks it's paper.",
 };

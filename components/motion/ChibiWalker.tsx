@@ -5,7 +5,7 @@ import { Character } from "@/components/motion/Chibi";
 import type { CharacterId } from "@/lib/content";
 
 /**
- * ChibiWalker — a little character that strolls across the full width of its
+ * ChibiWalker — a little figure that strolls across the full width of its
  * (relatively-positioned) parent on an endless loop, flipping to face its
  * direction. Sits absolutely at the bottom of whatever wraps it. Under reduced
  * motion it just stands still at the left.
@@ -22,7 +22,7 @@ export default function ChibiWalker({
   duration?: number;
   className?: string;
   colorClass?: string;
-  /** which member of the cast is doing the pacing */
+  /** which figure is doing the pacing */
   character?: CharacterId;
   /** start at the right edge instead — so two walkers never overlap */
   reverse?: boolean;

@@ -21,7 +21,7 @@ import InkBleed from "@/components/motion/InkBleed";
 import Chibi from "@/components/motion/Chibi";
 import ChibiWalker from "@/components/motion/ChibiWalker";
 import { Reveal } from "@/components/motion/Reveal";
-import { showcase as copy, type Project } from "@/lib/content";
+import { journal, showcase as copy, type Project } from "@/lib/content";
 import { matchesFilter, type Showcase } from "@/lib/projects";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
@@ -62,6 +62,8 @@ export default function Projects({
             sticky={copy.sticky}
             heading={copy.heading}
             scribble="underline"
+            date={journal.entries.work.date}
+            page={journal.entries.work.page}
           />
           <div className="relative mb-1 hidden shrink-0 sm:block">
             <Doodle

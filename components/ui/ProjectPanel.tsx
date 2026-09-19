@@ -4,8 +4,8 @@
  * ProjectPanel — a project as a comic panel.
  *
  * Every card is a framed panel: heavy ink border, a coloured spine along the
- * top, halftone shading in one corner, a panel number in the margin, and a cast
- * member standing on the top edge. Pinned projects also carry their live
+ * top, halftone shading in one corner, a panel number in the margin, and an ink
+ * figure standing on the top edge. Pinned projects also carry their live
  * GitHub numbers (language, stars, commits, last push), because those are
  * facts that change and the panel should say so.
  *
@@ -27,7 +27,7 @@ export default function ProjectPanel({
   project: Project;
   /** 1-based position, printed in the margin like a comic page. */
   index: number;
-  /** flagship panels get more room and a bigger cast member */
+  /** flagship panels get more room and a bigger figure */
   priority?: boolean;
 }) {
   const external = project.href.startsWith("http");
@@ -43,7 +43,7 @@ export default function ProjectPanel({
       <span className="panel__shade" aria-hidden />
       <span className="panel__spine" aria-hidden />
 
-      {/* a cast member stands on the top edge of the panel */}
+      {/* an ink figure stands on the top edge of the panel */}
       {project.character && (
         <span
           aria-hidden

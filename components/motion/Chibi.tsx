@@ -2,27 +2,27 @@
 
 /**
  * ============================================================================
- * THE CAST — hand-drawn ink characters who live in the margins.
+ * INK FIGURES — the little people (and one dog) drawn in the margins.
  * ============================================================================
  * Everything here is one SVG, `stroke="currentColor"`, animated with CSS — no
- * JS ticking, so a page full of characters costs nothing. The colour comes
- * from a `.crayon-*` class on any ancestor (see `--crayon` in globals.css), so
- * a character can be re-inked per section without touching this file.
+ * JS ticking, so a page full of figures costs nothing. The colour comes from a
+ * `.crayon-*` class on any ancestor (see `--crayon` in globals.css), so a
+ * figure can be re-inked per section without touching this file.
  *
  * Three things to know:
- *  1. `variant` is a pose. Add a new pose to POSES and every character can
- *     use it — the drawing is descriptor data, not hand-written JSX per pose.
+ *  1. `variant` is a pose. Add a new pose to POSES and every figure can use
+ *     it — the drawing is descriptor data, not hand-written JSX per pose.
  *  2. `accessory` is a hat, headphones, glasses or a ponytail. They stack onto
- *     any pose, which is how the cast gets to look like individuals.
- *  3. `<Character id="dash" />` renders a named member of the cast with the
- *     right pose, accessory and crayon. Use that in sections.
+ *     any pose, so the figures can look like individuals.
+ *  3. `<Character id="dash" />` renders one figure with its own pose,
+ *     accessory and crayon. Use that in sections.
  *
  * Respects prefers-reduced-motion via the global rule.
  * ============================================================================
  */
 
 import type { CSSProperties, ReactNode } from "react";
-import { cast, type CharacterId, type Crayon } from "@/lib/content";
+import type { CharacterId, Crayon } from "@/lib/content";
 
 type Variant =
   | "wave"
@@ -367,8 +367,8 @@ export function Dog({
 }
 
 /* --------------------------------------------------------------------------
- * The named cast — one config per character, so sections never have to
- * remember which dog is which.
+ * One config per figure — pose, accessory, colour. Sections just ask for a
+ * key; nobody has to remember which sketch is which.
  * ------------------------------------------------------------------------ */
 type CastSheet = {
   pose: Variant;
@@ -388,14 +388,11 @@ const SHEET: Record<CharacterId, CastSheet> = {
   moss: { pose: "shrug", busyPose: "think", accessory: "ponytail", hair: true, crayon: "green" },
 };
 
-export function castMeta(id: CharacterId) {
-  return cast.find((c) => c.id === id) ?? cast[0];
-}
-
 /**
- * <Character id="dash" /> — a named cast member in their own colour.
- * `busy` swaps to their secondary pose (walking, thinking) for margins where
- * a wave would be too friendly.
+ * <Character kind="dash" /> — one of the five ink figures, drawn in its own
+ * crayon colour. `busy` swaps to a secondary pose (walking, thinking) for
+ * margins where a wave would be too friendly. They are decorative: pass a
+ * title only if a figure is genuinely carrying information.
  */
 export function Character({
   id,
@@ -408,25 +405,23 @@ export function Character({
   size?: number;
   className?: string;
   busy?: boolean;
+  /** accessibility label; omit for decoration (the default) */
   title?: string;
 }) {
   const sheet = SHEET[id] ?? SHEET.dash;
-  const meta = castMeta(id);
   const pose = busy && sheet.busyPose ? sheet.busyPose : sheet.pose;
-  // an empty title means "purely decorative" — never an unlabelled img
-  const label = title === undefined ? `${meta.name} — ${meta.role}` : title || undefined;
 
   return (
     <span className={`crayon-${sheet.crayon} inline-block ${className}`}>
       {sheet.dog ? (
-        <Dog size={size} title={label} />
+        <Dog size={size} title={title} />
       ) : (
         <Chibi
           variant={pose}
           accessory={sheet.accessory}
           hair={sheet.hair}
           size={size}
-          title={label}
+          title={title}
         />
       )}
     </span>

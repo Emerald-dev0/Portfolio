@@ -6,8 +6,8 @@
 
 A portfolio that behaves less like a landing page and more like a spiral-bound
 engineering notebook someone left open on a desk. Aged newsprint, hand-drawn
-ink, comic panels, a small cast of characters who never quite sit still — and a
-work section that reads itself off GitHub.
+ink, comic panels, a dog on the cover — and a work section that reads itself
+off GitHub.
 
 **Building AI developer infrastructure, production web applications, and tools developers actually enjoy using.**
 
@@ -129,27 +129,56 @@ order: "pins-first"   // pinned repos, then curated work  ← default
 
 ---
 
-## The cast
+## It's a book, and it reads in order
 
-Five characters live in the margins, drawn as SVG, animated with CSS, coloured
-by the crayon box. They have names and opinions in `lib/content.ts → cast`, and
-they show up where they're useful: peeking over the top of the work section,
-standing on the corner of each comic panel, loitering beside the receipts,
-pacing along the footer tear.
+The metaphor isn't just the texture — the whole page is laid out as one week of
+diary entries. Every section opens with a **running head** (`The Engineer's
+Journal · Daniel Oluwadare ———— PAGE 03`), the **date it was written**, and a
+tag:
 
-| | Who | Job |
+| Page | Entry | Section |
 | --- | --- | --- |
-| **Dash** | the one who ships | says "one more commit" at 2am, means it |
-| **Pip** | headphones on | plays music, runs the tests, stares at the wall |
-| **Nova** | reads the actual error message | wild concept, works every time |
-| **Biscuit** | the dog on the keyboard | still counts as pair programming |
-| **Moss** | asks why | has never accepted "because it works" |
+| 01 | MONDAY | the cover and the first entry |
+| 02 | MONDAY, LATER | about, with a ticked checklist |
+| 03 | TUESDAY | the work — comic panels, live from GitHub |
+| 04 | WEDNESDAY | the receipts and the language bar |
+| 05 | WEDNESDAY, 11:47 PM | the comic strip |
+| 06 | THURSDAY | what I do |
+| 07 | FRIDAY | the journey, chapter by chapter |
+| 08 | SATURDAY | how to reach me |
 
-Adding a pose adds it to every character at once (poses are descriptor data,
-not hand-written JSX per pose) and `accessory` stacks a hat, headphones,
-glasses or a ponytail onto any of them.
+All of it is configured in one place, so the week can be re-cut without touching
+a component:
 
----
+```ts
+export const journal = {
+  runningHead: "The Engineer's Journal",
+  owner: "Daniel Oluwadare",
+  entries: {
+    hero:  { date: "MONDAY",   page: 1 },
+    about: { date: "MONDAY, LATER", page: 2 },
+    // …
+  },
+};
+```
+
+**Page 5 is a real comic strip.** Three hand-drawn panels of the same desk, one
+evening: 9:00 PM ("one small feature, two hours, tops"), 11:30 PM ("the tests
+have opinions"), 11:47 PM ("it was a comma"). Only three things change between
+panels — the screen, the arms, and what's floating over the figure's head —
+which is how the books do it too. Captions sit in a bar at the bottom; the
+clock on the wall is the setup.
+
+Also borrowed from the books: an **inside front cover** on the hero ("PROPERTY
+OF Daniel Oluwadare", a KEEP OUT sticker, one illustration), ticked
+**checkboxes** drawn with a tick that overshoots the box, **fill-in-the-blank
+lines**, **binder holes**, and a **folded corner** on the page someone wanted to
+remember.
+
+The illustrations are ink figures with poses and accessories, not characters
+with names — they stand on the corner of a project panel, walk along the footer
+tear, and otherwise stay out of the way. `components/motion/Chibi.tsx` has ten
+poses; adding one adds it to every figure at once.
 
 ## What makes it feel alive
 
@@ -168,10 +197,12 @@ layers that keep going long after the page loads.
   independent loops with light scroll parallax, so nothing moves in lockstep.
 - **Comic-panel filtering** — the work grid filters by technology with layout
   animation; panels reflow instead of jumping.
+- **A drawn comic strip** — three panels of hand-built SVG, where only the
+  screen, the arms and the thought bubble change between frames.
 - **A scroll-scrubbed timeline** — the journey "notebook spine" inks itself in
   as you read down the chapters.
-- **Tactile hovers** — panels lift, characters hop, paper corners peel, the
-  nav's ink highlight glides between links.
+- **Tactile hovers** — panels lift, figures hop, paper corners peel, the nav's
+  ink highlight glides between links.
 
 All of it respects `prefers-reduced-motion`, and everything interactive is
 reachable by keyboard with a visible focus ring.
@@ -195,11 +226,12 @@ app/
   not-found.tsx         # a page that fell out of the notebook
   globals.css           # design tokens, materials, crayons, keyframes
 components/
-  materials/            # PaperBackground, Tape, StickyNote, Sticker, TornEdge, Doodle
+  materials/            # PaperBackground, PageHeader, Tape, StickyNote, Sticker,
+                        #   TornEdge, Doodle, Handwritten, BookCover
   motion/               # Reveal, Scribble, RotatingText, InkBleed, Parallax,
                         #   AmbientField, Chibi (the whole cast), ChibiWalker
-  sections/             # Nav, Hero, About, Projects, Receipts, LogoMarquee,
-                        #   WhatIDo, Journey, Connect, Footer
+  sections/             # Nav, Hero, About, Projects, Receipts, ComicStrip,
+                        #   LogoMarquee, WhatIDo, Journey, Connect, Footer
   ui/                   # ProjectPanel, SectionHeader, Pill, SocialIcon
 lib/
   content.ts            # ← all copy, the cast, curated work, the overlay
@@ -234,8 +266,9 @@ links. No component edits needed for day-to-day updates.
 
 - **Projects** — pin them on GitHub; write the words in `githubOverlay`. Work
   that isn't on GitHub goes in `curatedProjects`.
-- **Cast** — `cast` holds the names, roles and lines; the drawings live in
-  `components/motion/Chibi.tsx`.
+- **The week** — `journal.entries` holds each section's day and page number;
+  `comicStrip.panels` holds the captions for page 5.
+- **Cover** — `insideCover` is the label, warning and stamp on the hero card.
 - **Social links** — real destinations live in `socials`.
 - **Timeline** — edit the `chapters` array; each renders as a notebook page
   with its own crayon and cast member.
@@ -266,7 +299,8 @@ Tokens are defined once in `globals.css` under `@theme`:
 Materials you can compose with: `.panel` (+ `__spine`, `__shade`, `__num`),
 `.bubble`, `.sticker`, `.sticky-tab`, `.ink-edge`, `.dogear`, `.paper-stack`,
 `.halftone`, `.crosshatch`, `.ink-rule`, `.page-num`, `.margin-note`,
-`.live-dot`.
+`.live-dot`. Hand-drawn paper bits (`Checkbox`, `FillLine`, `BinderHole`,
+`FoldedCorner`) live in `components/materials/Handwritten.tsx`.
 
 ## Deployment
 

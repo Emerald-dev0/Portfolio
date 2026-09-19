@@ -21,6 +21,15 @@ export default function Footer() {
           duration={30}
           className="bottom-0"
           colorClass="text-ink/55"
+          character="dash"
+        />
+        <ChibiWalker
+          size={34}
+          duration={38}
+          reverse
+          className="bottom-0"
+          colorClass="text-ink/35"
+          character="pip"
         />
       </div>
 
@@ -76,6 +85,9 @@ export default function Footer() {
 
           <div className="flex flex-col gap-2 border-t border-paper/15 pt-6 sm:flex-row sm:items-center sm:justify-between">
             <p className="font-pen text-lg text-marker">{footer.signoff}</p>
+            <p className="font-pen text-base text-paper/50">
+              {footer.theEnd}
+            </p>
             <p className="font-mono text-[12px] text-paper/50">
               {footer.copyright}
             </p>
