@@ -34,10 +34,20 @@ export default function Journey() {
           scribble="underline"
         />
 
-        <div ref={ref} className="relative mt-10 pl-8 sm:pl-12">
+        {/*
+          The spine's centre line and the chapter pins are both derived from
+          --rail, so the circles sit ON the line instead of beside it. The
+          chapter cards get the horizontal offset (pl-*) rather than the
+          container, which is what lets the pins position off the same origin.
+        */}
+        <div
+          ref={ref}
+          className="relative mt-10 [--rail:16px] sm:[--rail:20px]"
+        >
           {/* the notebook spine — a scroll-driven inked line */}
           <div
-            className="absolute left-[9px] top-2 h-[calc(100%-2rem)] w-[3px] sm:left-[15px]"
+            className="absolute top-2 bottom-8 w-[3px]"
+            style={{ left: "calc(var(--rail) - 1.5px)" }}
             aria-hidden
           >
             <div className="absolute inset-0 rounded-full bg-rule/50" />
@@ -64,15 +74,16 @@ function ChapterPage({ chapter, index }: { chapter: Chapter; index: number }) {
 
   return (
     <motion.div
-      className="relative"
+      className="relative pl-8 sm:pl-12"
       initial={{ opacity: 0, y: 26, rotate: tilt + 1.5 }}
       whileInView={{ opacity: 1, y: 0, rotate: tilt }}
       viewport={{ once: false, margin: "-12% 0px" }}
       transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
     >
-      {/* pin on the spine */}
+      {/* pin threaded on the spine: 16px wide, centred on --rail */}
       <span
-        className="absolute -left-8 top-4 z-10 flex h-4 w-4 items-center justify-center rounded-full border-[1.5px] border-ink bg-paper sm:-left-12"
+        className="absolute top-4 z-10 flex h-4 w-4 items-center justify-center rounded-full border-[1.5px] border-ink bg-paper"
+        style={{ left: "calc(var(--rail, 16px) - 8px)" }}
         aria-hidden
       >
         <span className="h-1.5 w-1.5 rounded-full bg-accent" />
