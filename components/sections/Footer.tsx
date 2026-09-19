@@ -21,6 +21,15 @@ export default function Footer() {
           duration={30}
           className="bottom-0"
           colorClass="text-ink/55"
+          character="dash"
+        />
+        <ChibiWalker
+          size={34}
+          duration={38}
+          reverse
+          className="bottom-0"
+          colorClass="text-ink/35"
+          character="pip"
         />
       </div>
 

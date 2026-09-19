@@ -6,23 +6,33 @@ import Doodle from "@/components/materials/Doodle";
 import Scribble from "@/components/motion/Scribble";
 import RotatingText from "@/components/motion/RotatingText";
 import AmbientField from "@/components/motion/AmbientField";
-import Chibi from "@/components/motion/Chibi";
+import { Character } from "@/components/motion/Chibi";
 import { Reveal } from "@/components/motion/Reveal";
 import { hero } from "@/lib/content";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
+export type HeroLive = {
+  /** real numbers, read from GitHub at render time */
+  publicRepos: number;
+  pinned: number;
+  login: string;
+  lastPushLabel: string | null;
+} | null;
+
 /**
- * Hero. No portrait — type is the composition. Dual identity intro (Daniel /
- * Emerald), a rotating "Building ___" line that continuously rewrites itself,
- * a cycling personality aside, and ambient doodles drifting behind. The first
- * screen should feel alive and unmistakably handcrafted within five seconds.
+ * Hero. No portrait: type is the composition. Dual-identity intro (Daniel /
+ * Emerald), a rotating "Building ___" line that keeps rewriting itself, one
+ * live number from GitHub, and ambient doodles drifting behind.
+ *
+ * The stat row mixes the fixed facts with a figure the API just told us,
+ * because a portfolio that can read its own stats should.
  */
-export default function Hero() {
+export default function Hero({ live }: { live?: HeroLive }) {
   return (
     <section
       id="top"
-      className="section-pad relative flex min-h-[94svh] items-center overflow-hidden !pt-32"
+      className="section-pad relative flex min-h-[92svh] items-center overflow-hidden !pt-32"
     >
       {/* ambient background life */}
       <div
@@ -96,7 +106,7 @@ export default function Hero() {
           </p>
         </Reveal>
 
-        {/* rotating build line — the continuously-rewriting statement */}
+        {/* rotating build line, the continuously-rewriting statement */}
         <Reveal dir="up" delay={0.6}>
           <p className="mt-6 text-[clamp(1.1rem,2.2vw,1.6rem)] font-medium leading-snug text-ink">
             {hero.buildingPrefix}{" "}
@@ -108,7 +118,6 @@ export default function Hero() {
           </p>
         </Reveal>
 
-        {/* favorite line — kept verbatim */}
         <Reveal dir="up" delay={0.7}>
           <p className="mt-3 max-w-lg text-[15px] font-medium leading-relaxed text-ink-muted">
             {hero.tagline}
@@ -117,7 +126,10 @@ export default function Hero() {
 
         <Reveal dir="up" delay={0.82}>
           <div className="mt-8 flex flex-wrap items-center gap-5">
-            <Pill href="#contact" variant="ink">
+            <Pill href="#work" variant="ink">
+              {hero.ctaWork}
+            </Pill>
+            <Pill href="#contact" variant="paper">
               {hero.cta}
             </Pill>
             <span className="flex items-center gap-1.5 font-pen text-lg text-ink-muted">
@@ -131,9 +143,9 @@ export default function Hero() {
           </div>
         </Reveal>
 
-        {/* stats */}
+        {/* stats: the fixed facts, plus one the API just told us */}
         <Reveal dir="up" delay={0.92}>
-          <dl className="mt-10 flex flex-wrap items-end gap-x-10 gap-y-3 border-t border-rule/70 pt-5">
+          <dl className="mt-10 flex flex-wrap items-end gap-x-9 gap-y-4 border-t border-rule/70 pt-5">
             {hero.stats.map((s) => (
               <div key={s.label} className="flex items-baseline gap-2">
                 <dt className="font-marker text-2xl text-ink">{s.value}</dt>
@@ -142,35 +154,31 @@ export default function Hero() {
                 </dd>
               </div>
             ))}
+
+            {live && (
+              <div className="flex items-baseline gap-2">
+                <dt className="flex items-center gap-2 font-marker text-2xl text-ink">
+                  {live.publicRepos}
+                  <span className="live-dot" aria-hidden />
+                </dt>
+                <dd className="max-w-[10rem] font-mono text-[10px] uppercase leading-tight tracking-[0.12em] text-ink-faint">
+                  public repos on GitHub
+                  {live.lastPushLabel ? ` · last push ${live.lastPushLabel}` : ""}
+                </dd>
+              </div>
+            )}
           </dl>
         </Reveal>
       </div>
 
-      {/* handwritten cycling aside — breaks into the right margin (xl+) */}
-      <motion.div
-        initial={{ opacity: 0, x: 20, rotate: 4 }}
-        animate={{ opacity: 1, x: 0, rotate: 3 }}
-        transition={{ duration: 0.8, ease: EASE, delay: 1.2 }}
-        className="absolute right-6 top-[44%] hidden max-w-[14rem] xl:block"
-      >
-        <p className="font-pen text-xl leading-tight text-accent-2">
-          <RotatingText phrases={hero.personaRotation} startDelay={2400} hold={2200} />
-        </p>
-        <Doodle
-          name="arrow-curve"
-          size={34}
-          className="animate-float mt-1 -scale-x-100 text-accent-2/70"
-        />
-      </motion.div>
-
-      {/* a little inhabitant, waving from the bottom-right */}
+      {/* one ink figure, low and out of the way */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, ease: EASE, delay: 1.6 }}
-        className="pointer-events-none absolute bottom-6 right-[6%] hidden text-ink/70 lg:block"
+        transition={{ duration: 0.7, ease: EASE, delay: 1.5 }}
+        className="pointer-events-none absolute bottom-10 right-[7%] hidden text-ink/60 lg:block"
       >
-        <Chibi variant="wave" size={72} title="a little wave hello" />
+        <Character id="dash" size={68} />
       </motion.div>
     </section>
   );

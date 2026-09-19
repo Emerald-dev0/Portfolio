@@ -5,7 +5,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import SectionHeader from "@/components/ui/SectionHeader";
 import Doodle from "@/components/materials/Doodle";
 import { Tape } from "@/components/materials/Tape";
-import { Reveal } from "@/components/motion/Reveal";
+import { Character } from "@/components/motion/Chibi";
 import { journey, type Chapter } from "@/lib/content";
 
 /**
@@ -34,10 +34,20 @@ export default function Journey() {
           scribble="underline"
         />
 
-        <div ref={ref} className="relative mt-10 pl-8 sm:pl-12">
+        {/*
+          The spine's centre line and the chapter pins are both derived from
+          --rail, so the circles sit ON the line instead of beside it. The
+          chapter cards get the horizontal offset (pl-*) rather than the
+          container, which is what lets the pins position off the same origin.
+        */}
+        <div
+          ref={ref}
+          className="relative mt-10 [--rail:16px] sm:[--rail:20px]"
+        >
           {/* the notebook spine — a scroll-driven inked line */}
           <div
-            className="absolute left-[9px] top-2 h-[calc(100%-2rem)] w-[3px] sm:left-[15px]"
+            className="absolute top-2 bottom-8 w-[3px]"
+            style={{ left: "calc(var(--rail) - 1.5px)" }}
             aria-hidden
           >
             <div className="absolute inset-0 rounded-full bg-rule/50" />
@@ -54,28 +64,6 @@ export default function Journey() {
           </div>
         </div>
 
-        {/* stat receipts — pulled from the story */}
-        <Reveal dir="up" delay={0.1}>
-          <div className="mt-10 grid grid-cols-3 gap-3">
-            {[
-              { value: "1,600+", label: "commits since Dec 2025" },
-              { value: "3", label: "production systems shipped" },
-              { value: "20+", label: "full-stack projects built" },
-            ].map((s) => (
-              <div
-                key={s.label}
-                className="ink-edge--soft bg-paper-raised p-3 text-center sm:p-4"
-              >
-                <div className="font-marker text-2xl leading-none text-ink sm:text-3xl">
-                  {s.value}
-                </div>
-                <div className="mt-1.5 font-mono text-[9.5px] uppercase leading-tight tracking-[0.1em] text-ink-faint">
-                  {s.label}
-                </div>
-              </div>
-            ))}
-          </div>
-        </Reveal>
       </div>
     </section>
   );
@@ -86,25 +74,27 @@ function ChapterPage({ chapter, index }: { chapter: Chapter; index: number }) {
 
   return (
     <motion.div
-      className="relative"
+      className="relative pl-8 sm:pl-12"
       initial={{ opacity: 0, y: 26, rotate: tilt + 1.5 }}
       whileInView={{ opacity: 1, y: 0, rotate: tilt }}
       viewport={{ once: false, margin: "-12% 0px" }}
       transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
     >
-      {/* pin on the spine */}
+      {/* pin threaded on the spine: 16px wide, centred on --rail */}
       <span
-        className="absolute -left-8 top-4 z-10 flex h-4 w-4 items-center justify-center rounded-full border-[1.5px] border-ink bg-paper sm:-left-12"
+        className="absolute top-4 z-10 flex h-4 w-4 items-center justify-center rounded-full border-[1.5px] border-ink bg-paper"
+        style={{ left: "calc(var(--rail, 16px) - 8px)" }}
         aria-hidden
       >
         <span className="h-1.5 w-1.5 rounded-full bg-accent" />
       </span>
 
       <div
-        className={`ink-edge--soft paper-stack relative bg-paper-raised p-5 ${
+        className={`crayon-${chapter.crayon} ink-edge--soft paper-stack relative bg-paper-raised p-5 ${
           chapter.flagship ? "sm:p-6" : ""
         }`}
       >
+        <span className="panel__spine" aria-hidden />
         <Tape
           className="absolute -top-3 left-6 z-10"
           rotate={index % 2 ? 5 : -5}
@@ -115,9 +105,9 @@ function ChapterPage({ chapter, index }: { chapter: Chapter; index: number }) {
         {/* era tab + commit badge */}
         <div className="flex items-center justify-between gap-3">
           <span className="inline-flex items-center gap-2">
-            <span className="sticky-tab">{chapter.era}</span>
+            <span className="sticky-tab sticky-tab--crayon">{chapter.era}</span>
             {chapter.flagship && (
-              <span className="font-pen text-lg text-accent">the pivot</span>
+              <span className="font-pen text-lg text-crayon">the pivot</span>
             )}
           </span>
           {chapter.commits && (
@@ -139,7 +129,7 @@ function ChapterPage({ chapter, index }: { chapter: Chapter; index: number }) {
           <Doodle
             name={chapter.doodle}
             size={chapter.flagship ? 40 : 32}
-            className="mt-1 hidden shrink-0 text-ink-faint sm:block"
+            className="mt-1 hidden shrink-0 text-crayon opacity-70 sm:block"
           />
         </div>
 
@@ -171,7 +161,18 @@ function ChapterPage({ chapter, index }: { chapter: Chapter; index: number }) {
             {chapter.annotation}
           </p>
         )}
+
       </div>
+
+      {/* whoever belongs to this era loiters on the corner of the page */}
+      {chapter.character && (
+        <span
+          aria-hidden
+          className="pointer-events-none absolute -top-[26px] right-5 hidden -rotate-3 sm:block"
+        >
+          <Character id={chapter.character} size={48} busy />
+        </span>
+      )}
     </motion.div>
   );
 }

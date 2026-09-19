@@ -25,7 +25,11 @@ export default function Connect() {
       />
       <div className="relative z-10 mx-auto grid w-full max-w-4xl grid-cols-1 items-start gap-10 lg:grid-cols-[1fr_0.72fr] lg:gap-14">
         <div>
-          <SectionHeader tag={connect.tag} heading={connect.heading} scribble="underline" />
+          <SectionHeader
+            tag={connect.tag}
+            heading={connect.heading}
+            scribble="underline"
+          />
 
           <Stagger className="mt-8 divide-y divide-rule border-y border-rule">
             {connect.socials.map((s) => (
