@@ -22,6 +22,23 @@
   --color-marker: #d19a3f; /* aged mustard highlighter */
   --color-accent-soft: #e6d8c0;
 
+  /* ------------------------------------------------------------------ *
+   * THE CRAYON BOX
+   * The first two inks were the whole palette. Comic panels needed more
+   * than two, so here is a small box of crayons — all mixed on the same
+   * sheet of aged paper, so nothing screams. Every coloured thing on the
+   * page reads `--crayon` (the ink) and `--crayon-on` (what to write with
+   * on top of it), set by a `.crayon-*` class.
+   * ------------------------------------------------------------------ */
+  --color-crayon-oxblood: #a4432f;
+  --color-crayon-teal: #3c6067;
+  --color-crayon-mustard: #d19a3f;
+  --color-crayon-blue: #2f5d8c;
+  --color-crayon-green: #4a7346;
+  --color-crayon-purple: #6a4a80;
+  --color-crayon-orange: #b95f28;
+  --color-crayon-pink: #a84f6b;
+
   /* Rules / hairlines */
   --color-rule: #c8b99a;
 
@@ -279,6 +296,11 @@ button.stamp:active {
   background: var(--color-accent);
   color: #fff;
 }
+/* any crayon in the box — reads --crayon / --crayon-on from the parent class */
+.sticky-tab--crayon {
+  background: var(--crayon, var(--color-marker));
+  color: var(--crayon-on, var(--color-ink));
+}
 
 .card-hand {
   background: var(--color-paper-raised);
@@ -496,6 +518,320 @@ button.stamp:active {
 .delay-1 { animation-delay: -2s; }
 .delay-2 { animation-delay: -4s; }
 .delay-3 { animation-delay: -6s; }
+
+/* ------------------------------------------------------------------ *
+ * CRAYON UTILITIES
+ * Set once, used everywhere: --crayon is the ink, --crayon-on is the
+ * text colour that stays legible on top of it.
+ * ------------------------------------------------------------------ */
+.crayon-oxblood { --crayon: var(--color-crayon-oxblood); --crayon-on: #fff; }
+.crayon-teal { --crayon: var(--color-crayon-teal); --crayon-on: #fff; }
+.crayon-blue { --crayon: var(--color-crayon-blue); --crayon-on: #fff; }
+.crayon-purple { --crayon: var(--color-crayon-purple); --crayon-on: #fff; }
+.crayon-green { --crayon: var(--color-crayon-green); --crayon-on: #fff; }
+.crayon-orange { --crayon: var(--color-crayon-orange); --crayon-on: #fff; }
+.crayon-pink { --crayon: var(--color-crayon-pink); --crayon-on: #fff; }
+.crayon-mustard { --crayon: var(--color-crayon-mustard); --crayon-on: var(--color-ink); }
+.crayon-ink { --crayon: var(--color-ink); --crayon-on: var(--color-paper); }
+
+/* Coloured ink for text/doodles: `text-crayon` on any .crayon-* parent.
+   (Plain classes, not Tailwind utilities, so they can't take a `hover:` prefix
+   — hence the two explicit variants below.) */
+.text-crayon { color: var(--crayon, currentColor); }
+.hover-crayon { transition: color 180ms var(--ease-standard); }
+.hover-crayon:hover { color: var(--crayon, var(--color-accent)); }
+.group:hover .group-hover-crayon { color: var(--crayon, var(--color-accent)); }
+
+/* ------------------------------------------------------------------ *
+ * MATERIAL: Comic panel
+ * A project card is a panel in a comic strip: heavy ink border, slightly
+ * uneven corners, halftone shading bleeding in from one corner, and the
+ * colour of its project. Deliberately not a rounded rectangle.
+ * ------------------------------------------------------------------ */
+.panel {
+  position: relative;
+  background: var(--color-paper-raised);
+  border: 2px solid var(--color-ink);
+  border-radius: 6px 9px 7px 10px / 10px 6px 9px 7px;
+  box-shadow:
+    0 1px 0 var(--color-paper-shadow),
+    0 12px 24px -14px rgba(34, 32, 26, 0.42);
+  transition:
+    transform var(--dur-hover-card) var(--ease-out-soft),
+    box-shadow var(--dur-hover-card) var(--ease-out-soft);
+  will-change: transform;
+}
+@media (min-width: 768px) {
+  .panel:hover {
+    transform: translateY(-5px) rotate(-0.5deg);
+    box-shadow:
+      0 2px 0 var(--color-paper-shadow),
+      0 22px 40px -18px rgba(34, 32, 26, 0.5);
+  }
+}
+
+/* halftone shading, tinted by the panel's crayon, faded out diagonally */
+.panel__shade {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background-image: radial-gradient(
+    color-mix(in srgb, var(--crayon, var(--color-ink)) 70%, transparent) 0.9px,
+    transparent 1.1px
+  );
+  background-size: 6px 6px;
+  opacity: 0.16;
+  -webkit-mask-image: linear-gradient(214deg, #000 0%, transparent 46%);
+  mask-image: linear-gradient(214deg, #000 0%, transparent 46%);
+}
+
+/* a heavy coloured bar along the top edge — the "ink" of this panel */
+.panel__spine {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  top: -2px;
+  height: 5px;
+  border-radius: 0 0 3px 3px;
+  background: var(--crayon, var(--color-ink));
+  opacity: 0.85;
+}
+
+/* the panel number, like a comic page margin: [ 02 ] */
+.panel__num {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--color-ink-faint);
+}
+
+/* an empty repository renders as a page that was never used */
+.panel--blank {
+  border-style: dashed;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 27px,
+    color-mix(in srgb, var(--color-rule) 60%, transparent) 27px,
+    color-mix(in srgb, var(--color-rule) 60%, transparent) 28px
+  );
+}
+
+/* ------------------------------------------------------------------ *
+ * MATERIAL: Speech bubble
+ * What the characters say. A pen-written bubble with a hand-drawn tail.
+ * ------------------------------------------------------------------ */
+.bubble {
+  position: relative;
+  display: inline-block;
+  background: var(--color-paper-raised);
+  border: 2px solid var(--color-ink);
+  border-radius: 16px 13px 17px 12px / 13px 17px 12px 16px;
+  padding: 0.5rem 0.8rem;
+  font-family: var(--font-pen);
+  font-size: 1.05rem;
+  line-height: 1.25;
+  color: var(--color-ink);
+  box-shadow: 0 8px 18px -12px rgba(34, 32, 26, 0.5);
+}
+.bubble::after {
+  content: "";
+  position: absolute;
+  left: 20px;
+  bottom: -8px;
+  width: 15px;
+  height: 15px;
+  transform: rotate(45deg);
+  background: var(--color-paper-raised);
+  border-right: 2px solid var(--color-ink);
+  border-bottom: 2px solid var(--color-ink);
+  border-bottom-right-radius: 3px;
+}
+.bubble--right::after {
+  left: auto;
+  right: 20px;
+}
+/* tail on top, for when the character is standing above the bubble */
+.bubble--up::after {
+  top: -8px;
+  bottom: auto;
+  left: 26px;
+  border-right: 0;
+  border-bottom: 0;
+  border-left: 2px solid var(--color-ink);
+  border-top: 2px solid var(--color-ink);
+  border-radius: 3px 0 0 0;
+}
+.bubble--crayon {
+  background: color-mix(in srgb, var(--crayon) 12%, var(--color-paper-raised));
+}
+.bubble--crayon::after {
+  background: color-mix(in srgb, var(--crayon) 12%, var(--color-paper-raised));
+}
+
+/* ------------------------------------------------------------------ *
+ * MATERIAL: Sticker
+ * Round, coloured, slightly rotated. Used for tags and status chips.
+ * ------------------------------------------------------------------ */
+.sticker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: var(--crayon, var(--color-marker));
+  color: var(--crayon-on, var(--color-ink));
+  border: 1.75px solid var(--color-ink);
+  border-radius: 999px;
+  padding: 0.26rem 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1;
+  box-shadow: 0 2px 0 rgba(34, 32, 26, 0.22);
+  transform: rotate(var(--sticker-r, -1.5deg));
+  white-space: nowrap;
+}
+.sticker--ghost {
+  background: transparent;
+  color: var(--color-ink-muted);
+  box-shadow: none;
+}
+
+/* square-ish version for section tags */
+.sticker--tag {
+  border-radius: 5px 3px 6px 4px / 4px 6px 3px 5px;
+  transform: rotate(var(--sticker-r, -1deg));
+}
+
+/* ------------------------------------------------------------------ *
+ * MATERIAL: Page furniture
+ * Page numbers, margin notes and other things a real notebook has.
+ * ------------------------------------------------------------------ */
+.page-num {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-ink-faint);
+}
+.margin-note {
+  font-family: var(--font-pen);
+  font-size: 1.05rem;
+  line-height: 1.1;
+  color: var(--color-accent-2);
+}
+/* the little "circled by hand" mark around a word */
+.circled {
+  position: relative;
+  display: inline-block;
+}
+.circled > svg {
+  position: absolute;
+  inset: -0.35em -0.5em;
+  width: calc(100% + 1em);
+  height: calc(100% + 0.7em);
+  pointer-events: none;
+  color: var(--crayon, var(--color-accent));
+}
+
+/* crosshatch fill, for the odd shaded corner */
+.crosshatch {
+  background-image:
+    repeating-linear-gradient(45deg, var(--color-ink) 0 1px, transparent 1px 5px),
+    repeating-linear-gradient(-45deg, var(--color-ink) 0 1px, transparent 1px 5px);
+  opacity: 0.09;
+}
+
+/* a hand-drawn horizontal rule, uneven on both ends */
+.ink-rule {
+  height: 2px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--color-rule) 8%,
+    var(--color-rule) 92%,
+    transparent
+  );
+}
+
+/* ------------------------------------------------------------------ *
+ * MOTION: the cast
+ * ------------------------------------------------------------------ */
+@keyframes chibi-hop {
+  0%, 100% { transform: translateY(0) scaleY(1); }
+  35% { transform: translateY(-7px) scaleY(1.03); }
+  70% { transform: translateY(0) scaleY(0.97); }
+}
+@keyframes chibi-sway-body {
+  0%, 100% { transform: rotate(-2deg); }
+  50% { transform: rotate(2deg); }
+}
+@keyframes chibi-tail {
+  0%, 100% { transform: rotate(-16deg); }
+  50% { transform: rotate(18deg); }
+}
+@keyframes chibi-ears {
+  0%, 92%, 100% { transform: rotate(0deg); }
+  96% { transform: rotate(-9deg); }
+}
+@keyframes chibi-zzz {
+  0% { opacity: 0; transform: translate(0, 0) scale(0.8); }
+  30% { opacity: 1; }
+  100% { opacity: 0; transform: translate(9px, -16px) scale(1.15); }
+}
+@keyframes chibi-arm-run {
+  0%, 100% { transform: rotate(-22deg); }
+  50% { transform: rotate(20deg); }
+}
+@keyframes chibi-arm-run-b {
+  0%, 100% { transform: rotate(20deg); }
+  50% { transform: rotate(-22deg); }
+}
+@keyframes blink-caret {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+@keyframes sticker-pop {
+  0% { opacity: 0; transform: scale(1.35) rotate(-8deg); }
+  60% { opacity: 1; transform: scale(0.95) rotate(1deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-2deg); }
+  50% { transform: rotate(2deg); }
+}
+
+.animate-hop { animation: chibi-hop 1.5s ease-in-out infinite; }
+
+/* the "this is live" dot next to the GitHub line */
+.live-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--color-crayon-green);
+  animation: live-pulse 2.6s ease-out infinite;
+}
+@keyframes live-pulse {
+  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-crayon-green) 55%, transparent); }
+  70% { box-shadow: 0 0 0 9px transparent; }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+.animate-sway-body { animation: chibi-sway-body 3.4s ease-in-out infinite; transform-origin: 50% 90%; }
+.animate-pop { animation: sticker-pop 0.5s var(--ease-out-soft) both; }
+.hover-wiggle:hover { animation: wiggle 0.5s ease-in-out 2; }
+
+/* ------------------------------------------------------------------ *
+ * FOCUS — a page this handmade should still be usable with a keyboard.
+ * ------------------------------------------------------------------ */
+:focus-visible {
+  outline: 2.5px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
 
 /* Respect reduced motion */
 @media (prefers-reduced-motion: reduce) {

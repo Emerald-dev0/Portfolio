@@ -56,7 +56,7 @@ export default function LogoMarquee() {
       className="relative overflow-hidden border-y border-rule/60 bg-paper/40 py-12"
     >
       <div className="mx-auto mb-6 flex max-w-5xl items-center gap-3 px-6">
-        <span className="sticky-tab">STACK</span>
+        <span className="sticky-tab">TOOLS</span>
         <span className="font-pen text-lg text-accent-2">{logos.note}</span>
         <Doodle
           name="arrow-curve"

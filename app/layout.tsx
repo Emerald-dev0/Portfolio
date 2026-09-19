@@ -4,7 +4,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Daniel Oluwadare (Emerald) — Software Engineer",
   description:
-    "Daniel Oluwadare — Emerald online. Building AI developer infrastructure, production web applications, and tools developers actually enjoy using. An engineer's notebook, taped down and scrolled through.",
+    "Daniel Oluwadare — Emerald online. Building AI developer infrastructure, production web applications, and tools developers actually enjoy using. An engineer's notebook, drawn as comic panels, fed live by GitHub.",
   metadataBase: new URL("https://danieloluwadare.dev"),
   openGraph: {
     title: "Daniel Oluwadare (Emerald) — Software Engineer",

@@ -1,0 +1,55 @@
+# ---------------------------------------------------------------------------
+# Keeps lib/github.snapshot.json in step with the pins on the profile.
+#
+# Why this exists: the site reads your pinned repos. With GITHUB_TOKEN set in
+# Vercel that happens live at render time and this workflow is just insurance.
+# Without a token, THIS is what makes the portfolio auto-update — it runs on a
+# schedule, re-reads the pins, and commits the new snapshot, which triggers a
+# redeploy on Vercel.
+#
+# You can also run it by hand: Actions → sync github pins → Run workflow.
+# ---------------------------------------------------------------------------
+name: sync github pins
+
+on:
+  schedule:
+    # every Monday and Thursday, 06:17 UTC (off the hour, so it never queues)
+    - cron: "17 6 * * 1,4"
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/sync-github.mjs"
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # The default Actions token can read public pinned items for the owner,
+      # so no extra secret is needed. Add a PAT as GH_PINS_TOKEN to sync
+      # somebody else's pins, or to survive a private profile.
+      - name: Sync pinned repos
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PINS_TOKEN || secrets.GITHUB_TOKEN }}
+        run: node scripts/sync-github.mjs
+
+      - name: Commit the snapshot if it moved
+        run: |
+          if git diff --quiet -- lib/github.snapshot.json; then
+            echo "no change — pins and stats are identical"
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add lib/github.snapshot.json
+          git commit -m "chore: sync pinned repos from GitHub [skip ci]"
+          git push

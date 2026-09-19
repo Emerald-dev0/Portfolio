@@ -1,6 +1,7 @@
 "use client";
 
 import { StickyTab } from "@/components/materials/StickyNote";
+import type { Crayon } from "@/lib/content";
 import Scribble from "@/components/motion/Scribble";
 import { Reveal } from "@/components/motion/Reveal";
 
@@ -20,7 +21,8 @@ export default function SectionHeader({
   tag: string;
   heading: string;
   sticky?: string;
-  tagColor?: "yellow" | "purple";
+  /** the originals (yellow / purple) or any crayon in the box */
+  tagColor?: "yellow" | "purple" | Crayon;
   align?: "left" | "center";
   scribble?: "underline" | "zigzag";
 }) {

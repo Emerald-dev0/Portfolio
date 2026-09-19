@@ -6,6 +6,7 @@ import SectionHeader from "@/components/ui/SectionHeader";
 import Doodle from "@/components/materials/Doodle";
 import { Tape } from "@/components/materials/Tape";
 import { Reveal } from "@/components/motion/Reveal";
+import { Character } from "@/components/motion/Chibi";
 import { journey, type Chapter } from "@/lib/content";
 
 /**
@@ -101,10 +102,11 @@ function ChapterPage({ chapter, index }: { chapter: Chapter; index: number }) {
       </span>
 
       <div
-        className={`ink-edge--soft paper-stack relative bg-paper-raised p-5 ${
+        className={`crayon-${chapter.crayon} ink-edge--soft paper-stack relative bg-paper-raised p-5 ${
           chapter.flagship ? "sm:p-6" : ""
         }`}
       >
+        <span className="panel__spine" aria-hidden />
         <Tape
           className="absolute -top-3 left-6 z-10"
           rotate={index % 2 ? 5 : -5}
@@ -115,9 +117,9 @@ function ChapterPage({ chapter, index }: { chapter: Chapter; index: number }) {
         {/* era tab + commit badge */}
         <div className="flex items-center justify-between gap-3">
           <span className="inline-flex items-center gap-2">
-            <span className="sticky-tab">{chapter.era}</span>
+            <span className="sticky-tab sticky-tab--crayon">{chapter.era}</span>
             {chapter.flagship && (
-              <span className="font-pen text-lg text-accent">the pivot</span>
+              <span className="font-pen text-lg text-crayon">the pivot</span>
             )}
           </span>
           {chapter.commits && (
@@ -139,7 +141,7 @@ function ChapterPage({ chapter, index }: { chapter: Chapter; index: number }) {
           <Doodle
             name={chapter.doodle}
             size={chapter.flagship ? 40 : 32}
-            className="mt-1 hidden shrink-0 text-ink-faint sm:block"
+            className="mt-1 hidden shrink-0 text-crayon opacity-70 sm:block"
           />
         </div>
 
@@ -171,7 +173,21 @@ function ChapterPage({ chapter, index }: { chapter: Chapter; index: number }) {
             {chapter.annotation}
           </p>
         )}
+
+        <span className="page-num absolute -bottom-5 right-1 opacity-70">
+          PAGE {String(index + 2).padStart(2, "0")}
+        </span>
       </div>
+
+      {/* whoever belongs to this era loiters on the corner of the page */}
+      {chapter.character && (
+        <span
+          aria-hidden
+          className="pointer-events-none absolute -top-[26px] right-5 hidden -rotate-3 sm:block"
+        >
+          <Character id={chapter.character} size={48} busy />
+        </span>
+      )}
     </motion.div>
   );
 }

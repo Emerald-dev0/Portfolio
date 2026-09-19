@@ -11,7 +11,13 @@ export type DoodleName =
   | "crown"
   | "rocket"
   | "brain"
-  | "arrow-curve";
+  | "arrow-curve"
+  | "lightbulb"
+  | "coffee"
+  | "bug"
+  | "flag"
+  | "cloud"
+  | "wifi";
 
 const paths: Record<DoodleName, React.ReactNode> = {
   star: (
@@ -35,6 +41,40 @@ const paths: Record<DoodleName, React.ReactNode> = {
   ),
   "arrow-curve": (
     <path d="M3 5 C10 4 15 7 16 15 M16 15 L12 12 M16 15 L19 11" />
+  ),
+  lightbulb: (
+    <>
+      <path d="M12 3 a6 6 0 0 1 3.4 10.9 c-.5.4-.8 1-.8 1.6 v.6 H9.4 v-.6 c0-.6-.3-1.2-.8-1.6 A6 6 0 0 1 12 3 Z" />
+      <path d="M9.6 19 h4.8 M10.6 21.4 h2.8" />
+    </>
+  ),
+  coffee: (
+    <>
+      <path d="M4 9 h12 v6 a4 4 0 0 1 -4 4 H8 a4 4 0 0 1 -4 -4 Z" />
+      <path d="M16 10.5 h1.6 a2.6 2.6 0 0 1 0 5.2 H16" />
+      <path d="M7 6 q1 -1.4 0 -3 M11 6 q1 -1.4 0 -3" />
+    </>
+  ),
+  bug: (
+    <>
+      <path d="M9 6 a3 3 0 0 1 6 0" />
+      <path d="M7 9.5 h10 V14 a5 5 0 0 1 -10 0 Z" />
+      <path d="M3.6 8.4 L6.2 10 M20.4 8.4 L17.8 10 M3.6 16.6 L6.2 15 M20.4 16.6 L17.8 15" />
+    </>
+  ),
+  flag: (
+    <path d="M6 21 V3 M6 4 h11 q-3 3.2 0 6.4 H6" />
+  ),
+  cloud: (
+    <path d="M6.6 18 a3.6 3.6 0 0 1 -.2 -7.2 a5 5 0 0 1 9.8 -1.3 a3.7 3.7 0 0 1 1 8.5 Z" />
+  ),
+  wifi: (
+    <>
+      <path d="M2.6 9.2 a14.4 14.4 0 0 1 18.8 0" />
+      <path d="M6 12.8 a9 9 0 0 1 12 0" />
+      <path d="M9.4 16.2 a4.4 4.4 0 0 1 5.2 0" />
+      <circle cx="12" cy="19.4" r="0.9" fill="currentColor" stroke="none" />
+    </>
   ),
 };
 

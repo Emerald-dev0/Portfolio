@@ -1,7 +1,8 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import Chibi from "@/components/motion/Chibi";
+import { Character } from "@/components/motion/Chibi";
+import type { CharacterId } from "@/lib/content";
 
 /**
  * ChibiWalker — a little character that strolls across the full width of its
@@ -14,18 +15,24 @@ export default function ChibiWalker({
   duration = 26,
   className = "",
   colorClass = "text-ink/60",
+  character = "dash",
+  reverse = false,
 }: {
   size?: number;
   duration?: number;
   className?: string;
   colorClass?: string;
+  /** which member of the cast is doing the pacing */
+  character?: CharacterId;
+  /** start at the right edge instead — so two walkers never overlap */
+  reverse?: boolean;
 }) {
   const reduce = useReducedMotion();
 
   if (reduce) {
     return (
       <div className={`pointer-events-none absolute ${className} ${colorClass}`}>
-        <Chibi variant="walk" size={size} />
+        <Character id={character} size={size} busy />
       </div>
     );
   }
@@ -34,8 +41,8 @@ export default function ChibiWalker({
     <motion.div
       aria-hidden
       className={`pointer-events-none absolute ${className} ${colorClass}`}
-      initial={{ left: "-6%" }}
-      animate={{ left: ["-6%", "104%", "-6%"] }}
+      initial={{ left: reverse ? "104%" : "-6%" }}
+      animate={{ left: reverse ? ["104%", "-6%", "104%"] : ["-6%", "104%", "-6%"] }}
       transition={{
         duration,
         ease: "linear",
@@ -48,7 +55,7 @@ export default function ChibiWalker({
         animate={{ scaleX: [1, 1, -1, -1, 1] }}
         transition={{ duration, repeat: Infinity, times: [0, 0.49, 0.5, 0.99, 1] }}
       >
-        <Chibi variant="walk" size={size} />
+        <Character id={character} size={size} busy />
       </motion.div>
     </motion.div>
   );
