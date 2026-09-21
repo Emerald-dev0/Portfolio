@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-19T15:17:56.095Z",
+  "generatedAt": "2026-09-21T12:49:21.031Z",
   "source": "pinned",
   "version": 1,
   "user": {
@@ -9,29 +9,21 @@
     "bio": "",
     "location": null,
     "followers": 4,
-    "publicRepos": 67
+    "publicRepos": 69
   },
   "contributions": {
-    "from": "2025-09-14",
-    "to": "2026-09-19",
-    "total": 1995,
-    "activeDays": 155,
-    "totalDays": 371,
+    "from": "2025-09-21",
+    "to": "2026-09-21",
+    "total": 1994,
+    "activeDays": 153,
+    "totalDays": 366,
     "longestStreak": 17,
-    "currentStreak": 2,
+    "currentStreak": 0,
     "busiestDay": {
       "date": "2026-07-07",
       "count": 145
     },
     "active": [
-      [
-        "2025-09-16",
-        3
-      ],
-      [
-        "2025-09-18",
-        2
-      ],
       [
         "2025-09-23",
         3
@@ -642,22 +634,22 @@
       ],
       [
         "2026-09-19",
-        7
+        11
       ]
     ]
   },
   "stats": {
-    "pinned": 6,
-    "starsPinned": 2,
+    "pinned": 5,
+    "starsPinned": 0,
     "stars": 5,
-    "commitsPinned": 542,
-    "publicRepos": 67,
-    "ownRepos": 65,
-    "reposScanned": 67,
+    "commitsPinned": 221,
+    "publicRepos": 69,
+    "ownRepos": 67,
+    "reposScanned": 69,
     "languages": [
       {
         "name": "TypeScript",
-        "repos": 23,
+        "repos": 25,
         "color": "#3178c6"
       },
       {
@@ -696,128 +688,9 @@
         "color": "#427819"
       }
     ],
-    "pushed": "2026-09-19T13:57:02Z"
+    "pushed": "2026-09-16T14:55:13Z"
   },
   "pins": [
-    {
-      "slug": "Emerald-dev0/axiom-network",
-      "owner": "Emerald-dev0",
-      "name": "axiom-network",
-      "displayName": null,
-      "description": null,
-      "url": "https://github.com/Emerald-dev0/axiom-network",
-      "homepage": null,
-      "stars": 2,
-      "forks": 0,
-      "isArchived": false,
-      "isEmpty": false,
-      "pushedAt": "2026-08-02T21:54:48Z",
-      "updatedAt": "2026-08-10T02:15:39Z",
-      "language": "TypeScript",
-      "languageColor": "#3178c6",
-      "languages": [
-        {
-          "name": "TypeScript",
-          "percent": 99.3,
-          "color": "#3178c6"
-        },
-        {
-          "name": "HTML",
-          "percent": 0.3,
-          "color": "#e34c26"
-        },
-        {
-          "name": "JavaScript",
-          "percent": 0.3,
-          "color": "#f1e05a"
-        },
-        {
-          "name": "CSS",
-          "percent": 0.1,
-          "color": "#563d7c"
-        }
-      ],
-      "topics": [],
-      "readmeTitle": "Axiom: The Economic Layer for Autonomous AI Agents",
-      "lede": "Axiom is an autonomous economic network that enables AI agents to discover, hire, and pay for capabilities using AXC credits and the x402 protocol.",
-      "commits": 104
-    },
-    {
-      "slug": "Emerald-dev0/Axon",
-      "owner": "Emerald-dev0",
-      "name": "Axon",
-      "displayName": null,
-      "description": null,
-      "url": "https://github.com/Emerald-dev0/Axon",
-      "homepage": null,
-      "stars": 0,
-      "forks": 0,
-      "isArchived": false,
-      "isEmpty": false,
-      "pushedAt": "2026-03-28T10:38:30Z",
-      "updatedAt": "2026-03-28T10:38:34Z",
-      "language": "TypeScript",
-      "languageColor": "#3178c6",
-      "languages": [
-        {
-          "name": "TypeScript",
-          "percent": 99.2,
-          "color": "#3178c6"
-        },
-        {
-          "name": "CSS",
-          "percent": 0.6,
-          "color": "#563d7c"
-        },
-        {
-          "name": "JavaScript",
-          "percent": 0.1,
-          "color": "#f1e05a"
-        },
-        {
-          "name": "Dockerfile",
-          "percent": 0.1,
-          "color": "#384d54"
-        }
-      ],
-      "topics": [],
-      "readmeTitle": null,
-      "lede": null,
-      "commits": 2
-    },
-    {
-      "slug": "Emerald-dev0/Commitgraph",
-      "owner": "Emerald-dev0",
-      "name": "Commitgraph",
-      "displayName": null,
-      "description": null,
-      "url": "https://github.com/Emerald-dev0/Commitgraph",
-      "homepage": null,
-      "stars": 0,
-      "forks": 0,
-      "isArchived": false,
-      "isEmpty": false,
-      "pushedAt": "2026-06-02T14:39:25Z",
-      "updatedAt": "2026-06-02T14:47:12Z",
-      "language": "TypeScript",
-      "languageColor": "#3178c6",
-      "languages": [
-        {
-          "name": "TypeScript",
-          "percent": 62.9,
-          "color": "#3178c6"
-        },
-        {
-          "name": "JavaScript",
-          "percent": 37.1,
-          "color": "#f1e05a"
-        }
-      ],
-      "topics": [],
-      "readmeTitle": null,
-      "lede": null,
-      "commits": 10
-    },
     {
       "slug": "Emerald-dev0/Cypher",
       "owner": "Emerald-dev0",
@@ -862,69 +735,166 @@
       "commits": 92
     },
     {
-      "slug": "Emerald-dev0/Noon-digital",
+      "slug": "Emerald-dev0/AOT",
       "owner": "Emerald-dev0",
-      "name": "Noon-digital",
+      "name": "AOT",
       "displayName": null,
-      "description": null,
-      "url": "https://github.com/Emerald-dev0/Noon-digital",
-      "homepage": null,
-      "stars": 0,
-      "forks": 0,
-      "isArchived": false,
-      "isEmpty": true,
-      "pushedAt": "2026-07-28T22:38:58Z",
-      "updatedAt": "2026-07-28T22:38:58Z",
-      "language": null,
-      "languageColor": null,
-      "languages": [],
-      "topics": [],
-      "readmeTitle": null,
-      "lede": null,
-      "commits": 0
-    },
-    {
-      "slug": "GetContextly/contextly",
-      "owner": "GetContextly",
-      "name": "contextly",
-      "displayName": null,
-      "description": null,
-      "url": "https://github.com/GetContextly/contextly",
-      "homepage": null,
+      "description": "A visual representation of the Attack on Titan Universe",
+      "url": "https://github.com/Emerald-dev0/AOT",
+      "homepage": "https://aot-verse.vercel.app",
       "stars": 0,
       "forks": 0,
       "isArchived": false,
       "isEmpty": false,
-      "pushedAt": "2026-09-19T13:57:02Z",
-      "updatedAt": "2026-09-19T13:57:06Z",
+      "pushedAt": "2026-08-13T22:46:06Z",
+      "updatedAt": "2026-08-13T22:46:18Z",
       "language": "TypeScript",
       "languageColor": "#3178c6",
       "languages": [
         {
           "name": "TypeScript",
-          "percent": 85.5,
+          "percent": 97,
           "color": "#3178c6"
         },
         {
-          "name": "PLpgSQL",
-          "percent": 7.7,
-          "color": "#336790"
-        },
-        {
-          "name": "Python",
-          "percent": 5.1,
-          "color": "#3572A5"
-        },
-        {
           "name": "CSS",
-          "percent": 1.2,
+          "percent": 1.9,
           "color": "#563d7c"
+        },
+        {
+          "name": "HTML",
+          "percent": 1.1,
+          "color": "#e34c26"
         }
       ],
       "topics": [],
-      "readmeTitle": "Contextly",
-      "lede": "Universal context layer for AI coding agents.",
-      "commits": 334
+      "readmeTitle": "Attack on Titan — Cinematic Interactive Experience",
+      "lede": "An image-first, motion-driven interactive visual exploration of scale, terror, human resilience, and freedom in the universe of Hajime Isayama’s Attack on Titan (進撃の巨人).",
+      "commits": 3
+    },
+    {
+      "slug": "Emerald-dev0/Lens",
+      "owner": "Emerald-dev0",
+      "name": "Lens",
+      "displayName": null,
+      "description": null,
+      "url": "https://github.com/Emerald-dev0/Lens",
+      "homepage": null,
+      "stars": 0,
+      "forks": 0,
+      "isArchived": false,
+      "isEmpty": false,
+      "pushedAt": "2026-09-16T14:55:13Z",
+      "updatedAt": "2026-09-16T14:55:09Z",
+      "language": "TypeScript",
+      "languageColor": "#3178c6",
+      "languages": [
+        {
+          "name": "TypeScript",
+          "percent": 88.9,
+          "color": "#3178c6"
+        },
+        {
+          "name": "JavaScript",
+          "percent": 6.7,
+          "color": "#f1e05a"
+        },
+        {
+          "name": "CSS",
+          "percent": 4,
+          "color": "#563d7c"
+        },
+        {
+          "name": "HTML",
+          "percent": 0.4,
+          "color": "#e34c26"
+        }
+      ],
+      "topics": [],
+      "readmeTitle": "Lens",
+      "lede": null,
+      "commits": 3
+    },
+    {
+      "slug": "Emerald-dev0/Lockup",
+      "owner": "Emerald-dev0",
+      "name": "Lockup",
+      "displayName": null,
+      "description": null,
+      "url": "https://github.com/Emerald-dev0/Lockup",
+      "homepage": null,
+      "stars": 0,
+      "forks": 0,
+      "isArchived": false,
+      "isEmpty": false,
+      "pushedAt": "2026-07-11T10:16:21Z",
+      "updatedAt": "2026-07-11T10:16:28Z",
+      "language": "TypeScript",
+      "languageColor": "#3178c6",
+      "languages": [
+        {
+          "name": "TypeScript",
+          "percent": 97.3,
+          "color": "#3178c6"
+        },
+        {
+          "name": "Kotlin",
+          "percent": 1.8,
+          "color": "#A97BFF"
+        },
+        {
+          "name": "JavaScript",
+          "percent": 0.9,
+          "color": "#f1e05a"
+        }
+      ],
+      "topics": [],
+      "readmeTitle": null,
+      "lede": null,
+      "commits": 104
+    },
+    {
+      "slug": "Emerald-dev0/PhoneDock",
+      "owner": "Emerald-dev0",
+      "name": "PhoneDock",
+      "displayName": null,
+      "description": null,
+      "url": "https://github.com/Emerald-dev0/PhoneDock",
+      "homepage": null,
+      "stars": 0,
+      "forks": 0,
+      "isArchived": false,
+      "isEmpty": false,
+      "pushedAt": "2026-08-26T17:33:26Z",
+      "updatedAt": "2026-08-26T17:33:35Z",
+      "language": "Kotlin",
+      "languageColor": "#A97BFF",
+      "languages": [
+        {
+          "name": "Kotlin",
+          "percent": 51.5,
+          "color": "#A97BFF"
+        },
+        {
+          "name": "Python",
+          "percent": 29.5,
+          "color": "#3572A5"
+        },
+        {
+          "name": "C++",
+          "percent": 16,
+          "color": "#f34b7d"
+        },
+        {
+          "name": "Shell",
+          "percent": 2,
+          "color": "#89e051"
+        }
+      ],
+      "topics": [],
+      "readmeTitle": "PhoneDock",
+      "lede": "Turn your Android phone into a native extension of your Windows PC.",
+      "commits": 19
     }
   ]
 }
