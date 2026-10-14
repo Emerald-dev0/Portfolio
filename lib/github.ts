@@ -105,6 +105,13 @@ export type GithubSnapshot = {
   user: GithubUser;
   stats: GithubStats;
   pins: PinnedRepo[];
+  /**
+   * Most recently pushed owned repos, excluding pins — "what's alive" rather
+   * than "what's featured". Written by the sync script; absent in snapshots
+   * from before it existed. The live read never touches it (it spreads the
+   * snapshot through), so it refreshes on every scheduled sync instead.
+   */
+  recent?: PinnedRepo[];
   /** true when this render came from the live API, false when from disk. */
   live: boolean;
   /** short reason the live read didn't happen — surfaced in dev only. */

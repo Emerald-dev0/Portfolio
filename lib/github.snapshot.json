@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-12T15:26:30.151Z",
+  "generatedAt": "2026-10-14T08:39:23.693Z",
   "source": "pinned",
   "version": 1,
   "user": {
@@ -13,12 +13,12 @@
   },
   "contributions": {
     "from": "2025-10-12",
-    "to": "2026-10-12",
-    "total": 2199,
-    "activeDays": 165,
-    "totalDays": 366,
+    "to": "2026-10-14",
+    "total": 2218,
+    "activeDays": 167,
+    "totalDays": 368,
     "longestStreak": 17,
-    "currentStreak": 8,
+    "currentStreak": 10,
     "busiestDay": {
       "date": "2026-07-07",
       "count": 145
@@ -454,11 +454,11 @@
       ],
       [
         "2026-07-21",
-        64
+        63
       ],
       [
         "2026-07-22",
-        57
+        58
       ],
       [
         "2026-07-23",
@@ -466,11 +466,11 @@
       ],
       [
         "2026-07-24",
-        59
+        58
       ],
       [
         "2026-07-25",
-        25
+        26
       ],
       [
         "2026-07-27",
@@ -482,11 +482,11 @@
       ],
       [
         "2026-07-29",
-        14
+        13
       ],
       [
         "2026-07-30",
-        77
+        78
       ],
       [
         "2026-07-31",
@@ -682,7 +682,15 @@
       ],
       [
         "2026-10-12",
-        15
+        20
+      ],
+      [
+        "2026-10-13",
+        13
+      ],
+      [
+        "2026-10-14",
+        1
       ]
     ]
   },
@@ -943,6 +951,240 @@
       "readmeTitle": "PhoneDock",
       "lede": "Connect your Android phone, iPhone, Linux computer, Windows PC, and Mac through a unified, privacy-first device experience.",
       "commits": 20
+    }
+  ],
+  "recent": [
+    {
+      "slug": "Emerald-dev0/Portfolio",
+      "owner": "Emerald-dev0",
+      "name": "Portfolio",
+      "displayName": null,
+      "description": null,
+      "url": "https://github.com/Emerald-dev0/Portfolio",
+      "homepage": "https://emerald-blush.vercel.app",
+      "stars": 0,
+      "forks": 0,
+      "isArchived": false,
+      "isEmpty": false,
+      "pushedAt": "2026-10-14T08:34:42Z",
+      "updatedAt": "2026-10-14T08:34:47Z",
+      "language": "TypeScript",
+      "languageColor": "#3178c6",
+      "languages": [
+        {
+          "name": "TypeScript",
+          "percent": 80.7,
+          "color": "#3178c6"
+        },
+        {
+          "name": "CSS",
+          "percent": 10.5,
+          "color": "#563d7c"
+        },
+        {
+          "name": "JavaScript",
+          "percent": 8.8,
+          "color": "#f1e05a"
+        }
+      ],
+      "topics": [],
+      "readmeTitle": "Daniel Oluwadare — Portfolio",
+      "lede": "Software engineer. Building AI developer infrastructure and production web",
+      "commits": 15
+    },
+    {
+      "slug": "Emerald-dev0/Intake",
+      "owner": "Emerald-dev0",
+      "name": "Intake",
+      "displayName": null,
+      "description": null,
+      "url": "https://github.com/Emerald-dev0/Intake",
+      "homepage": "https://intak.vercel.app",
+      "stars": 1,
+      "forks": 0,
+      "isArchived": false,
+      "isEmpty": false,
+      "pushedAt": "2026-10-13T21:01:58Z",
+      "updatedAt": "2026-10-13T21:02:04Z",
+      "language": "TypeScript",
+      "languageColor": "#3178c6",
+      "languages": [
+        {
+          "name": "TypeScript",
+          "percent": 60.9,
+          "color": "#3178c6"
+        },
+        {
+          "name": "JavaScript",
+          "percent": 26,
+          "color": "#f1e05a"
+        },
+        {
+          "name": "CSS",
+          "percent": 11.4,
+          "color": "#563d7c"
+        },
+        {
+          "name": "HTML",
+          "percent": 0.6,
+          "color": "#e34c26"
+        }
+      ],
+      "topics": [],
+      "readmeTitle": "Intake",
+      "lede": "Describe what you need to collect. Intake builds the form.",
+      "commits": 93
+    },
+    {
+      "slug": "Emerald-dev0/Calder",
+      "owner": "Emerald-dev0",
+      "name": "Calder",
+      "displayName": null,
+      "description": "Avenor — developer-first communication infrastructure. Transactional email is the first primitive.",
+      "url": "https://github.com/Emerald-dev0/Calder",
+      "homepage": "https://calder-web.vercel.app",
+      "stars": 0,
+      "forks": 1,
+      "isArchived": false,
+      "isEmpty": false,
+      "pushedAt": "2026-10-13T10:18:48Z",
+      "updatedAt": "2026-10-11T21:40:45Z",
+      "language": "TypeScript",
+      "languageColor": "#3178c6",
+      "languages": [
+        {
+          "name": "TypeScript",
+          "percent": 95.1,
+          "color": "#3178c6"
+        },
+        {
+          "name": "CSS",
+          "percent": 3.2,
+          "color": "#563d7c"
+        },
+        {
+          "name": "JavaScript",
+          "percent": 0.5,
+          "color": "#f1e05a"
+        },
+        {
+          "name": "PLpgSQL",
+          "percent": 0.4,
+          "color": "#336790"
+        }
+      ],
+      "topics": [],
+      "readmeTitle": "Calder",
+      "lede": "Developer-first communication infrastructure. Transactional email is the first primitive.",
+      "commits": 165
+    },
+    {
+      "slug": "Emerald-dev0/soro",
+      "owner": "Emerald-dev0",
+      "name": "soro",
+      "displayName": null,
+      "description": null,
+      "url": "https://github.com/Emerald-dev0/soro",
+      "homepage": null,
+      "stars": 1,
+      "forks": 0,
+      "isArchived": false,
+      "isEmpty": false,
+      "pushedAt": "2026-10-08T16:46:23Z",
+      "updatedAt": "2026-10-09T09:36:43Z",
+      "language": "TypeScript",
+      "languageColor": "#3178c6",
+      "languages": [
+        {
+          "name": "TypeScript",
+          "percent": 91.8,
+          "color": "#3178c6"
+        },
+        {
+          "name": "CSS",
+          "percent": 6.8,
+          "color": "#563d7c"
+        },
+        {
+          "name": "JavaScript",
+          "percent": 0.9,
+          "color": "#f1e05a"
+        },
+        {
+          "name": "HTML",
+          "percent": 0.5,
+          "color": "#e34c26"
+        }
+      ],
+      "topics": [],
+      "readmeTitle": "Soro — banking should be as easy as having a conversation",
+      "lede": "Soro is a conversational banking access layer: customers speak",
+      "commits": 35
+    },
+    {
+      "slug": "Emerald-dev0/noon-digital-flagship",
+      "owner": "Emerald-dev0",
+      "name": "noon-digital-flagship",
+      "displayName": null,
+      "description": null,
+      "url": "https://github.com/Emerald-dev0/noon-digital-flagship",
+      "homepage": "https://noon-digital-flagship-delta.vercel.app",
+      "stars": 0,
+      "forks": 0,
+      "isArchived": false,
+      "isEmpty": false,
+      "pushedAt": "2026-10-03T14:04:46Z",
+      "updatedAt": "2026-10-03T14:04:50Z",
+      "language": "TypeScript",
+      "languageColor": "#3178c6",
+      "languages": [
+        {
+          "name": "TypeScript",
+          "percent": 82.8,
+          "color": "#3178c6"
+        },
+        {
+          "name": "Python",
+          "percent": 11.8,
+          "color": "#3572A5"
+        },
+        {
+          "name": "CSS",
+          "percent": 3.4,
+          "color": "#563d7c"
+        },
+        {
+          "name": "JavaScript",
+          "percent": 1.2,
+          "color": "#f1e05a"
+        }
+      ],
+      "topics": [],
+      "readmeTitle": null,
+      "lede": null,
+      "commits": 19
+    },
+    {
+      "slug": "Emerald-dev0/Forma-AI",
+      "owner": "Emerald-dev0",
+      "name": "Forma-AI",
+      "displayName": null,
+      "description": null,
+      "url": "https://github.com/Emerald-dev0/Forma-AI",
+      "homepage": null,
+      "stars": 0,
+      "forks": 0,
+      "isArchived": false,
+      "isEmpty": false,
+      "pushedAt": "2026-09-29T08:09:34Z",
+      "updatedAt": "2026-09-29T08:09:38Z",
+      "language": null,
+      "languageColor": null,
+      "languages": [],
+      "topics": [],
+      "readmeTitle": "Forma — The Intelligent Creative Studio",
+      "lede": "Project 02 · Holiday Projects · Product vision and engineering README",
+      "commits": 2
     }
   ]
 }

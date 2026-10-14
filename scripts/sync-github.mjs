@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
  * ============================================================================
- * sync-github — pull my pinned GitHub repos into a snapshot the site can read.
+ * sync-github — pull my pinned GitHub repos (+ recent pushes) into a snapshot
+ * the site can read.
  * ============================================================================
  * The portfolio's "Pinned" section is driven by the repos pinned on my GitHub
  * profile. This script reads them and writes `lib/github.snapshot.json`, which
@@ -387,6 +388,58 @@ async function accountStats() {
 }
 
 /* --------------------------------------------------------------------------
+ * Recent — what I've actually been pushing to lately, pins or not.
+ * The pins say what's featured; this says what's alive. Same enriched shape
+ * as a pin, so the site can render both without special cases. Skips forks,
+ * archived repos, and anything already pinned (no duplicates on the page).
+ * ------------------------------------------------------------------------ */
+const RECENT_COUNT = 6;
+
+async function fetchRecent(excludeSlugs) {
+  const repos =
+    (await getJSON(
+      `${API}/users/${USER}/repos?per_page=100&sort=pushed&direction=desc&type=owner`,
+    )) ?? [];
+
+  const fresh = repos
+    .filter((r) => !r.fork && !r.archived && (r.size ?? 0) > 0)
+    .filter((r) => (r.name ?? "").toLowerCase() !== USER.toLowerCase())
+    .filter((r) => !excludeSlugs.has((r.full_name ?? "").toLowerCase()))
+    .slice(0, RECENT_COUNT)
+    .map((r) => ({
+      nameWithOwner: r.full_name,
+      name: r.name,
+      description: r.description,
+      url: r.html_url,
+      homepageUrl: r.homepage || null,
+      stargazerCount: r.stargazers_count ?? 0,
+      forkCount: r.forks_count ?? 0,
+      isArchived: Boolean(r.archived),
+      isEmpty: (r.size ?? 0) === 0,
+      pushedAt: r.pushed_at,
+      updatedAt: r.updated_at,
+      primaryLanguage: r.language
+        ? { name: r.language, color: languageColor(r.language) }
+        : null,
+      repositoryTopics: { nodes: [] },
+      defaultBranchRef: null, // REST path asks for the count below
+    }));
+
+  const out = [];
+  for (const node of fresh) {
+    const repo = await enrich(node);
+    repo.commits = repo.isEmpty ? 0 : await commitCount(repo.slug);
+    // topics need one more call on the REST path — best effort only
+    const topics = await getJSON(`${API}/repos/${repo.slug}/topics`, {
+      headers: { Accept: "application/vnd.github.mercy-preview+json" },
+    });
+    if (Array.isArray(topics?.names)) repo.topics = topics.names.slice(0, 12);
+    out.push(repo);
+  }
+  return out;
+}
+
+/* --------------------------------------------------------------------------
  * Contributions — the green squares, as raw numbers.
  * A year of daily counts, plus the streaks you would otherwise have to count by
  * eye. Only days with activity are stored; the renderer fills the blank squares
@@ -470,6 +523,16 @@ async function main() {
     console.log(`  · ${repo.slug.padEnd(30)} ${bits.join("  ")}`);
   }
 
+  // In no-token mode the pins already ARE the most-recently-pushed repos,
+  // so a separate recent list would just duplicate the page.
+  const isProxy = user.__source === "recent-pushed";
+  const recent = isProxy
+    ? []
+    : await fetchRecent(new Set(pins.map((p) => p.slug.toLowerCase())));
+  for (const r of recent) {
+    console.log(`  · ${r.slug.padEnd(30)} recent  pushed ${r.pushedAt?.slice(0, 10) ?? "?"}`);
+  }
+
   const snapshot = {
     generatedAt: new Date().toISOString(),
     // "pinned" = real pins; "recent-pushed" = honest no-token proxy
@@ -500,13 +563,15 @@ async function main() {
         pins.map((p) => p.pushedAt).filter(Boolean).sort().reverse()[0] ?? null,
     },
     pins,
+    /** most recently pushed owned repos, excluding pins — "what's alive" */
+    recent,
   };
 
   await mkdir(dirname(OUT), { recursive: true });
   await writeFile(OUT, `${JSON.stringify(snapshot, null, 2)}\n`, "utf8");
 
   const rel = OUT.replace(`${ROOT}/`, "");
-  console.log(`\n  ✓  ${pins.length} repos -> ${rel}`);
+  console.log(`\n  ✓  ${pins.length} pins + ${recent.length} recent -> ${rel}`);
   console.log(
     `     stars: ${snapshot.stats.stars} · commits in pins: ${snapshot.stats.commitsPinned}`,
   );

@@ -160,6 +160,73 @@ export default function Projects({
           </p>
         )}
 
+        {/* ---------------- fresh off the desk ---------------- */}
+        {showcase.recent.length > 0 && (
+          <Reveal dir="up" delay={0.05}>
+            <div className="mt-14">
+              <div className="flex flex-wrap items-center gap-3">
+                <span className="sticky-tab">{copy.freshTag}</span>
+                <h3 className="font-marker text-2xl text-ink sm:text-3xl">
+                  {copy.freshHeading}
+                </h3>
+              </div>
+              <p className="mt-2 max-w-2xl text-[13px] leading-relaxed text-ink-muted">
+                {copy.freshNote}
+              </p>
+              <ul className="mt-5 overflow-hidden rounded-[10px_7px_11px_8px] border-2 border-ink bg-paper-raised">
+                {showcase.recent.map((project, i) => (
+                  <li key={project.slug}>
+                    <a
+                      href={project.href}
+                      target={project.href.startsWith("http") ? "_blank" : undefined}
+                      rel={project.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                      className={`group flex items-baseline gap-3 px-4 py-3 transition-colors hover:bg-paper sm:gap-4 sm:px-5 ${
+                        i > 0 ? "border-t border-rule" : ""
+                      }`}
+                    >
+                      <span className="shrink-0 font-mono text-[10px] text-ink-faint">
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate font-marker text-lg leading-tight text-ink group-hover:text-accent">
+                          {project.name}
+                        </span>
+                        <span className="mt-0.5 block truncate text-[12.5px] text-ink-muted">
+                          {project.oneLiner}
+                        </span>
+                      </span>
+                      {project.live?.language && (
+                        <span className="hidden shrink-0 items-center gap-1.5 font-mono text-[10.5px] text-ink-muted md:inline-flex">
+                          <span
+                            aria-hidden
+                            className="inline-block h-2.5 w-2.5 rounded-full border border-ink/30"
+                            style={{
+                              background:
+                                project.live.languageColor ?? "var(--color-ink-faint)",
+                            }}
+                          />
+                          {project.live.language}
+                        </span>
+                      )}
+                      {project.live?.pushedLabel && (
+                        <span className="hidden shrink-0 font-mono text-[10.5px] uppercase tracking-[0.08em] text-ink-faint sm:inline">
+                          {project.live.pushedLabel}
+                        </span>
+                      )}
+                      <span
+                        aria-hidden
+                        className="shrink-0 text-ink-faint transition-transform group-hover:translate-x-1 group-hover:text-accent"
+                      >
+                        →
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </Reveal>
+        )}
+
         {/* ---------------- the rest of the pile ---------------- */}
         <Reveal dir="up" delay={0.05}>
           <a

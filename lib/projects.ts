@@ -159,6 +159,8 @@ export type Showcase = {
   pinned: Project[];
   curated: Project[];
   filters: ShowcaseFilter[];
+  /** most recently pushed repos, excluding anything already pinned */
+  recent: Project[];
   /** the contribution calendar, when it could be read */
   contributions: Contributions | null;
   /** Real numbers for the receipts strip. */
@@ -185,6 +187,13 @@ export function buildShowcase(snapshot: GithubSnapshot): Showcase {
 
   const pinned = (snapshot.pins ?? [])
     .filter((repo) => !overlayHidden(repo.slug))
+    .map(projectFromRepo);
+
+  const pinnedSlugs = new Set(pinned.map((p) => p.slug.toLowerCase()));
+  const recent = (snapshot.recent ?? [])
+    .filter((repo) => !pinnedSlugs.has(repo.slug.toLowerCase()))
+    .filter((repo) => !overlayHidden(repo.slug))
+    .slice(0, 6)
     .map(projectFromRepo);
 
   const curated = curatedProjects.filter(
@@ -219,6 +228,7 @@ export function buildShowcase(snapshot: GithubSnapshot): Showcase {
     pinned,
     curated,
     filters,
+    recent,
     contributions: snapshot.contributions ?? null,
     totals: {
       pinned: pinned.length,

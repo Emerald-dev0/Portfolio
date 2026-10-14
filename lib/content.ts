@@ -390,6 +390,11 @@ export const showcase = {
   /** Shown when a pinned repository has no commits in it. */
   emptyNote: "Name reserved. Nothing shipped here yet.",
   closing: "BROWSE EVERYTHING ON GITHUB",
+  /** The strip of recently-pushed repos between the pins and the archive. */
+  freshTag: "FRESH OFF THE DESK",
+  freshHeading: "What I've been pushing lately.",
+  freshNote:
+    "Not pinned, just alive. The most recently pushed repos, pins excluded, refreshed every sync.",
   archiveNote:
     "Client work, experiments, hackathons and products. Not everything makes the shortlist, but everything on this list taught me something.",
   allLabel: "all",
@@ -559,7 +564,7 @@ export const socials: Social[] = [
   { label: "GitHub", handle: "Emerald-dev0", href: "https://github.com/Emerald-dev0", icon: "github" },
   { label: "Instagram", handle: "@emerald_dev1", href: "https://instagram.com/emerald_dev1", icon: "instagram" },
   { label: "TikTok", handle: "@emerald_dev1", href: "https://tiktok.com/@emerald_dev1", icon: "tiktok" },
-  { label: "X", handle: "@dev_boy09", href: "https://x.com/dev_boy09", icon: "x" },
+  { label: "X", handle: "@Dev_emeraldX", href: "https://x.com/Dev_emeraldX", icon: "x" },
 ];
 
 /* Logo marquee. If a matching /logos/<file> exists it's used; otherwise the
