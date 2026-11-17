@@ -11,6 +11,7 @@ import { Button } from "../ui/Button";
 import { Card } from "../ui/Card";
 import { Icon } from "../ui/Icon";
 import { Section, SectionHeader } from "../ui/Section";
+import { ServiceStack } from "./ServiceStack";
 
 /**
  * WHAT I DO, four offerings on an emerald panel. Asymmetric bento: two
@@ -57,7 +58,12 @@ export function WhatIDo() {
           copy={servicesHeading.intro}
         />
 
-        <div className="mt-16 grid gap-6 md:grid-cols-2 lg:grid-cols-12">
+        {/* Phones get the sticky numbered deck: cards pin and stack. */}
+        <div className="mt-10">
+          <ServiceStack />
+        </div>
+
+        <div className="mt-16 hidden gap-6 md:grid md:grid-cols-2 lg:grid-cols-12">
           {services.map((s, i) => (
             <Reveal key={s.title} delay={i * 0.08} className={SPANS[i]}>
               <Card rotate={s.rotate} className="h-full p-7 text-ink sm:p-8">
