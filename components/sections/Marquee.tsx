@@ -1,4 +1,5 @@
 import { marquee } from "../../lib/content";
+import { DirectionalMarquee } from "../motion/Motion";
 
 /**
  * MARQUEE, the ink strip that separates hero from work. Two rows, opposite
@@ -6,12 +7,12 @@ import { marquee } from "../../lib/content";
  * on the emerald row. Both pause on hover.
  */
 export function Marquee() {
-  const row = [...marquee.items, ...marquee.items];
+  const row = marquee.items;
 
   return (
     <div className="relative z-30 -my-4 select-none" aria-hidden="true">
       <div className="w-[106vw] -translate-x-[3vw] rotate-[-1.6deg] overflow-hidden border-y-[2.5px] border-ink bg-night py-3">
-        <div className="marquee-track animate-marquee items-center gap-6">
+        <DirectionalMarquee className="items-center gap-6" baseDuration={30}>
           {row.map((item, i) => (
             <span key={`${item}-${i}`} className="flex items-center gap-6">
               <span className="font-display text-lg font-extrabold uppercase tracking-tight text-bone sm:text-2xl">
@@ -20,7 +21,7 @@ export function Marquee() {
               <span className="text-leaf">✦</span>
             </span>
           ))}
-        </div>
+        </DirectionalMarquee>
       </div>
 
       <div className="w-[106vw] -translate-x-[2vw] rotate-[1.2deg] overflow-hidden border-b-[2.5px] border-ink bg-leaf py-2">

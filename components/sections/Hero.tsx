@@ -1,6 +1,11 @@
-import { ArrowDown01Icon, ArrowRight01Icon, StarIcon } from "@hugeicons/core-free-icons";
+import {
+  ArrowDown01Icon,
+  ArrowRight01Icon,
+  StarIcon,
+} from "@hugeicons/core-free-icons";
 import { hero } from "../../lib/content";
 import { Reveal } from "../motion/Reveal";
+import { LineReveal } from "../motion/Motion";
 import { Magnetic, Parallax, TiltCard } from "../motion/Loud";
 import { Button } from "../ui/Button";
 import { Doodle } from "../ui/Doodle";
@@ -20,7 +25,11 @@ import { StickerWall } from "./StickerWall";
  */
 export function Hero({ commits, repos }: { commits?: number; repos?: number }) {
   return (
-    <Section id="top" overlap={false} className="relative overflow-hidden bg-paper">
+    <Section
+      id="top"
+      overlap={false}
+      className="relative overflow-hidden bg-paper"
+    >
       {/* Backdrop: halftone wash + oversized marks */}
       <div className="halftone pointer-events-none absolute inset-x-0 top-0 h-[420px] opacity-[0.07]" />
       <Doodle
@@ -47,12 +56,21 @@ export function Hero({ commits, repos }: { commits?: number; repos?: number }) {
             </Reveal>
 
             <Reveal delay={0.06}>
-              <h1 className="mt-4 font-display font-extrabold leading-[0.92] tracking-[-0.03em] text-ink">
-                <span className="block text-[clamp(2.2rem,5vw,3.4rem)]">{hero.greeting}</span>
-                <span className="mt-1 block text-[clamp(2.8rem,8vw,5.6rem)]">
-                  {hero.headline}
-                </span>
-              </h1>
+              <LineReveal
+                className="mt-4 font-display font-extrabold leading-[0.92] tracking-[-0.03em] text-ink"
+                lines={[
+                  <span key="a" className="block text-[clamp(2rem,6vw,3.4rem)]">
+                    {hero.greeting}
+                  </span>,
+                  <span
+                    key="b"
+                    className="relative block text-[clamp(2.6rem,10vw,5.6rem)]"
+                  >
+                    {hero.headline}
+                    <span className="text-tang">.</span>
+                  </span>,
+                ]}
+              />
             </Reveal>
 
             <Reveal delay={0.14}>
@@ -109,8 +127,8 @@ export function Hero({ commits, repos }: { commits?: number; repos?: number }) {
           {/* ------------------------------------------------------------ */}
           {/* Right: the poster wall                                        */}
           {/* ------------------------------------------------------------ */}
-          <div className="relative lg:col-span-5">
-            <div className="relative mx-auto aspect-[4/5] w-full max-w-[430px]">
+          <div className="relative mt-2 lg:col-span-5 lg:mt-0">
+            <div className="relative mx-auto aspect-[4/5] w-full max-w-[320px] sm:max-w-[430px]">
               {/* Poster 1, back */}
               <Parallax distance={26} className="absolute left-0 top-0 w-[62%]">
                 <TiltCard max={10}>
@@ -132,7 +150,10 @@ export function Hero({ commits, repos }: { commits?: number; repos?: number }) {
               </Parallax>
 
               {/* Poster 2, front right */}
-              <Parallax distance={-34} className="absolute right-0 top-[26%] w-[58%]">
+              <Parallax
+                distance={-34}
+                className="absolute right-0 top-[26%] w-[58%]"
+              >
                 <TiltCard max={12}>
                   <figure className="relative rotate-[4deg]">
                     <div className="aspect-square">
@@ -148,7 +169,7 @@ export function Hero({ commits, repos }: { commits?: number; repos?: number }) {
               </Parallax>
 
               {/* Sticker wall sits on top of the posters */}
-              <div className="absolute -bottom-6 left-0 right-0 z-20 origin-top scale-[0.78] sm:scale-[0.85]">
+              <div className="absolute -bottom-10 left-0 right-0 z-20 origin-top scale-[0.62] sm:-bottom-6 sm:scale-[0.85]">
                 <StickerWall compact />
               </div>
             </div>
@@ -156,12 +177,16 @@ export function Hero({ commits, repos }: { commits?: number; repos?: number }) {
         </div>
 
         <Reveal delay={0.5}>
-          <div className="mt-10 flex flex-wrap items-center gap-4">
+          <div className="mt-14 flex flex-wrap items-center gap-4 sm:mt-10">
             <p className="inline-flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-[0.18em] opacity-55">
               <Icon icon={ArrowDown01Icon} size={15} className="animate-bob" />
               {hero.scrollNote}
             </p>
-            <Doodle name="arrow" className="w-12 rotate-90 text-tang" strokeWidth={5} />
+            <Doodle
+              name="arrow"
+              className="w-12 rotate-90 text-tang"
+              strokeWidth={5}
+            />
           </div>
         </Reveal>
       </div>

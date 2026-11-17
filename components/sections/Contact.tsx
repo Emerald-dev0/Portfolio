@@ -62,7 +62,7 @@ export function Contact() {
 
   return (
     <Section id="contact" className="pattern-dots-light bg-night text-bone">
-      <div className="mx-auto max-w-7xl px-5 pb-36 pt-28 sm:px-8">
+      <div className="mx-auto max-w-7xl px-5 pb-24 pt-20 sm:px-8 sm:pb-36 sm:pt-28">
         <div className="grid gap-14 lg:grid-cols-12">
           <div className="lg:col-span-6">
             <SectionHeader pill="Contact" title={contact.heading} copy={contact.copy.join(" ")} />

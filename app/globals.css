@@ -447,3 +447,48 @@ body {
   border-right: 1px dashed color-mix(in srgb, var(--color-ink) 22%, transparent);
   opacity: 0.85;
 }
+
+/* ==========================================================================
+   MOBILE
+   A phone is not a narrow desktop. Line lengths shorten, the display type
+   steps down less aggressively, tap targets reach 44px, the last line of the
+   page clears the dock, and anything that scrolls sideways is scrolled
+   horizontally by design rather than clipped.
+   ========================================================================== */
+@media (max-width: 640px) {
+  .display-hero {
+    letter-spacing: -0.025em;
+  }
+
+  /* Tap targets: the sticker chips and icon buttons grow to a thumb. */
+  .chip {
+    padding: 0.32rem 0.7rem;
+    font-size: 0.72rem;
+  }
+
+  /* Nothing narrower than a comfortable measure. */
+  p,
+  li {
+    max-width: 42ch;
+  }
+
+  /* Horizontal scrollers: a hint of the next card, never a hard cut. */
+  .edge-scroll {
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .edge-scroll::-webkit-scrollbar {
+    display: none;
+  }
+  .edge-scroll > * {
+    scroll-snap-align: center;
+  }
+}
+
+/* Room for the dock on phones with a home indicator. */
+@supports (padding: env(safe-area-inset-bottom)) {
+  body {
+    padding-bottom: 0;
+  }
+}

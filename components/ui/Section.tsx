@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { Reveal } from "../motion/Reveal";
+import { Hairline, LineReveal } from "../motion/Motion";
 
 /**
  * SECTION, a full-bleed flat panel with a rounded, overlapping top edge.
@@ -51,14 +52,27 @@ export function SectionHeader({
       <Reveal>
         <span className="label-pill">{pill}</span>
       </Reveal>
-      <Reveal delay={0.08}>
-        <h2 className="display-section mt-5">{title}</h2>
-      </Reveal>
+      <div className="mt-5">
+        {typeof title === "string" ? (
+          <LineReveal
+            as="h2"
+            className="display-section"
+            lines={title.split(". ").map((line, i, all) => (
+              <span key={i}>{i < all.length - 1 ? `${line}.` : line}</span>
+            ))}
+          />
+        ) : (
+          <Reveal delay={0.08}>
+            <h2 className="display-section">{title}</h2>
+          </Reveal>
+        )}
+      </div>
       {copy ? (
         <Reveal delay={0.16}>
-          <p className="mt-4 max-w-xl text-lg leading-relaxed opacity-90">{copy}</p>
+          <p className="mt-4 max-w-xl text-[1.05rem] leading-relaxed opacity-80">{copy}</p>
         </Reveal>
       ) : null}
+      <Hairline className="mt-7 w-full opacity-15" />
     </div>
   );
 }

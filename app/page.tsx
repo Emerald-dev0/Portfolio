@@ -1,4 +1,6 @@
 import { Nav } from "../components/sections/Nav";
+import { MobileDock } from "../components/sections/MobileDock";
+import { ScrollRail } from "../components/motion/Motion";
 import { Hero } from "../components/sections/Hero";
 import { Marquee } from "../components/sections/Marquee";
 import { WhatIDo } from "../components/sections/WhatIDo";
@@ -30,6 +32,11 @@ import { getGithubSnapshot } from "../lib/github";
  *   contact
  *   footer (the terminal)
  *
+ * Motion: a reading rail across the top, masked line reveals on every
+ * headline, panels that lean as they pass, a marquee that follows the scroll
+ * direction, counting stats, and (below lg) a swipeable project deck plus a
+ * thumb-zone dock.
+ *
  * GitHub data is read server-side with a committed snapshot as the floor, so
  * the page never renders a ", " where a number should be.
  */
@@ -41,6 +48,7 @@ export default async function HomePage() {
 
   return (
     <>
+      <ScrollRail />
       <Nav />
       <main id="main">
         <Hero commits={commits} repos={snapshot.user?.publicRepos} />
@@ -57,6 +65,7 @@ export default async function HomePage() {
         <Contact />
       </main>
       <Footer />
+      <MobileDock />
     </>
   );
 }

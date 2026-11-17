@@ -8,6 +8,7 @@ import { ContributionGraph } from "../ui/ContributionGraph";
 import { Doodle } from "../ui/Doodle";
 import { Icon } from "../ui/Icon";
 import { Section, SectionHeader } from "../ui/Section";
+import { NumberTicker } from "../motion/Motion";
 
 /**
  * GITHUB, proof of work. A dark panel with the contribution heatmap on a
@@ -21,7 +22,7 @@ export function GithubSection({ snapshot }: { snapshot: GithubSnapshot }) {
 
   return (
     <Section id="github" className="pattern-dots-light bg-night text-bone">
-      <div className="mx-auto max-w-7xl px-5 pb-36 pt-28 sm:px-8">
+      <div className="mx-auto max-w-7xl px-5 pb-24 pt-20 sm:px-8 sm:pb-36 sm:pt-28">
         <div className="flex flex-wrap items-end justify-between gap-8">
           <SectionHeader
             pill={githubSection.label}
@@ -31,7 +32,7 @@ export function GithubSection({ snapshot }: { snapshot: GithubSnapshot }) {
           <Reveal>
             <div className="flex flex-wrap gap-3">
               <span className="chip">
-                {stats.publicRepos} public repositories
+                <NumberTicker value={stats.publicRepos} /> public repositories
               </span>
               {contributions ? (
                 <>
@@ -50,7 +51,7 @@ export function GithubSection({ snapshot }: { snapshot: GithubSnapshot }) {
             <div className="sticker p-5 text-ink sm:p-7">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <p className="font-mono text-xs font-bold uppercase tracking-[0.14em]">
-                  {contributions.total.toLocaleString()} contributions in the last year
+                  <NumberTicker value={contributions.total} /> contributions in the last year
                 </p>
                 <p className="font-mono text-[0.65rem] font-bold uppercase tracking-[0.14em] text-ink/50">
                   {describeProvenance(snapshot)}

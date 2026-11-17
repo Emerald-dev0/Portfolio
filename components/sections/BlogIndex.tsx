@@ -70,7 +70,7 @@ export function BlogIndex({ posts, initialTag }: { posts: Post[]; initialTag?: s
           strokeWidth={5}
         />
 
-        <div className="mx-auto max-w-7xl px-5 pb-16 pt-32 sm:px-8 lg:pt-40">
+        <div className="mx-auto max-w-7xl px-5 pb-12 pt-24 sm:px-8 sm:pb-16 sm:pt-32 lg:pt-40">
           <Reveal>
             <span className="label-pill">
               <span className="size-2 rounded-full bg-leaf" />

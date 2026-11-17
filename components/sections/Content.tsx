@@ -27,7 +27,7 @@ export function Content() {
 
   return (
     <Section id="content" className="pattern-grid bg-paper">
-      <div className="mx-auto max-w-7xl px-5 pb-36 pt-28 sm:px-8">
+      <div className="mx-auto max-w-7xl px-5 pb-24 pt-20 sm:px-8 sm:pb-36 sm:pt-28">
         <SectionHeader
           pill={contentHeading.label}
           title={contentHeading.heading}

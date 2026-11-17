@@ -46,7 +46,7 @@ export function Nav() {
   };
 
   return (
-    <header className="fixed inset-x-0 top-4 z-50 flex justify-center px-4">
+    <header className="fixed inset-x-0 top-4 z-50 flex justify-center px-4 max-md:hidden">
       <nav
         aria-label="Primary"
         className="sticker-sm flex w-full max-w-3xl items-center gap-2 rounded-full py-2 pl-3 pr-2 sm:gap-3 sm:pl-4"

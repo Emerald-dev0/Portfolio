@@ -11,7 +11,7 @@ import { Section, SectionHeader } from "../ui/Section";
 export function Process() {
   return (
     <Section id="process" className="pattern-dots-light bg-grape text-bone">
-      <div className="mx-auto max-w-7xl px-5 pb-36 pt-28 sm:px-8">
+      <div className="mx-auto max-w-7xl px-5 pb-24 pt-20 sm:px-8 sm:pb-36 sm:pt-28">
         <SectionHeader
           pill={processHeading.label}
           title={processHeading.heading}

@@ -15,7 +15,7 @@ const FACT_OFFSET = ["", "lg:mt-10", "", "lg:mt-10", "", "lg:mt-10"];
 export function About() {
   return (
     <Section id="about" className="pattern-dots bg-tang text-night">
-      <div className="mx-auto max-w-7xl px-5 pb-36 pt-28 sm:px-8">
+      <div className="mx-auto max-w-7xl px-5 pb-24 pt-20 sm:px-8 sm:pb-36 sm:pt-28">
         <div className="grid gap-14 lg:grid-cols-12">
           <div className="lg:col-span-6">
             <SectionHeader pill={about.label} title={about.heading} />

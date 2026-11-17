@@ -30,7 +30,7 @@ export function Footer() {
         strokeWidth={5}
       />
 
-      <div className="mx-auto max-w-7xl px-5 pb-10 pt-20 sm:px-8">
+      <div className="mx-auto max-w-7xl px-5 pb-[calc(env(safe-area-inset-bottom)+96px)] pt-16 sm:px-8 sm:pb-10 sm:pt-20 md:pb-10">
         <div className="grid gap-12 lg:grid-cols-12">
           {/* Terminal */}
           <div className="lg:col-span-7">

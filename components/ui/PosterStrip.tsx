@@ -1,4 +1,5 @@
 import { InkPoster } from "./InkPoster";
+import { ScrollSkew } from "../motion/Motion";
 
 /**
  * POSTER STRIP
@@ -33,27 +34,34 @@ export function PosterStrip({ reverse = false }: { reverse?: boolean }) {
   const row = [...POSTERS, ...POSTERS];
 
   return (
-    <div
-      aria-hidden="true"
-      className={`relative z-20 -my-6 w-[108vw] -translate-x-[4vw] overflow-hidden border-y-[2.5px] border-ink bg-night py-4 ${
-        reverse ? "rotate-[1.2deg]" : "rotate-[-1.4deg]"
-      }`}
-    >
+    <ScrollSkew>
       <div
-        className={`marquee-track items-center gap-4 ${
-          reverse ? "animate-marquee-rev" : "animate-marquee"
+        aria-hidden="true"
+        className={`relative z-20 -my-6 w-[108vw] -translate-x-[4vw] overflow-hidden border-y-[2.5px] border-ink bg-night py-4 ${
+          reverse ? "rotate-[1.2deg]" : "rotate-[-1.4deg]"
         }`}
-        style={{ animationDuration: reverse ? "52s" : "44s" }}
       >
-        {row.map((p, i) => (
-          <figure
-            key={`${p.name}-${i}`}
-            className="relative h-[132px] w-[132px] shrink-0 rotate-[-1.5deg] overflow-hidden rounded-[10px] border-[2.5px] border-bone shadow-[4px_4px_0_var(--color-tang)] sm:h-[160px] sm:w-[160px]"
-          >
-            <InkPoster index={p.index} name={p.name} role={p.role} crayon={p.crayon} />
-          </figure>
-        ))}
+        <div
+          className={`marquee-track items-center gap-4 ${
+            reverse ? "animate-marquee-rev" : "animate-marquee"
+          }`}
+          style={{ animationDuration: reverse ? "52s" : "44s" }}
+        >
+          {row.map((p, i) => (
+            <figure
+              key={`${p.name}-${i}`}
+              className="relative h-[132px] w-[132px] shrink-0 rotate-[-1.5deg] overflow-hidden rounded-[10px] border-[2.5px] border-bone shadow-[4px_4px_0_var(--color-tang)] sm:h-[160px] sm:w-[160px]"
+            >
+              <InkPoster
+                index={p.index}
+                name={p.name}
+                role={p.role}
+                crayon={p.crayon}
+              />
+            </figure>
+          ))}
+        </div>
       </div>
-    </div>
+    </ScrollSkew>
   );
 }

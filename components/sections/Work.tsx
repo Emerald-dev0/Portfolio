@@ -12,6 +12,7 @@ import {
 } from "../../lib/content";
 import type { GithubSnapshot } from "../../lib/github";
 import { Reveal } from "../motion/Reveal";
+import { ProjectDeck } from "./ProjectDeck";
 import { TiltCard } from "../motion/Loud";
 import { Button } from "../ui/Button";
 import { Doodle } from "../ui/Doodle";
@@ -83,7 +84,7 @@ function LinkPill({
 export function Work({ snapshot }: { snapshot: GithubSnapshot }) {
   return (
     <Section id="work" className="bg-paper">
-      <div className="mx-auto max-w-7xl px-5 pb-32 pt-28 sm:px-8">
+      <div className="mx-auto max-w-7xl px-5 pb-24 pt-20 sm:px-8 sm:pb-32 sm:pt-28">
         <div className="flex flex-wrap items-end justify-between gap-8">
           <SectionHeader
             pill={workHeading.label}
@@ -101,7 +102,11 @@ export function Work({ snapshot }: { snapshot: GithubSnapshot }) {
         {/* ---------------------------------------------------------------- */}
         {/* Featured                                                          */}
         {/* ---------------------------------------------------------------- */}
-        <div className="mt-16 flex flex-col gap-16 lg:gap-24">
+        <div className="mt-12 lg:hidden">
+          <ProjectDeck />
+        </div>
+
+        <div className="mt-16 hidden flex-col gap-16 lg:flex lg:gap-24">
           {featuredProjects.map((p, i) => {
             const repo = findRepo(snapshot, p.repo);
             const url = repoUrl(snapshot, p.repo);
