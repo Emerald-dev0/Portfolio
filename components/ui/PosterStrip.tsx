@@ -1,21 +1,32 @@
-import Image from "next/image";
+import { InkPoster } from "./InkPoster";
 
 /**
- * POSTER STRIP, a rotated, auto-scrolling band of project posters. It's the
- * wallpaper between sections: loud, full-bleed, and pure repetition of the
- * project artwork already on the page. Decorative, so hidden from screen
- * readers (the projects themselves are described in the Work section).
+ * POSTER STRIP
+ * ------------------------------------------------------------------------
+ * A rotated, auto-scrolling band of project posters: the loud break between
+ * sections. Each poster is drawn from the same ink materials as the work
+ * panels, so nothing here is a bitmap and nothing has to load.
+ *
+ * Decorative, so it is hidden from the accessibility tree; the projects
+ * themselves are described properly in the Work section.
  */
 
-const POSTERS = [
-  { src: "/projects/calder.webp", name: "Calder" },
-  { src: "/projects/testflow.webp", name: "TestFlow" },
-  { src: "/projects/orvn.webp", name: "ORREI" },
-  { src: "/projects/telegram.webp", name: "GitBot" },
-  { src: "/projects/intake.webp", name: "Intake" },
-  { src: "/projects/opencircle.webp", name: "OpenCircle" },
-  { src: "/projects/blueprint.webp", name: "Blueprint" },
-  { src: "/projects/cypher.webp", name: "Cypher" },
+type Poster = {
+  index: string;
+  name: string;
+  role: string;
+  crayon: "leaf" | "tang" | "grape" | "lagoon" | "blush" | "night";
+};
+
+const POSTERS: Poster[] = [
+  { index: "01", name: "Calder", role: "email api", crayon: "grape" },
+  { index: "02", name: "Intake", role: "ai forms", crayon: "tang" },
+  { index: "03", name: "TestFlow", role: "exam backend", crayon: "leaf" },
+  { index: "04", name: "ORREI", role: "property pages", crayon: "lagoon" },
+  { index: "05", name: "Cypher", role: "lan control", crayon: "blush" },
+  { index: "06", name: "Blueprint", role: "code intel", crayon: "night" },
+  { index: "07", name: "GitBot", role: "telegram bot", crayon: "tang" },
+  { index: "08", name: "PhoneDock", role: "device bridge", crayon: "leaf" },
 ];
 
 export function PosterStrip({ reverse = false }: { reverse?: boolean }) {
@@ -37,12 +48,9 @@ export function PosterStrip({ reverse = false }: { reverse?: boolean }) {
         {row.map((p, i) => (
           <figure
             key={`${p.name}-${i}`}
-            className="relative h-[132px] w-[132px] shrink-0 overflow-hidden rounded-xl border-[2.5px] border-bone shadow-[4px_4px_0_var(--color-tang)] sm:h-[160px] sm:w-[160px]"
+            className="relative h-[132px] w-[132px] shrink-0 rotate-[-1.5deg] overflow-hidden rounded-[10px] border-[2.5px] border-bone shadow-[4px_4px_0_var(--color-tang)] sm:h-[160px] sm:w-[160px]"
           >
-            <Image src={p.src} alt="" fill sizes="160px" className="object-cover" />
-            <figcaption className="absolute inset-x-0 bottom-0 bg-ink/75 py-0.5 text-center font-mono text-[0.55rem] font-bold uppercase tracking-[0.14em] text-bone">
-              {p.name}
-            </figcaption>
+            <InkPoster index={p.index} name={p.name} role={p.role} crayon={p.crayon} />
           </figure>
         ))}
       </div>

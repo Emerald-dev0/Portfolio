@@ -5,7 +5,6 @@ date: 2026-11-06
 tags: ["Journey","Building"]
 featured: false
 draft: false
-cover: "/projects/testflow.webp"
 ---
 
 I'm the backend developer on TestFlow, a CBT practice platform for Obafemi Awolowo University students. It now carries 1,500+ questions across 50+ courses, and over 1,300 students have practised on it.

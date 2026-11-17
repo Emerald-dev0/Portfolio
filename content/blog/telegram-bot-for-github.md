@@ -5,7 +5,6 @@ date: 2026-11-14
 tags: ["Bots", "Node.js", "Telegram"]
 featured: false
 draft: false
-cover: "/projects/telegram.webp"
 ---
 
 I miss GitHub notifications constantly. Not because there are too many, because I don't live on GitHub. So I built a bot that pipes GitHub events into a chat, and shipped the first version on WhatsApp with Baileys.

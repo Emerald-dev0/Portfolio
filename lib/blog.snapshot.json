@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-17T15:00:38.188Z",
+ "generated": "2026-11-17T16:23:54.540Z",
  "posts": [
   {
    "slug": "telegram-bot-for-github",
@@ -13,7 +13,6 @@
    ],
    "featured": false,
    "draft": false,
-   "cover": "/projects/telegram.webp",
    "content": [
     {
      "type": "paragraph",
@@ -190,17 +189,10 @@
    ],
    "featured": true,
    "draft": false,
-   "cover": "/projects/calder.webp",
    "content": [
     {
      "type": "paragraph",
      "text": "Calder started as an annoyance. Every project I shipped needed transactional email, password resets, receipts, notifications, and every time I wired up a provider I ended up rebuilding the same three things: templates, delivery tracking, and a dashboard that tells me what actually happened to the email I sent."
-    },
-    {
-     "type": "image",
-     "src": "/projects/calder.webp",
-     "alt": "Calder, developer-first email infrastructure",
-     "caption": "The first primitive is one API call. Everything else hangs off it."
     },
     {
      "type": "heading",
@@ -299,7 +291,6 @@
    ],
    "featured": false,
    "draft": false,
-   "cover": "/projects/testflow.webp",
    "content": [
     {
      "type": "paragraph",
@@ -463,7 +454,6 @@
    ],
    "featured": false,
    "draft": false,
-   "cover": "/projects/blueprint.webp",
    "content": [
     {
      "type": "paragraph",
@@ -534,7 +524,6 @@
    ],
    "featured": false,
    "draft": false,
-   "cover": "/projects/orvn.webp",
    "content": [
     {
      "type": "paragraph",

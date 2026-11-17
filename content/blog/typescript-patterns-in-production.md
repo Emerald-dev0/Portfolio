@@ -5,7 +5,6 @@ date: 2026-10-22
 tags: ["TypeScript","Code"]
 featured: false
 draft: false
-cover: "/projects/blueprint.webp"
 ---
 
 I've read the type-level programming books. In production, with a deadline and a codebase that other people (future me included) have to read, I use about five patterns. They've each prevented a class of bug I used to ship regularly.

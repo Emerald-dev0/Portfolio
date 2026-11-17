@@ -5,13 +5,10 @@ date: 2026-11-10
 tags: ["Building","TypeScript","APIs"]
 featured: true
 draft: false
-cover: "/projects/calder.webp"
 ---
 
 Calder started as an annoyance. Every project I shipped needed transactional email, password resets, receipts, notifications, and every time I wired up a provider I ended up rebuilding the same three things: templates, delivery tracking, and a dashboard that tells me what actually happened to the email I sent.
 
-![Calder, developer-first email infrastructure](/projects/calder.webp)
-_The first primitive is one API call. Everything else hangs off it._
 
 ## Email as an afterthought
 

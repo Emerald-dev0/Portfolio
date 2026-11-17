@@ -5,7 +5,6 @@ date: 2026-09-30
 tags: ["Design","Motion"]
 featured: false
 draft: false
-cover: "/projects/orvn.webp"
 ---
 
 Two apps can do the same thing and feel completely different. One feels instant and intentional; the other feels like it's thinking about it. The difference is rarely performance, it's feedback. Interfaces that feel alive tell you what's happening, constantly, in small ways.
