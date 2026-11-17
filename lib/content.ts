@@ -1,107 +1,512 @@
 /**
  * ============================================================================
- * CONTENT — single source of truth for all copy.
+ * CONTENT, every word on the site, in one place.
  * ============================================================================
- * Voice: ~80% engineer, ~20% dry humor. Facts over adjectives. Short lines.
- * Rare, sharp jokes (never bitter). All project copy is grounded in the real
- * products. Contact details are real and confirmed.
+ * Links and socials live in `lib/config.ts`. This file is the copy: hero,
+ * services, projects, about, process, content pillars, contact, footer.
  *
- * Two things live here that changed the job of this file:
+ * The project copy is written from each project's own README or live site, and
+ * it says plainly where something is still in progress. Accuracy beats hype.
  *
- *   `githubOverlay` — hand-written copy for repos that come from GitHub. The
- *   site reads your pinned repos, and this map is where you make them sound
- *   like you instead of like a repo description. Key it "owner/name" or just
- *   "name" (case-insensitive). Anything you don't write falls back to the
- *   repo's own description/README, then to an honest placeholder.
- *
- *   `curatedProjects` — projects that aren't pinned on GitHub. These render
- *   after the pins so the page never depends on a pin being set.
+ * No em dashes anywhere in this file. Commas, colons and full stops only.
  * ============================================================================
  */
 
-/* Flip to true once real contact details exist. */
-export const CONTACT_CONFIRMED = true;
-
-/* Dual identity — real name + online persona. */
-export const identity = {
-  realName: "Daniel Oluwadare",
-  persona: "Emerald",
-  personaHandle: "@emerald_dev",
-  github: "Emerald-dev0",
-};
-
-export type NavLink = { label: string; href: string };
-
-export const nav = {
-  wordmark: "DANIEL",
-  links: [
-    { label: "about", href: "#about" },
-    { label: "work", href: "#work" },
-    { label: "stack", href: "#stack" },
-    { label: "journey", href: "#journey" },
-    { label: "contact", href: "#contact" },
-  ] satisfies NavLink[],
-};
-
+/* --------------------------------------------------------------------------
+ * HERO
+ * ------------------------------------------------------------------------ */
 export const hero = {
-  // Small eyebrow that cycles through identity facets.
-  kicker: "SOFTWARE ENGINEER",
-  kickerRotation: [
-    "SOFTWARE ENGINEER",
-    "AI INFRASTRUCTURE BUILDER",
-    "FULL-STACK, NIGERIA",
-    "ALSO KNOWN AS EMERALD",
+  greeting: "Hey, I'm Daniel.",
+  headline: "I build software.",
+  intro: [
+    "I'm a Computer Science student at Obafemi Awolowo University with a genuine interest in technology and building things that solve real problems.",
+    "I spend most of my time working on backend systems, full-stack applications and developer tools. I enjoy taking an idea, working through the technical challenges and turning it into something people can actually use.",
+    "Some of that work is already live. Some is still a work in progress. I share the journey as I go.",
   ],
-  greeting: "Hi, I'm",
-  realName: "Daniel Oluwadare.",
-  personaLine: "Online, I go by Emerald.",
-  // The rotating verb-phrase that rewrites itself under the name.
-  buildingPrefix: "Building",
-  buildingRotation: [
-    "AI developer infrastructure.",
-    "production web applications.",
-    "tools developers actually enjoy using.",
-    "developer experiences.",
-    "products from raw ideas.",
-    "the future of AI engineering.",
-  ],
-  /** Cycles in the margin. Facts, not bits. */
-  personaRotation: [
-    "Most of my commits land after midnight.",
-    "Currently building Contextly and Blueprint.",
-    "Backend, despite my best efforts.",
-    "Still learning. Still shipping.",
-  ],
-  tagline: "Full-stack by trade. Backend by circumstance.",
-  cta: "Get in touch",
-  ctaWork: "See the work",
-  scrollNote: "scroll to explore",
-  // Facts, kept deliberately small and checkable.
-  stats: [
-    { value: "1,600+", label: "commits since Dec 2025" },
-    { value: "3", label: "production systems shipped" },
-    { value: "20+", label: "full-stack projects built" },
+  ctaWork: "Explore my work",
+  ctaContact: "Let's work together",
+  badge: "Open to freelance projects and interesting collaborations.",
+  location: "Ile-Ife, Nigeria",
+  dragHint: "Drag me",
+  scrollNote: "Scroll to explore",
+  posters: [
+    { name: "TestFlow", note: "Live", crayon: "leaf" as const, index: "03" },
+    { name: "Calder", note: "In development", crayon: "grape" as const, index: "01" },
   ],
 };
 
-export const about = {
-  tag: "ABOUT",
-  noteId: "NOTE #001",
-  heading: "Started with curiosity and a lot of broken builds.",
+/* --------------------------------------------------------------------------
+ * MARQUEE, the stack strip.
+ * ------------------------------------------------------------------------ */
+export const marquee = {
+  items: [
+    "TypeScript",
+    "Next.js",
+    "React",
+    "Node.js",
+    "PostgreSQL",
+    "Prisma",
+    "Tailwind CSS",
+    "Python",
+    "Kotlin",
+    "MCP",
+    "Neon",
+    "Vercel",
+    "Framer Motion",
+    "Groq",
+  ],
+  note: "currently building: Calder & TestFlow",
+  projects: [
+    "Calder",
+    "TestFlow",
+    "ORREI",
+    "GitBot",
+    "Intake",
+    "Blueprint",
+    "Cypher",
+  ],
+};
+
+/* --------------------------------------------------------------------------
+ * WHAT I DO
+ * ------------------------------------------------------------------------ */
+export type Service = {
+  icon: "code" | "database" | "wrench" | "sparkles";
+  title: string;
+  copy: string;
+  chips: string[];
+  color: "leaf" | "tang" | "grape" | "lagoon";
+  rotate: number;
+};
+
+export const servicesHeading = {
+  label: "What I do",
+  heading: "Things I can help you build.",
+  intro:
+    "I work across different parts of software development, depending on what a project needs. Here are some areas I spend most of my time working in.",
+  cta: "Have something in mind? Let's talk.",
+};
+
+export const services: Service[] = [
+  {
+    icon: "database",
+    title: "Backend Development & APIs",
+    copy: "I enjoy working on the parts of an application that users don't necessarily see but depend on every day. From authentication and database design to APIs, background jobs and third-party integrations, I focus on building systems that are reliable, maintainable and make sense as a project grows.",
+    chips: ["Node.js", "TypeScript", "PostgreSQL", "Prisma", "Neon", "Queues"],
+    color: "leaf",
+    rotate: -1,
+  },
+  {
+    icon: "code",
+    title: "Full-stack Development",
+    copy: "I build web applications from the ground up, working across the frontend and backend to make sure everything fits together. That means thinking about the data, application logic, user experience and all the little details that make a product enjoyable to use.",
+    chips: ["Next.js", "React", "TypeScript", "Tailwind CSS"],
+    color: "tang",
+    rotate: 1,
+  },
+  {
+    icon: "wrench",
+    title: "Developer Tools & Automation",
+    copy: "I like finding ways to make repetitive work less repetitive. I've worked on bots, integrations and automation tools that connect services and simplify everyday development workflows. I'm also exploring how AI can fit into the tools developers already use.",
+    chips: ["Python", "Telegram Bot API", "MCP", "GitHub API", "CI/CD"],
+    color: "grape",
+    rotate: -1,
+  },
+  {
+    icon: "sparkles",
+    title: "Frontend & Interface Development",
+    copy: "I care about how software feels to use, not just whether it works. I enjoy building clean interfaces, thoughtful interactions and responsive layouts. Things like loading states, transitions, accessibility and small usability details matter just as much as the main functionality.",
+    chips: ["React", "Next.js", "Framer Motion", "Tailwind CSS", "Design Systems"],
+    color: "lagoon",
+    rotate: 1,
+  },
+];
+
+/* --------------------------------------------------------------------------
+ * SELECTED WORK
+ * `repo` is the GitHub repo name used for live stats; `null` = no public repo.
+ * ------------------------------------------------------------------------ */
+export type Project = {
+  name: string;
+  tagline: string;
+  description: string;
+  stack: string[];
+  repo: string | null;
+  liveUrl: string | null;
+  role: string;
+  color: "leaf" | "tang" | "grape" | "lagoon";
+  status: string;
+  note: string;
+  /** Honest footnote: pending work, scope limits, or current state. */
+  footnote?: string;
+};
+
+export const workHeading = {
+  label: "Selected work",
+  heading: "A few things I've been working on.",
+  intro:
+    "Most of these started with a problem I wanted to solve. Others came from curiosity and a desire to understand how something could be built.",
+  closing: "They're real projects, with real engineering decisions behind them.",
+  count: "4 featured",
+  archiveCount: "10+ other projects and experiments",
+};
+
+export const featuredProjects: Project[] = [
+  {
+    name: "Calder",
+    tagline: "Developer-first communication infrastructure.",
+    description:
+      "Every application needs to communicate with its users. I kept running into the same problem whenever I worked on a new product: setting up transactional email meant rebuilding much of the same infrastructure. That's what led me to start Calder. It's a transactional email API with its own queue, background workers, AWS SES integration and dashboard. The idea is to give developers a straightforward way to handle application email without having to manage all the underlying infrastructure themselves. I'm building it with the intention of expanding beyond email into other communication channels.",
+    stack: ["TypeScript", "Next.js", "PostgreSQL", "AWS SES", "Turborepo"],
+    repo: "Calder",
+    liveUrl: "https://calder-web.vercel.app",
+    role: "Solo developer: architecture, API, worker and dashboard.",
+    color: "leaf",
+    status: "In development",
+    note: "communication infrastructure",
+    footnote:
+      "Core email delivery and worker infrastructure are implemented and manually tested. Billing and SDK distribution are still being worked on, so the HTTP quickstart is currently the recommended way to integrate.",
+  },
+  {
+    name: "Intake",
+    tagline: "Describe, review, create.",
+    description:
+      "Creating a form shouldn't mean spending the next twenty minutes clicking through settings and arranging questions. Intake lets you describe the form you want in plain language. It interprets your request, puts together a proposed structure and lets you review everything before creating the form in your Google Forms or Typeform account. I built it around a simple idea: people should spend more time thinking about what information they need and less time figuring out how to collect it.",
+    stack: ["TypeScript", "Next.js", "Neon", "Better Auth", "Groq"],
+    repo: "Intake",
+    liveUrl: "https://intak.vercel.app",
+    role: "Solo developer: full-stack development, AI pipeline and provider integrations.",
+    color: "tang",
+    status: "Live",
+    note: "describe, review, create",
+    footnote:
+      "AI operations are metered through a server-side credit ledger. Provider credentials remain protected, and unsupported integrations are communicated honestly rather than pretending they're available. Microsoft Forms creation isn't supported because Microsoft doesn't provide the required creation API.",
+  },
+  {
+    name: "TestFlow",
+    tagline: "Exam confidence for Nigerian university students.",
+    description:
+      "TestFlow is a computer-based testing and practice platform built initially for students at Obafemi Awolowo University. It gives students a place to practise questions across their courses, take timed tests, review explanations and keep track of their progress. I've been responsible for much of the backend engineering behind the exam experience, including question delivery, scoring, study-plan progress and the systems that support the practice experience. Working on TestFlow has been one of my most valuable learning experiences because the decisions I make in the code have a direct impact on how students use the platform.",
+    stack: ["Next.js", "Node.js", "PostgreSQL", "Question Bank"],
+    repo: null,
+    liveUrl: "https://testflow.com.ng",
+    role: "Backend developer.",
+    color: "leaf",
+    status: "Live",
+    note: "in students' hands",
+    footnote:
+      "Over 1,300 students and a question bank of more than 1,500 questions across 50+ courses. The product is public, while its source code is private.",
+  },
+  {
+    name: "ORREI",
+    tagline: "A property deserves better than a forwarded PDF.",
+    description:
+      "ORREI is being developed under ORVN Labs for real estate wholesalers and disposition teams in the United States. The idea is to take property information that's often scattered across documents, messages and spreadsheets and turn it into a structured, shareable presentation for potential buyers. One of the things I care about most with this project is data accuracy. Property information needs to retain its source, and AI-generated suggestions shouldn't automatically become published facts. People should be able to review and approve information before it goes live.",
+    stack: ["TypeScript", "Next.js", "Neon", "PostgreSQL RLS", "Cloudflare R2"],
+    repo: "Orvn-labs2",
+    liveUrl: "https://www.orvnlabs.com",
+    role: "Platform engineering, data modelling and publishing workflow.",
+    color: "grape",
+    status: "In development · Private beta",
+    note: "ORVN Labs",
+    footnote:
+      "Currently in a private beta with approved users, with early activity concentrated in Florida. The product's public website uses illustrative screens and property information rather than live customer data.",
+  },
+];
+
+export type ArchiveProject = {
+  name: string;
+  blurb: string;
+  stack: string[];
+  repo: string | null;
+  liveUrl: string | null;
+  color: "leaf" | "tang" | "grape" | "lagoon";
+  status: string;
+};
+
+export const archiveHeading = {
+  label: "And the rest of the wall",
+  description: "Client work, experiments and ideas I've enjoyed bringing to life.",
+  cta: "Every repository on GitHub",
+  note: "Or tell me what to build next.",
+};
+
+export const moreProjects: ArchiveProject[] = [
+  {
+    name: "Cypher",
+    blurb:
+      "A project that lets you control a Windows PC from your phone over your local network. It includes screen streaming, clipboard synchronisation, file transfers and session pairing without relying on cloud servers.",
+    stack: ["HTML", "Node.js", "Android"],
+    repo: "Cypher",
+    liveUrl: "https://cypher-one-omega.vercel.app",
+    color: "tang",
+    status: "Shipped",
+  },
+  {
+    name: "Blueprint",
+    blurb:
+      "An exploration of what an AI-powered engineering workspace could look like. It combines codebase intelligence, architecture decision records and local-first indexing to help developers understand and work with their projects.",
+    stack: ["TypeScript", "Tauri", "Rust"],
+    repo: "Blueprint",
+    liveUrl: null,
+    color: "grape",
+    status: "Alpha",
+  },
+  {
+    name: "GitBot",
+    blurb:
+      "A Telegram bot that brings GitHub activity into chat. It sends updates about commits, pushes and branches, making it easier to keep up with what's happening across my repositories.",
+    stack: ["TypeScript", "Telegram Bot API", "GitHub Webhooks"],
+    repo: null,
+    liveUrl: null,
+    color: "leaf",
+    status: "In development",
+  },
+  {
+    name: "PhoneDock",
+    blurb:
+      "An ongoing project exploring better ways to connect phones and computers. The goal is to support things like screen sharing, file transfers, clipboard synchronisation and using a phone as a second display.",
+    stack: ["Kotlin", "Android", "Cross-platform development"],
+    repo: "PhoneDock",
+    liveUrl: null,
+    color: "grape",
+    status: "In development",
+  },
+  {
+    name: "Attack on Titan",
+    blurb:
+      "An experimental, cinematic web experience inspired by the visual world of Attack on Titan. I used it to explore animation, transitions, image-led layouts and unconventional navigation.",
+    stack: ["TypeScript", "Framer Motion", "Art Direction"],
+    repo: "AOT",
+    liveUrl: "https://aot-verse.vercel.app",
+    color: "tang",
+    status: "Live",
+  },
+  {
+    name: "LIFELINK",
+    blurb:
+      "An emergency health identity concept built around the idea of a digital twin. The goal is to make important health information accessible when someone cannot communicate for themselves.",
+    stack: ["TypeScript", "Next.js"],
+    repo: "lifelink-emergency-twin",
+    liveUrl: "https://lifelink-rho.vercel.app",
+    color: "lagoon",
+    status: "Prototype",
+  },
+  {
+    name: "Formak",
+    blurb:
+      "A small design and development experiment exploring claymorphism, soft shadows, rounded surfaces and playful interactions.",
+    stack: ["TypeScript", "CSS"],
+    repo: "Formak",
+    liveUrl: "https://forma-kappa-orcin.vercel.app",
+    color: "leaf",
+    status: "Experiment",
+  },
+  {
+    name: "Noma Form",
+    blurb:
+      "An exploration of how typography can influence the experience of filling out a form, using type as the main visual element rather than relying on decorative components.",
+    stack: ["TypeScript", "Typography"],
+    repo: "Noma-Form",
+    liveUrl: "https://noma.pxxl.click",
+    color: "tang",
+    status: "Experiment",
+  },
+  {
+    name: "This Portfolio",
+    blurb:
+      "The website you're currently exploring. I built it to bring together my projects, writing, GitHub activity and a little bit of personality.",
+    stack: ["Next.js", "Tailwind CSS", "Framer Motion"],
+    repo: "Portfolio",
+    liveUrl: "https://dev-emerald-one.vercel.app",
+    color: "lagoon",
+    status: "Live",
+  },
+];
+
+/* --------------------------------------------------------------------------
+ * GITHUB
+ * ------------------------------------------------------------------------ */
+export const githubSection = {
+  label: "GitHub",
+  heading: "A look at what I've been building.",
   body: [
-    "Started teaching myself programming in 2024 while studying Computer Science. The degree gives me the theory; the late nights taught me why the build broke, then why the fix broke too.",
-    "I gravitate toward frontend work, but most projects pull me into backend architecture and infrastructure too, and I've learned to enjoy that part.",
-    "Recently, that curiosity has shifted toward AI developer infrastructure: building tools that help engineers and AI systems work together more effectively.",
+    "I enjoy sharing my work publicly, whether it's a finished project, a small experiment or something I'm still trying to figure out.",
+    "My GitHub is where most of that work lives. You'll find applications, experiments, utilities and the occasional idea that got a little out of hand.",
   ],
-  building: "Studying Computer Science at Obafemi Awolowo University, based in Osun State, Nigeria.",
-  pullQuote: "Code is how I find out if the idea actually works.",
+  statsLabel: "Synced from GitHub",
+  cta: "Follow me on GitHub",
+  note: "New projects and repositories appear here automatically.",
 };
 
-/* ---------------------------------------------------------------------------
- * COLOUR — a small crayon box for panels and character accessories.
- * The values live in globals.css (@theme); this is the type + list so copy and
- * components can never invent a colour that doesn't exist.
- * ------------------------------------------------------------------------- */
+/* --------------------------------------------------------------------------
+ * ABOUT
+ * ------------------------------------------------------------------------ */
+export const about = {
+  label: "About",
+  heading: "A little more about me.",
+  body: [
+    "I've always been interested in technology and how things work. That curiosity eventually led me to start learning programming before gaining admission to Obafemi Awolowo University, where I'm now studying Computer Science.",
+    "What started as an interest in understanding how software works gradually turned into something I genuinely enjoy doing. I'd come across an idea, try to build it, run into problems, spend time figuring things out and learn something new in the process.",
+    "That's still how I approach development today.",
+    "I'm particularly interested in backend engineering. I enjoy understanding how systems fit together, how data moves through an application and what happens behind the scenes to make things work reliably.",
+    "At the same time, I don't like restricting myself to one part of development. Building actual products has exposed me to frontend engineering, databases, infrastructure, deployment and product decisions. I've learned to appreciate how all these pieces come together.",
+    "Lately, I've also been exploring AI infrastructure and developer tooling, particularly ways to make software development more efficient without losing the engineering thinking behind it.",
+    "There's still a lot I want to learn, and plenty of things I want to build. For now, I'm focused on getting better by doing the work, taking on challenging problems and learning from the things I create.",
+  ],
+  currentlyLabel: "Currently",
+  facts: [
+    { label: "Computer Science student", sub: "Obafemi Awolowo University" },
+    { label: "Ile-Ife, Osun State", sub: "Nigeria · UTC+1" },
+    {
+      label: "Building in public",
+      sub: "Sharing projects, development tips and things I'm learning.",
+    },
+    { label: "GDG OAU", sub: "Community member." },
+    {
+      label: "Usually working on something",
+      sub: "even when I should probably be sleeping.",
+    },
+  ],
+  signature: "A human, not a résumé.",
+  currently: {
+    building: "Calder, a communication infrastructure platform for developers.",
+    learning: "System design, distributed systems and AI infrastructure.",
+    reading: "Designing Data-Intensive Applications.",
+    listening: "Whatever happens to be playing on Spotify.",
+  },
+};
+
+/* --------------------------------------------------------------------------
+ * SPOTIFY
+ * ------------------------------------------------------------------------ */
+export const spotifySection = {
+  label: "Currently listening",
+  heading: "What I'm listening to while building.",
+  body: "A little soundtrack to the projects, late-night debugging sessions and everything in between.",
+  note: "Pulled live from Spotify.",
+};
+
+/* --------------------------------------------------------------------------
+ * PROCESS
+ * ------------------------------------------------------------------------ */
+export const processHeading = {
+  label: "Process",
+  heading: "From an idea to something people can use.",
+  intro:
+    "I like keeping projects straightforward. Good communication, clear expectations and regular progress make a huge difference.",
+};
+
+export const processSteps = [
+  {
+    title: "Understand the problem",
+    copy: "Before jumping into code, I'd like to understand what you're trying to achieve, who you're building it for and what success actually looks like. Sometimes the best first step is figuring out what doesn't need to be built.",
+    deliverable: "A clear scope and agreed direction.",
+  },
+  {
+    title: "Work out the approach",
+    copy: "Once we understand the problem, I'll work through the structure, technical decisions and user experience. If there's something particularly important or uncertain, I'd rather test it early than discover problems halfway through development.",
+    deliverable: "A practical plan and an early look at the solution.",
+  },
+  {
+    title: "Build and share progress",
+    copy: "I prefer working in smaller, manageable steps rather than disappearing for weeks and returning with a surprise. You'll have something to review as development progresses, and we can address feedback along the way.",
+    deliverable: "Regular updates and working features.",
+  },
+  {
+    title: "Get it live",
+    copy: "We'll get the application deployed, check that everything works as expected and take care of the final details. I'm also happy to help with fixes and improvements after launch.",
+    deliverable: "A deployed product and a proper handover.",
+  },
+];
+
+/* --------------------------------------------------------------------------
+ * CONTENT
+ * ------------------------------------------------------------------------ */
+export const contentHeading = {
+  label: "Content",
+  heading: "I share what I'm learning along the way.",
+  intro:
+    "I enjoy documenting my experiences as a developer. Not just the finished projects, but the decisions, mistakes, tools and lessons that come with building software.",
+  note: "You'll find me sharing things on my social platforms.",
+  cta: "Follow the journey",
+  ctaSecondary: "See the code",
+};
+
+export const contentPillars = [
+  {
+    title: "Building in public",
+    copy: "Updates from projects I'm working on, things I've shipped and the occasional bug that took far longer to fix than it should have.",
+  },
+  {
+    title: "Learning as I go",
+    copy: "Notes from my Computer Science journey, technical concepts I'm exploring and things I've learned while working on actual projects.",
+  },
+  {
+    title: "Tools and technology",
+    copy: "Honest thoughts on developer tools, frameworks and technologies I've tried. What worked, what didn't and what I'd recommend to other developers.",
+  },
+];
+
+/* --------------------------------------------------------------------------
+ * BLOG
+ * ------------------------------------------------------------------------ */
+export const blogHeading = {
+  label: "Blog",
+  heading: "Notes from things I've built and learned.",
+  intro:
+    "I write about projects, technical decisions, interesting problems and lessons from working through them.",
+  note:
+    "These aren't meant to be perfect technical papers. They're my way of documenting what I've learned, hopefully in a way that's useful to someone else.",
+  cta: "Read all posts",
+};
+
+/* --------------------------------------------------------------------------
+ * CONTACT
+ * ------------------------------------------------------------------------ */
+export const contact = {
+  label: "Contact",
+  heading: "Have something you'd like to build?",
+  copy: [
+    "Maybe you have an idea you've been thinking about, an existing product that needs some work or a technical problem you're trying to solve.",
+    "I'm always open to interesting projects, freelance opportunities and conversations with people building useful things.",
+    "Tell me a little about what you're working on. We can take it from there.",
+  ],
+  emailCta: "oluwadare458@gmail.com",
+  successTitle: "Message sent.",
+  successCopy:
+    "Thanks for reaching out. I'll get back to you within 24 hours. If it's urgent, the email button is right there.",
+  form: {
+    name: "Name",
+    email: "Email",
+    message: "What are we building?",
+    submit: "Send message",
+    placeholders: {
+      name: "Your name",
+      email: "Your email address",
+      message:
+        "Tell me a little about your project, idea or the problem you're trying to solve...",
+    },
+  },
+};
+
+/* --------------------------------------------------------------------------
+ * FOOTER
+ * ------------------------------------------------------------------------ */
+export const footer = {
+  brand: "Emerald",
+  tagline: "Still curious. Still building.",
+  copyright: "© 2026 Daniel Oluwadare. All rights reserved.",
+  builtNote: "Built with Next.js, React & Tailwind CSS. No templates were harmed.",
+  location: "Ile-Ife, Nigeria",
+  availability: "Usually around · Replies within a day.",
+};
+
+/* --------------------------------------------------------------------------
+ * CRAYONS AND INK FIGURES
+ * The illustration system: a fixed box of crayons, each with the ink colour it
+ * fills and a matching text colour that stays legible on top of it.
+ * ------------------------------------------------------------------------ */
 export type Crayon =
   | "oxblood"
   | "teal"
@@ -110,496 +515,6 @@ export type Crayon =
   | "green"
   | "purple"
   | "orange"
-  | "pink"
-  | "ink";
+  | "pink";
 
-/* ---------------------------------------------------------------------------
- * DRAWINGS — keys for the ink figures in components/motion/Chibi.tsx.
- * They are illustrations, not characters with backstories: they stand on the
- * corner of a panel, walk along the footer tear, and otherwise stay out of the
- * way. Nothing here is shown to the reader.
- * ------------------------------------------------------------------------- */
 export type CharacterId = "dash" | "pip" | "nova" | "biscuit" | "moss";
-
-/* ---------------------------------------------------------------------------
- * PROJECTS — the data contract everything else agrees on.
- * Built at render time by lib/projects.ts from (a) your GitHub pins and
- * (b) `curatedProjects` below.
- * ------------------------------------------------------------------------- */
-
-/** The fields a human writes by hand, for a repo that comes from GitHub. */
-export type ProjectOverlay = {
-  /** Display name, if the repo slug isn't how you'd say it out loud. */
-  name?: string;
-  /** One line that hooks. Falls back to the repo's own description. */
-  oneLiner?: string;
-  /** 1–2 sentences. Falls back to the README's first real paragraph. */
-  blurb?: string;
-  role?: string;
-  /** Handwritten corner annotation. */
-  note?: string;
-  tag?: string;
-  /** Which crayon the comic panel is inked in. */
-  crayon?: Crayon;
-  tech?: string[];
-  /** Override the primary link (defaults to homepage, then the repo). */
-  href?: string;
-  cta?: string;
-  metric?: string;
-  credit?: { linkText: string; href: string };
-  /** Which illustration loiters on this panel. */
-  character?: CharacterId;
-  /** Large panel spanning two columns. */
-  flagship?: boolean;
-  /** Pin it on GitHub, but keep it off the site. */
-  hidden?: boolean;
-};
-
-/** A finished project, assembled from overlay + live GitHub + defaults. */
-export type Project = {
-  slug: string;
-  name: string;
-  oneLiner: string;
-  blurb: string;
-  role?: string;
-  tech: string[];
-  /** primary destination */
-  href: string;
-  cta: string;
-  /** the repo itself, when the primary link isn't the repo */
-  codeHref?: string;
-  note?: string;
-  tag: string;
-  tagColor: "accent" | "marker" | "ink";
-  crayon: Crayon;
-  character?: CharacterId;
-  flagship?: boolean;
-  metric?: string;
-  credit?: { linkText: string; href: string };
-  /** Where this row came from — pins are the live half of the page. */
-  source: "pinned" | "curated";
-  owner?: string;
-  live?: {
-    stars: number;
-    forks: number;
-    language: string | null;
-    languageColor: string | null;
-    pushedAt: string | null;
-    /** "3 weeks ago" — formatted on the server so hydration never disagrees. */
-    pushedLabel: string | null;
-    commits: number | null;
-    topics: string[];
-    isEmpty: boolean;
-    isArchived: boolean;
-  };
-};
-
-/* ---------------------------------------------------------------------------
- * GITHUB OVERLAY — copy for the repos currently pinned on my profile.
- * Delete a key and the panel falls back to the repo's own words.
- * ------------------------------------------------------------------------- */
-export const githubOverlay: Record<string, ProjectOverlay> = {
-  /* ---- pinned, flagship ------------------------------------------------- */
-  "GetContextly/contextly": {
-    name: "Contextly",
-    oneLiner: "A universal context layer for AI coding agents.",
-    blurb:
-      "Persistent project memory across Claude Code, Cursor, Copilot and any other MCP-compatible assistant. It captures the decisions, history, and knowledge behind a codebase, so agents grasp not just what changed, but why.",
-    role: "Solo: architecture, backend, MCP.",
-    tag: "BUILDING",
-    crayon: "teal",
-    tech: ["TypeScript", "MCP", "Node.js", "Supabase", "Postgres"],
-    note: "the flagship",
-    character: "nova",
-    flagship: true,
-  },
-  "Emerald-dev0/axiom-network": {
-    name: "Axiom Network",
-    oneLiner: "An economic layer for autonomous AI agents.",
-    blurb:
-      "Agents that discover, hire, and pay for each other's capabilities: an AXC ledger with atomic transactions and cryptographic receipts, an x402 payment engine, a capability registry, reputation scoring, and a conductor that plans a goal then hires the sub-agents to reach it.",
-    role: "Solo: protocol, ledger, monorepo.",
-    tag: "BUILDING",
-    crayon: "blue",
-    tech: ["TypeScript", "Node.js", "Express", "Prisma", "Neon Postgres", "React"],
-    note: "agents hiring agents",
-    character: "moss",
-  },
-  "Emerald-dev0/Cypher": {
-    name: "Cypher",
-    oneLiner: "Your PC, driven from your phone. No cloud, no accounts.",
-    blurb:
-      "A local-network remote control: live desktop streaming, screen recording at up to 60fps, two-way clipboard sync, chunked file transfer, power and process control. A Flutter Android app talking to a Python/Flask agent over WebSockets, found by mDNS, unlocked by a rotating six-digit pairing code.",
-    role: "Solo: mobile app, PC agent, protocol.",
-    tag: "LIVE",
-    crayon: "green",
-    tech: ["Flutter", "Dart", "Python", "Flask", "WebSocket", "OpenCV"],
-    note: "no cloud, on purpose",
-    character: "dash",
-  },
-  "Emerald-dev0/Commitgraph": {
-    name: "Commitgraph",
-    oneLiner: "Git forensics for the file everyone's afraid to touch.",
-    blurb:
-      "A CLI that mines repository history instead of guessing at it: file hotspots, knowledge distribution, and logical coupling, meaning the hidden dependency between files that always change together. Markdown and JSON output, so it can run in CI beside the tests.",
-    role: "Solo: CLI, analyzers, tests.",
-    tag: "BUILDING",
-    crayon: "purple",
-    tech: ["TypeScript", "Node.js", "Commander", "Vitest"],
-    note: "reads history, not vibes",
-    character: "pip",
-  },
-  "Emerald-dev0/Axon": {
-    name: "Axon",
-    oneLiner: "A collaborative API workspace with the plumbing already in.",
-    blurb:
-      "Collections, environments, request history, API keys, shared workspaces, and team roles behind an Express/Supabase API, plus Stripe billing, an admin surface, and a VS Code extension speaking to the same endpoints.",
-    role: "Solo: backend, Next.js client, extension.",
-    tag: "BUILDING",
-    crayon: "orange",
-    tech: ["TypeScript", "Next.js", "Express", "Supabase", "Stripe", "VS Code API"],
-    note: "early, honestly",
-    character: "biscuit",
-  },
-  "Emerald-dev0/Noon-digital": {
-    name: "Noon Digital",
-    oneLiner: "A name I parked before it became anything.",
-    blurb:
-      "The repository is empty on purpose. No commits, just the name held. It stays pinned because that's where it lives until it turns into the thing I keep sketching on paper.",
-    role: "Eventually.",
-    tag: "PARKED",
-    crayon: "mustard",
-    tech: [],
-    note: "blank page (for now)",
-    character: "pip",
-  },
-};
-
-/* ---------------------------------------------------------------------------
- * CURATED PROJECTS — work worth showing that isn't pinned on GitHub.
- * These render after the pinned ones.
- * ------------------------------------------------------------------------- */
-export const curatedProjects: Project[] = [
-  {
-    slug: "curated/blueprint",
-    name: "Blueprint",
-    oneLiner: "An AI engineering command center.",
-    blurb:
-      "An operating system for AI-assisted software engineering: Tree-sitter semantic analysis of a whole repository, architecture decision records linked to the code they explain, and AI orchestration across editors, in one local-first workspace.",
-    role: "Solo: product and architecture.",
-    tech: ["TypeScript", "Tauri", "Rust", "SQLite"],
-    href: "https://github.com/Emerald-dev0/Blueprint",
-    codeHref: "https://github.com/Emerald-dev0/Blueprint",
-    cta: "view code",
-    note: "local-first",
-    tag: "BUILDING",
-    tagColor: "accent",
-    crayon: "oxblood",
-    character: "nova",
-    flagship: true,
-    source: "curated",
-  },
-  {
-    slug: "curated/orvn-labs",
-    name: "ORVN Labs",
-    oneLiner: "First-contact intelligence for real estate brokerages.",
-    blurb:
-      "Brokerage infrastructure that answers, qualifies, routes, books, and logs inbound leads before response-delay kills the deal. The PAS engine handles first contact in seconds.",
-    role: "Lead frontend developer.",
-    tech: ["Next.js", "TypeScript", "Node.js"],
-    href: "https://orvnlabs.com",
-    codeHref: undefined,
-    cta: "visit site",
-    note: "leads, before they go cold",
-    tag: "LIVE",
-    tagColor: "marker",
-    crayon: "pink",
-    character: "dash",
-    source: "curated",
-  },
-  {
-    slug: "curated/lifelink",
-    name: "LifeLink",
-    oneLiner: "An emergency health identity platform.",
-    blurb:
-      "When you can't speak for yourself, your Digital Twin does. A responder scans a grant code and gets only the health data you authorized: instantly, time-limited, and logged. Consent stays with the patient.",
-    role: "Built for a hackathon.",
-    tech: ["Next.js", "TypeScript", "Tailwind"],
-    href: "https://lifelink-rho.vercel.app/",
-    cta: "visit site",
-    note: "hackathon build",
-    tag: "LIVE",
-    tagColor: "marker",
-    crayon: "teal",
-    character: "moss",
-    source: "curated",
-  },
-  {
-    slug: "curated/testflow",
-    name: "TestFlow",
-    oneLiner: "Timed CBT exam practice for OAU students.",
-    blurb:
-      "A mobile-first computer-based-testing platform: real exam timing, instant marking with corrections, and progress analytics across the first-year courses students struggle with most.",
-    role: "Backend developer.",
-    tech: ["Node.js", "MongoDB", "Express"],
-    href: "http://testflow-phi.vercel.app/",
-    cta: "visit site",
-    note: "backend was mine",
-    tag: "LIVE",
-    tagColor: "ink",
-    crayon: "blue",
-    character: "biscuit",
-    source: "curated",
-  },
-  {
-    slug: "curated/mukhtar-salvage",
-    name: "Mukhtar Salvage",
-    oneLiner: "A YouTube packaging studio on the TKO Framework.",
-    blurb:
-      "Psychological thumbnail and title packaging that turns the videos creators already make into consistent wins. I built the platform: results showcase, system breakdown, and the application funnel.",
-    role: "Built the website / platform.",
-    tech: ["Next.js", "Tailwind", "Framer Motion"],
-    href: "https://www.mukhtarsalvage.com/",
-    cta: "visit site",
-    note: "packaging > luck",
-    tag: "LIVE",
-    tagColor: "ink",
-    crayon: "mustard",
-    character: "dash",
-    source: "curated",
-  },
-];
-
-/* ---------------------------------------------------------------------------
- * SHOWCASE — the section that renders both halves.
- * ------------------------------------------------------------------------- */
-export const showcase = {
-  tag: "WORK",
-  sticky: "the stuff I'm proud of",
-  heading: "Things I've actually shipped.",
-  /**
-   * How the grid is assembled:
-   *   "pins-first"   pinned repos, then curated work (default)
-   *   "pins-only"    strictly what's pinned on GitHub
-   *   "curated-only" ignore GitHub entirely
-   */
-  order: "pins-first" as "pins-first" | "pins-only" | "curated-only",
-  /** Live line under the header, filled with real numbers at render time. */
-  livePrefix: "Pulled live from",
-  liveSuffix: ". Pin a repository and it appears here automatically.",
-  /** Shown when a pinned repository has no commits in it. */
-  emptyNote: "Name reserved. Nothing shipped here yet.",
-  closing: "BROWSE EVERYTHING ON GITHUB",
-  /** The strip of recently-pushed repos between the pins and the archive. */
-  freshTag: "FRESH OFF THE DESK",
-  freshHeading: "What I've been pushing lately.",
-  freshNote:
-    "Not pinned, just alive. The most recently pushed repos, pins excluded, refreshed every sync.",
-  archiveNote:
-    "Client work, experiments, hackathons and products. Not everything makes the shortlist, but everything on this list taught me something.",
-  allLabel: "all",
-  filterHint: "filter by tech",
-  archiveHeading: (more: number) => `${more} more public repositories.`,
-};
-
-/* ---------------------------------------------------------------------------
- * GITHUB — the section that shows live activity rather than claiming it.
- * Every figure below is read from the API. Nothing here is typed in by hand.
- * ------------------------------------------------------------------------- */
-export const githubSection = {
-  tag: "GITHUB",
-  heading: "What the commit graph says.",
-  note: "read from the API, not typed in by hand",
-  contributionsLabel: "Contributions, last 12 months",
-  languagesLabel: "Languages",
-  languagesNote: "Primary language across every public repository.",
-  activityLabel: "Activity",
-  lastPushPrefix: "Last push",
-};
-
-export const stack = {
-  tag: "STACK",
-  heading: "What I actually reach for.",
-  note: "MERN most often, with AI tooling in the workflow rather than as a gimmick.",
-  groups: [
-    {
-      label: "Frontend",
-      items: ["JavaScript", "TypeScript", "React", "Next.js", "Tailwind"],
-    },
-    { label: "Backend", items: ["Node.js", "Express", "SQL"] },
-    { label: "Mobile", items: ["Flutter"] },
-    {
-      label: "Data & Infra",
-      items: ["MongoDB", "Supabase", "Neon", "Vercel"],
-      note: "most comfortable with MongoDB",
-    },
-  ],
-};
-
-export const whatIDo = {
-  tag: "SERVICES",
-  heading: "What I do, when someone asks.",
-  items: [
-    { title: "Web Development", line: "Next.js and React, front to back." },
-    { title: "Mobile Apps", line: "Flutter, when it needs to live on a phone." },
-    {
-      title: "Backend & APIs",
-      line: "The part I keep saying I won't touch, and always end up owning.",
-    },
-    { title: "AI Infrastructure", line: "Context layers and tooling agents rely on." },
-  ],
-};
-
-/* ---------------------------------------------------------------------------
- * JOURNEY — told as notebook chapters, not a flat year list. Each chapter is a
- * page in the engineer's journal: an era tab, a headline, a short narrative, a
- * handwritten annotation, and a checklist of milestones or production work.
- * ------------------------------------------------------------------------- */
-export type DoodleName =
-  | "star"
-  | "spark"
-  | "crown"
-  | "rocket"
-  | "brain"
-  | "arrow-curve"
-  | "lightbulb"
-  | "coffee"
-  | "bug"
-  | "flag"
-  | "cloud"
-  | "wifi";
-
-export type Chapter = {
-  era: string;
-  title: string;
-  body: string;
-  listLabel?: string;
-  items?: string[];
-  annotation?: string;
-  commits?: string;
-  doodle: DoodleName;
-  crayon: Crayon;
-  /** Which illustration appears in the margin of this chapter. */
-  character?: CharacterId;
-  flagship?: boolean;
-};
-
-const chapters: Chapter[] = [
-  {
-    era: "2024",
-    title: "The beginning.",
-    body: "Started learning programming and teaching myself software development. Spent this phase building fundamentals, experimenting, breaking things, debugging endlessly, and learning how software actually works through hands-on projects.",
-    listLabel: "Milestones",
-    items: [
-      "Learned JavaScript and modern web development",
-      "Built first React and Node.js applications",
-      "Started contributing consistently on GitHub",
-      "Fell for solving problems by building them",
-    ],
-    annotation: "every mistake became another lesson",
-    doodle: "rocket",
-    crayon: "green",
-    character: "dash",
-  },
-  {
-    era: "2025",
-    title: "From learning to serious building.",
-    body: "Moved beyond tutorials and started building more complex full-stack applications, improving my workflow and my understanding of what goes into a complete product.",
-    listLabel: "Focused on",
-    items: [
-      "React and Next.js",
-      "Node.js backend development",
-      "Databases, APIs, deployment",
-      "Software architecture",
-    ],
-    doodle: "star",
-    crayon: "blue",
-    character: "moss",
-  },
-  {
-    era: "Early 2026",
-    title: "Started shipping production software.",
-    body: "Moved from experimental projects into real products used by actual people. This phase taught me what building beyond code involves: users, reliability, deployment, maintenance, and requirements that change.",
-    listLabel: "Production systems shipped",
-    items: ["ORVN Labs", "TestFlow", "Mukhtar Salvage"],
-    annotation: "1,600+ commits since December",
-    commits: "1,600+ commits",
-    doodle: "crown",
-    crayon: "orange",
-    character: "nova",
-  },
-  {
-    era: "2026 – present",
-    title: "Building AI developer infrastructure.",
-    body: "The focus shifted from only building applications to building tools that improve how developers build software. Contextly gives AI agents persistent memory of a codebase; Blueprint unifies project intelligence, architectural memory, and AI orchestration. The goal is no longer just building software, but building the tools that shape how software gets built.",
-    annotation: "the questions got bigger",
-    doodle: "brain",
-    crayon: "purple",
-    character: "pip",
-    flagship: true,
-  },
-];
-
-export const journey = {
-  tag: "JOURNEY",
-  sticky: "the whole story, one page at a time",
-  heading: "How I got here.",
-  note: "four chapters, so far",
-  chapters,
-};
-
-/* Testimonials: intentionally empty. Do NOT fabricate quotes. */
-export const testimonials: { quote: string; author: string }[] = [];
-
-/* Real social links. `icon` keys map to <SocialIcon>. */
-export type Social = {
-  label: string;
-  handle: string;
-  href: string;
-  icon: "email" | "github" | "instagram" | "tiktok" | "x";
-};
-
-export const socials: Social[] = [
-  { label: "Email", handle: "oluwadare458@gmail.com", href: "mailto:oluwadare458@gmail.com", icon: "email" },
-  { label: "GitHub", handle: "Emerald-dev0", href: "https://github.com/Emerald-dev0", icon: "github" },
-  { label: "Instagram", handle: "@emerald_dev1", href: "https://instagram.com/emerald_dev1", icon: "instagram" },
-  { label: "TikTok", handle: "@emerald_dev1", href: "https://tiktok.com/@emerald_dev1", icon: "tiktok" },
-  { label: "X", handle: "@Dev_emeraldX", href: "https://x.com/Dev_emeraldX", icon: "x" },
-];
-
-/* Logo marquee. If a matching /logos/<file> exists it's used; otherwise the
-   monogram chip renders. Drop real SVGs in public/logos/ to upgrade. */
-export const logos = {
-  heading: "Tools I build with.",
-  note: "the daily drivers",
-  items: [
-    "TypeScript", "JavaScript", "React", "Next.js", "Node.js", "Express",
-    "MongoDB", "Postgres", "Supabase", "Tailwind", "Flutter", "Vercel",
-    "Neon", "Rust", "MCP",
-  ],
-};
-
-export const connect = {
-  tag: "CONTACT",
-  heading: "Have an idea worth building?",
-  bubble:
-    "I'm usually building something. If you have an ambitious idea, or a deadline that looks impossible, I'd like to hear about it.",
-  emailHref: "mailto:oluwadare458@gmail.com",
-  socials,
-};
-
-export const footer = {
-  lines: ["Keep building.", "Keep learning.", "Keep shipping."],
-  emphasis: "shipping",
-  signoff: "Daniel Oluwadare, building as Emerald.",
-  copyright: "© 2026 Daniel Oluwadare. All rights reserved.",
-  builtNote: "Built with Next.js, React and Tailwind CSS.",
-};
-
-/* ---- 404 — a torn-out page ------------------------------------------- */
-export const notFound = {
-  sticky: "404",
-  heading: "That page isn't here.",
-  body: "The link may be out of date, or the page may have moved. The work and the contact details are both a click away.",
-  cta: "back to the portfolio",
-};

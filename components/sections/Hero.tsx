@@ -1,185 +1,170 @@
-"use client";
-
-import { motion } from "framer-motion";
-import Pill from "@/components/ui/Pill";
-import Doodle from "@/components/materials/Doodle";
-import Scribble from "@/components/motion/Scribble";
-import RotatingText from "@/components/motion/RotatingText";
-import AmbientField from "@/components/motion/AmbientField";
-import { Character } from "@/components/motion/Chibi";
-import { Reveal } from "@/components/motion/Reveal";
-import { hero } from "@/lib/content";
-
-const EASE = [0.16, 1, 0.3, 1] as const;
-
-export type HeroLive = {
-  /** real numbers, read from GitHub at render time */
-  publicRepos: number;
-  pinned: number;
-  login: string;
-  lastPushLabel: string | null;
-} | null;
+import { ArrowDown01Icon, ArrowRight01Icon, StarIcon } from "@hugeicons/core-free-icons";
+import { hero } from "../../lib/content";
+import { Reveal } from "../motion/Reveal";
+import { Magnetic, Parallax, TiltCard } from "../motion/Loud";
+import { Button } from "../ui/Button";
+import { Doodle } from "../ui/Doodle";
+import { Icon } from "../ui/Icon";
+import { NowPlaying } from "../ui/NowPlaying";
+import { Section } from "../ui/Section";
+import { InkPoster } from "../ui/InkPoster";
+import { StickerWall } from "./StickerWall";
 
 /**
- * Hero. No portrait: type is the composition. Dual-identity intro (Daniel /
- * Emerald), a rotating "Building ___" line that keeps rewriting itself, one
- * live number from GitHub, and ambient doodles drifting behind.
+ * HERO, deliberately off-grid. The name runs at display size across the left
+ * seven columns; on the right, three project posters overlap at angles with
+ * tape holding them down, and the draggable sticker wall sits on top of them.
  *
- * The stat row mixes the fixed facts with a figure the API just told us,
- * because a portfolio that can read its own stats should.
+ * The posters are real project artwork from /public/projects, so the first
+ * thing you see is the work, not an abstract shape.
  */
-export default function Hero({ live }: { live?: HeroLive }) {
+export function Hero({ commits, repos }: { commits?: number; repos?: number }) {
   return (
-    <section
-      id="top"
-      className="section-pad relative flex min-h-[92svh] items-center overflow-hidden !pt-32"
-    >
-      {/* ambient background life */}
-      <div
-        className="animate-breathe halftone pointer-events-none absolute -right-24 top-6 h-[440px] w-[440px] rounded-full"
-        style={{
-          maskImage: "radial-gradient(circle, black, transparent 70%)",
-          WebkitMaskImage: "radial-gradient(circle, black, transparent 70%)",
-        }}
+    <Section id="top" overlap={false} className="relative overflow-hidden bg-paper">
+      {/* Backdrop: halftone wash + oversized marks */}
+      <div className="halftone pointer-events-none absolute inset-x-0 top-0 h-[420px] opacity-[0.07]" />
+      <Doodle
+        name="asterisk"
+        className="pointer-events-none absolute -right-14 top-28 w-52 text-ink/10 animate-spin-slow"
+        strokeWidth={4}
       />
-      <AmbientField
-        marks={[
-          { name: "star", className: "right-[8%] top-[20%]", size: 26, anim: "drift", delay: 1, color: "text-accent-2/60" },
-          { name: "spark", className: "right-[24%] top-[68%]", size: 22, anim: "float", delay: 2, color: "text-accent/50" },
-          { name: "rocket", className: "right-[13%] bottom-[10%]", size: 30, anim: "sway", color: "text-ink-faint/45" },
-          { name: "brain", className: "left-[2%] top-[58%]", size: 26, anim: "drift", delay: 3, color: "text-ink-faint/35" },
-        ]}
+      <Doodle
+        name="spiral"
+        className="pointer-events-none absolute -left-10 top-[38%] w-40 text-grape/20"
+        strokeWidth={4}
       />
 
-      <div className="relative z-10 mx-auto w-full max-w-4xl">
-        {/* animated eyebrow */}
-        <Reveal dir="up" blur delay={0.05}>
-          <p className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.28em] text-ink-faint">
-            <span
-              className="inline-block h-1.5 w-1.5 rounded-full bg-accent"
-              aria-hidden
-            />
-            <RotatingText
-              phrases={hero.kickerRotation}
-              typeSpeed={45}
-              deleteSpeed={22}
-              hold={2000}
-            />
-          </p>
-        </Reveal>
+      <div className="relative mx-auto max-w-7xl px-5 pb-24 pt-32 sm:px-8 lg:pt-36">
+        <div className="grid items-start gap-14 lg:grid-cols-12">
+          {/* ------------------------------------------------------------ */}
+          {/* Left                                                          */}
+          {/* ------------------------------------------------------------ */}
+          <div className="lg:col-span-7">
+            <Reveal>
+              <p className="font-mono text-[0.7rem] font-bold uppercase tracking-[0.18em] opacity-45">
+                {hero.location}
+              </p>
+            </Reveal>
 
-        {/* dual-identity intro */}
-        <h1 className="mt-5 font-marker text-[clamp(2.5rem,8vw,5.5rem)] leading-[0.98] text-ink">
-          <motion.span
-            className="inline-block text-[0.55em] font-normal text-ink-muted"
-            initial={{ opacity: 0, y: 16, rotate: -2 }}
-            animate={{ opacity: 1, y: 0, rotate: -1 }}
-            transition={{ duration: 0.7, ease: EASE, delay: 0.15 }}
-          >
-            {hero.greeting}
-          </motion.span>
-          <br />
-          <span className="relative inline-block">
-            <motion.span
-              className="relative z-10 inline-block text-accent"
-              initial={{ opacity: 0, y: 26 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.75, ease: EASE, delay: 0.3 }}
-            >
-              {hero.realName}
-            </motion.span>
-            <Scribble
-              preset="underline"
-              color="accent"
-              delay={1}
-              duration={0.7}
-              strokeWidth={4}
-              className="absolute -bottom-2 left-0 h-3 w-full"
-            />
-          </span>
-        </h1>
+            <Reveal delay={0.06}>
+              <h1 className="mt-4 font-display font-extrabold leading-[0.92] tracking-[-0.03em] text-ink">
+                <span className="block text-[clamp(2.2rem,5vw,3.4rem)]">{hero.greeting}</span>
+                <span className="mt-1 block text-[clamp(2.8rem,8vw,5.6rem)]">
+                  {hero.headline}
+                </span>
+              </h1>
+            </Reveal>
 
-        {/* persona line */}
-        <Reveal dir="up" delay={0.5}>
-          <p className="mt-4 font-pen text-2xl leading-none text-accent-2">
-            {hero.personaLine}
-          </p>
-        </Reveal>
+            <Reveal delay={0.14}>
+              <div className="mt-7 flex max-w-xl flex-col gap-4 text-[1.02rem] leading-relaxed opacity-80">
+                {hero.intro.map((para, i) => (
+                  <p key={i}>{para}</p>
+                ))}
+              </div>
+            </Reveal>
 
-        {/* rotating build line, the continuously-rewriting statement */}
-        <Reveal dir="up" delay={0.6}>
-          <p className="mt-6 text-[clamp(1.1rem,2.2vw,1.6rem)] font-medium leading-snug text-ink">
-            {hero.buildingPrefix}{" "}
-            <RotatingText
-              phrases={hero.buildingRotation}
-              className="text-accent"
-              startDelay={1600}
-            />
-          </p>
-        </Reveal>
+            <Reveal delay={0.28}>
+              <div className="mt-8 flex flex-wrap items-center gap-3">
+                <Magnetic>
+                  <Button href="/#work" variant="ink">
+                    {hero.ctaWork}
+                    <Icon icon={ArrowRight01Icon} size={17} />
+                  </Button>
+                </Magnetic>
+                <Magnetic>
+                  <Button href="/#contact" variant="leaf">
+                    {hero.ctaContact}
+                  </Button>
+                </Magnetic>
+              </div>
+            </Reveal>
 
-        <Reveal dir="up" delay={0.7}>
-          <p className="mt-3 max-w-lg text-[15px] font-medium leading-relaxed text-ink-muted">
-            {hero.tagline}
-          </p>
-        </Reveal>
+            <Reveal delay={0.34}>
+              <div className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-3">
+                <span className="inline-flex items-center gap-2 text-[0.82rem] opacity-75">
+                  <span className="size-2 shrink-0 rounded-full bg-leaf" />
+                  {hero.badge}
+                </span>
+                {repos ? (
+                  <span className="inline-flex items-center gap-1.5 font-mono text-[0.65rem] font-bold uppercase tracking-[0.14em] opacity-55">
+                    <Icon icon={StarIcon} size={12} />
+                    {repos} public repos
+                  </span>
+                ) : null}
+                {commits ? (
+                  <span className="font-mono text-[0.65rem] font-bold uppercase tracking-[0.14em] opacity-55">
+                    {commits.toLocaleString()} commits
+                  </span>
+                ) : null}
+              </div>
+            </Reveal>
 
-        <Reveal dir="up" delay={0.82}>
-          <div className="mt-8 flex flex-wrap items-center gap-5">
-            <Pill href="#work" variant="ink">
-              {hero.ctaWork}
-            </Pill>
-            <Pill href="#contact" variant="paper">
-              {hero.cta}
-            </Pill>
-            <span className="flex items-center gap-1.5 font-pen text-lg text-ink-muted">
+            <Reveal delay={0.4}>
+              <div className="mt-7 max-w-xs">
+                <NowPlaying />
+              </div>
+            </Reveal>
+          </div>
+
+          {/* ------------------------------------------------------------ */}
+          {/* Right: the poster wall                                        */}
+          {/* ------------------------------------------------------------ */}
+          <div className="relative lg:col-span-5">
+            <div className="relative mx-auto aspect-[4/5] w-full max-w-[430px]">
+              {/* Poster 1, back */}
+              <Parallax distance={26} className="absolute left-0 top-0 w-[62%]">
+                <TiltCard max={10}>
+                  <figure className="relative">
+                    <span
+                      className="tape-strip -top-3 left-1/2 w-24 -translate-x-1/2 rotate-[-4deg]"
+                      aria-hidden
+                    />
+                    <div className="aspect-square">
+                      <InkPoster
+                        index={hero.posters[0].index}
+                        name={hero.posters[0].name}
+                        role={hero.posters[0].note}
+                        crayon={hero.posters[0].crayon}
+                      />
+                    </div>
+                  </figure>
+                </TiltCard>
+              </Parallax>
+
+              {/* Poster 2, front right */}
+              <Parallax distance={-34} className="absolute right-0 top-[26%] w-[58%]">
+                <TiltCard max={12}>
+                  <figure className="relative rotate-[4deg]">
+                    <div className="aspect-square">
+                      <InkPoster
+                        index={hero.posters[1].index}
+                        name={hero.posters[1].name}
+                        role={hero.posters[1].note}
+                        crayon={hero.posters[1].crayon}
+                      />
+                    </div>
+                  </figure>
+                </TiltCard>
+              </Parallax>
+
+              {/* Sticker wall sits on top of the posters */}
+              <div className="absolute -bottom-6 left-0 right-0 z-20 origin-top scale-[0.78] sm:scale-[0.85]">
+                <StickerWall compact />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <Reveal delay={0.5}>
+          <div className="mt-10 flex flex-wrap items-center gap-4">
+            <p className="inline-flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-[0.18em] opacity-55">
+              <Icon icon={ArrowDown01Icon} size={15} className="animate-bob" />
               {hero.scrollNote}
-              <Doodle
-                name="arrow-curve"
-                size={24}
-                className="animate-float text-ink-muted"
-              />
-            </span>
+            </p>
+            <Doodle name="arrow" className="w-12 rotate-90 text-tang" strokeWidth={5} />
           </div>
         </Reveal>
-
-        {/* stats: the fixed facts, plus one the API just told us */}
-        <Reveal dir="up" delay={0.92}>
-          <dl className="mt-10 flex flex-wrap items-end gap-x-9 gap-y-4 border-t border-rule/70 pt-5">
-            {hero.stats.map((s) => (
-              <div key={s.label} className="flex items-baseline gap-2">
-                <dt className="font-marker text-2xl text-ink">{s.value}</dt>
-                <dd className="max-w-[9rem] font-mono text-[10px] uppercase leading-tight tracking-[0.12em] text-ink-faint">
-                  {s.label}
-                </dd>
-              </div>
-            ))}
-
-            {live && (
-              <div className="flex items-baseline gap-2">
-                <dt className="flex items-center gap-2 font-marker text-2xl text-ink">
-                  {live.publicRepos}
-                  <span className="live-dot" aria-hidden />
-                </dt>
-                <dd className="max-w-[10rem] font-mono text-[10px] uppercase leading-tight tracking-[0.12em] text-ink-faint">
-                  public repos on GitHub
-                  {live.lastPushLabel ? ` · last push ${live.lastPushLabel}` : ""}
-                </dd>
-              </div>
-            )}
-          </dl>
-        </Reveal>
       </div>
-
-      {/* one ink figure, low and out of the way */}
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, ease: EASE, delay: 1.5 }}
-        className="pointer-events-none absolute bottom-10 right-[7%] hidden text-ink/60 lg:block"
-      >
-        <Character id="dash" size={68} />
-      </motion.div>
-    </section>
+    </Section>
   );
 }

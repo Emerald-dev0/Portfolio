@@ -1,0 +1,592 @@
+{
+ "generated": "2026-11-17T15:00:38.188Z",
+ "posts": [
+  {
+   "slug": "telegram-bot-for-github",
+   "title": "Why my GitHub bot moved from WhatsApp to Telegram",
+   "excerpt": "A bot that pipes GitHub events into a chat I actually read. The WhatsApp version worked; Telegram made it maintainable. Here's the trade, and the architecture underneath.",
+   "date": "2026-11-14",
+   "tags": [
+    "Bots",
+    "Node.js",
+    "Telegram"
+   ],
+   "featured": false,
+   "draft": false,
+   "cover": "/projects/telegram.webp",
+   "content": [
+    {
+     "type": "paragraph",
+     "text": "I miss GitHub notifications constantly. Not because there are too many, because I don't live on GitHub. So I built a bot that pipes GitHub events into a chat, and shipped the first version on WhatsApp with Baileys."
+    },
+    {
+     "type": "paragraph",
+     "text": "It worked. Then I moved it to Telegram, and the project stopped being a liability."
+    },
+    {
+     "type": "callout",
+     "kind": "note",
+     "text": "This one is still in development. The architecture below is what's running; the polish (quiet hours, digest mode, per-repo filters) isn't done yet."
+    },
+    {
+     "type": "heading",
+     "level": 2,
+     "text": "Why chat at all"
+    },
+    {
+     "type": "paragraph",
+     "text": "In Nigeria, WhatsApp is the default notification surface. A webhook that lands in a chat I open fifty times a day beats an email I check twice a week. The lesson generalizes: **meet yourself on the surface you already watch**, not the one you wish you watched."
+    },
+    {
+     "type": "paragraph",
+     "text": "So the goal was never \"a WhatsApp bot\". The goal was \"GitHub speaks where I already am\". That reframing is what made switching clients a weekend job instead of a rewrite."
+    },
+    {
+     "type": "heading",
+     "level": 2,
+     "text": "Why WhatsApp stopped being the right client"
+    },
+    {
+     "type": "paragraph",
+     "text": "Baileys is an unofficial implementation of the WhatsApp Web protocol. That's the whole problem in one sentence:"
+    },
+    {
+     "type": "list",
+     "ordered": false,
+     "items": [
+      "**It can break without warning.** WhatsApp ships, the internals move, and your socket stops authenticating.",
+      "**The session is the product.** Lose the session file and you re-pair by scanning a QR code like it's 2016, every time you redeploy.",
+      "**Hosting is awkward.** A long-lived socket process on a serverless platform is a bad fit; you end up paying for an always-on box to hold a connection."
+     ]
+    },
+    {
+     "type": "paragraph",
+     "text": "None of those are fatal. All of them are maintenance debt on a tool whose only job is to save me attention."
+    },
+    {
+     "type": "heading",
+     "level": 2,
+     "text": "Why Telegram fits"
+    },
+    {
+     "type": "paragraph",
+     "text": "Telegram's Bot API is **official, HTTP-based, and stateless**. A bot is a token you POST to. That single change deletes the entire class of problems above:"
+    },
+    {
+     "type": "table",
+     "head": [
+      "",
+      "WhatsApp (Baileys)",
+      "Telegram Bot API"
+     ],
+     "rows": [
+      [
+       "Transport",
+       "Long-lived socket",
+       "Plain HTTPS request"
+      ],
+      [
+       "Auth",
+       "Paired session (QR)",
+       "Static bot token"
+      ],
+      [
+       "Deploy",
+       "Always-on process",
+       "Anywhere that can `fetch`"
+      ],
+      [
+       "Breakage",
+       "Protocol can shift",
+       "Versioned, documented"
+      ]
+     ]
+    },
+    {
+     "type": "paragraph",
+     "text": "The interesting part isn't that Telegram is nicer. It's that the *shape of the integration* changed what I could build. A stateless sender means I can run it from a cron, a serverless function, or a webhook handler with no coordination."
+    },
+    {
+     "type": "heading",
+     "level": 2,
+     "text": "The architecture"
+    },
+    {
+     "type": "paragraph",
+     "text": "Three moving parts, same as before:"
+    },
+    {
+     "type": "list",
+     "ordered": true,
+     "items": [
+      "a **GitHub webhook receiver** that verifies the signature,",
+      "a **queue** so a burst of events doesn't hammer the API,",
+      "a **sender** that formats one message per event type and POSTs it."
+     ]
+    },
+    {
+     "type": "paragraph",
+     "text": "Formatters stay deliberately dumb, one function per event, so adding an event is a five-line diff:"
+    },
+    {
+     "type": "code",
+     "lang": "typescript",
+     "code": "type Formatter = (e: GitHubEvent) => string | null;\n\nconst FORMATTERS: Record<string, Formatter> = {\n  pull_request: (e) =>\n    e.action === \"opened\"\n      ? `🔀 PR #${e.number} opened, ${e.title}\\n${e.url}`\n      : null,\n  issues: (e) =>\n    e.action === \"opened\" ? `🐛 Issue #${e.number}, ${e.title}\\n${e.url}` : null,\n  release: (e) => `🚀 ${e.release.name} is out\\n${e.release.url}`,\n};\n\nexport async function deliver(event: GitHubEvent) {\n  const format = FORMATTERS[event.kind];\n  if (!format) return;                  // not interesting, say nothing\n  const text = format(event);\n  if (!text) return;\n  await queue.push({ chatId: event.chatId, text });\n}"
+    },
+    {
+     "type": "paragraph",
+     "text": "The sender is one function, and that's the point:"
+    },
+    {
+     "type": "code",
+     "lang": "typescript",
+     "code": "async function send({ chatId, text }: Job) {\n  const res = await fetch(\n    `https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}/sendMessage`,\n    {\n      method: \"POST\",\n      headers: { \"Content-Type\": \"application/json\" },\n      body: JSON.stringify({ chat_id: chatId, text, parse_mode: \"HTML\" }),\n    },\n  );\n  if (!res.ok) throw new Error(`telegram ${res.status}`);   // let the queue retry\n}"
+    },
+    {
+     "type": "callout",
+     "kind": "tip",
+     "text": "Throw on failure and let the queue own retries. A sender that quietly swallows errors is how notifications go missing for a week before you notice."
+    },
+    {
+     "type": "heading",
+     "level": 2,
+     "text": "What I'd tell past me"
+    },
+    {
+     "type": "list",
+     "ordered": false,
+     "items": [
+      "**Pick the official API first.** Unofficial clients buy you access today and charge you maintenance forever.",
+      "**One formatter per event, and return `null` for noise.** Most GitHub events are not worth a message. Filtering by event type is cheaper than filtering with your eyes.",
+      "**Idempotency at the edge.** GitHub retries webhooks. Use the delivery ID to drop duplicates before they reach the chat.",
+      "**Keep the sender stateless.** Every hour I spent holding a socket open was an hour not spent on the actual product."
+     ]
+    },
+    {
+     "type": "heading",
+     "level": 2,
+     "text": "Where it goes next"
+    },
+    {
+     "type": "paragraph",
+     "text": "The bot is still in development: quiet hours, a daily digest, and per-repo filters are the next three things. The point of moving to an official API was to make those small features instead of structural ones."
+    },
+    {
+     "type": "paragraph",
+     "text": "The lesson is bigger than bots: **when a tool's job is to save you attention, it must not cost you any.** If maintaining the integration is harder than living without it, the integration is the bug."
+    }
+   ],
+   "readMinutes": 3
+  },
+  {
+   "slug": "building-calder-email-api",
+   "title": "Building Calder: why I started a developer-first email API",
+   "excerpt": "Every project I shipped needed transactional email, and every time I wired up a provider I rebuilt the same three things. Calder is my attempt to build them once, properly.",
+   "date": "2026-11-10",
+   "tags": [
+    "Building",
+    "TypeScript",
+    "APIs"
+   ],
+   "featured": true,
+   "draft": false,
+   "cover": "/projects/calder.webp",
+   "content": [
+    {
+     "type": "paragraph",
+     "text": "Calder started as an annoyance. Every project I shipped needed transactional email, password resets, receipts, notifications, and every time I wired up a provider I ended up rebuilding the same three things: templates, delivery tracking, and a dashboard that tells me what actually happened to the email I sent."
+    },
+    {
+     "type": "image",
+     "src": "/projects/calder.webp",
+     "alt": "Calder, developer-first email infrastructure",
+     "caption": "The first primitive is one API call. Everything else hangs off it."
+    },
+    {
+     "type": "heading",
+     "level": 2,
+     "text": "Email as an afterthought"
+    },
+    {
+     "type": "paragraph",
+     "text": "Email is the only feature users judge by its absence. A broken checkout page gets reported. A password reset that never arrives just becomes a user who never comes back. Yet in most codebases email is the last thing wired up, usually with a provider SDK copy-pasted from a tutorial and a prayer."
+    },
+    {
+     "type": "paragraph",
+     "text": "I wanted the opposite: email as a first-class primitive, designed the way I'd design any other API. One call in, a predictable event stream out."
+    },
+    {
+     "type": "heading",
+     "level": 2,
+     "text": "The first primitive"
+    },
+    {
+     "type": "paragraph",
+     "text": "Calder's first primitive is a single POST: a template, a recipient, and variables. Everything else, rendering, sending, retries, webhooks, hangs off that one shape."
+    },
+    {
+     "type": "paragraph",
+     "text": "The system behind it is deliberately boring, too: an API app, a dashboard app, an async worker for sending and retries, and shared packages for the database, queue, providers and observability. Example `curl` first, so nothing depends on a published SDK:"
+    },
+    {
+     "type": "code",
+     "lang": "bash",
+     "code": "curl -X POST https://api.calder.dev/v1/emails \\\n  -H \"Authorization: Bearer $CALDER_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"template\": \"password-reset\",\n    \"to\": \"user@example.com\",\n    \"variables\": { \"name\": \"Ada\", \"resetUrl\": \"https://…\" }\n  }'"
+    },
+    {
+     "type": "paragraph",
+     "text": "One call. Rendering, retries and delivery events hang off it, and the events come back as webhooks, `sent`, `delivered`, `bounced`, `complained`."
+    },
+    {
+     "type": "callout",
+     "kind": "tip",
+     "text": "Start with the boring primitive. If the core call feels inevitable, the rest of the product designs itself."
+    },
+    {
+     "type": "heading",
+     "level": 2,
+     "text": "What I learned"
+    },
+    {
+     "type": "list",
+     "ordered": false,
+     "items": [
+      "Idempotency keys are not optional. Retries happen; double-sending a password reset is a bug users can see.",
+      "Webhooks need signatures and replay protection from day one, retrofitting trust is painful.",
+      "The dashboard is the product. Developers don't buy email sending; they buy knowing what happened.",
+      "TypeScript end to end pays for itself the first time a template variable changes shape."
+     ]
+    },
+    {
+     "type": "heading",
+     "level": 2,
+     "text": "Where it honestly stands"
+    },
+    {
+     "type": "paragraph",
+     "text": "Calder is not \"done\", and I'd rather tell you that than pretend:"
+    },
+    {
+     "type": "list",
+     "ordered": false,
+     "items": [
+      "The API, dashboard, durable queue, drain loop, worker and SES integration are implemented and were manually verified end to end.",
+      "Billing isn't configured yet.",
+      "The SDK source exists, but I'm not claiming a published package, the HTTP quickstart is the path that works today.",
+      "SMTP is specified, not deployed."
+     ]
+    },
+    {
+     "type": "callout",
+     "kind": "note",
+     "text": "When your README has a \"launch availability\" section, keep it honest. The fastest way to lose a developer's trust is a feature list that's really a roadmap."
+    },
+    {
+     "type": "paragraph",
+     "text": "The bet is settled though: email deserves the same engineering respect as payments. Build it once, build it properly."
+    }
+   ],
+   "readMinutes": 2
+  },
+  {
+   "slug": "building-testflow-exam-backend",
+   "title": "Building TestFlow: what a real exam backend taught me about users",
+   "excerpt": "1,500+ questions, 1,300+ students, and a lecture timetable that does not care about my deploy schedule. The backend decisions that made TestFlow survive contact with real students.",
+   "date": "2026-11-06",
+   "tags": [
+    "Journey",
+    "Building"
+   ],
+   "featured": false,
+   "draft": false,
+   "cover": "/projects/testflow.webp",
+   "content": [
+    {
+     "type": "paragraph",
+     "text": "I'm the backend developer on TestFlow, a CBT practice platform for Obafemi Awolowo University students. It now carries 1,500+ questions across 50+ courses, and over 1,300 students have practised on it."
+    },
+    {
+     "type": "paragraph",
+     "text": "I'm a Computer Science student. I have a lecture timetable that treats my deploy schedule as a suggestion. Here's what building for real students taught me that no tutorial could."
+    },
+    {
+     "type": "callout",
+     "kind": "note",
+     "text": "This is a personal build log, not an official product post. Numbers are from the platform's own landing page at the time of writing."
+    },
+    {
+     "type": "heading",
+     "level": 2,
+     "text": "Scope is the whole game"
+    },
+    {
+     "type": "paragraph",
+     "text": "When you have maybe fifteen hours a week, the difference between shipping and not shipping is the feature list. My rule was simple: **if a feature doesn't make the first user say \"this is useful\", it doesn't exist yet.**"
+    },
+    {
+     "type": "paragraph",
+     "text": "That meant:"
+    },
+    {
+     "type": "list",
+     "ordered": false,
+     "items": [
+      "One core loop, done completely: pick a course → practise questions → see what you got wrong.",
+      "Practice mode and timed CBT mode as two thin views over *the same* question engine.",
+      "No admin panel for the first month. A script and the database were the admin panel.",
+      "Landing copy written after the product worked, because copy is easier when the thing is real."
+     ]
+    },
+    {
+     "type": "heading",
+     "level": 2,
+     "text": "The backend decisions that mattered"
+    },
+    {
+     "type": "heading",
+     "level": 3,
+     "text": "1. Questions are not \"content\", they're data with a contract"
+    },
+    {
+     "type": "paragraph",
+     "text": "The tempting version is a giant JSON blob per course. It breaks the moment you want to know *which* question a student keeps failing. So every question has a stable id, a course, a topic, a type, options, the correct answer, and an explanation:"
+    },
+    {
+     "type": "code",
+     "lang": "typescript",
+     "code": "type Question = {\n  id: string;\n  courseId: string;\n  topic: string;\n  prompt: string;\n  options: { key: \"A\" | \"B\" | \"C\" | \"D\"; text: string }[];\n  answer: \"A\" | \"B\" | \"C\" | \"D\";\n  explanation: string;      // the whole point of the product\n};"
+    },
+    {
+     "type": "paragraph",
+     "text": "That contract is why progress, streaks and per-topic accuracy are all just queries instead of new features."
+    },
+    {
+     "type": "heading",
+     "level": 3,
+     "text": "2. Score on the server, always"
+    },
+    {
+     "type": "paragraph",
+     "text": "The client never sees the answer key. A practice session sends answers up, the server grades them and returns the result *with* the explanation. It also means a student can't open devtools and give themselves a 100."
+    },
+    {
+     "type": "callout",
+     "kind": "warning",
+     "text": "Shipping the answer key to the browser is the single easiest way to make a study product worthless. It's also the easiest mistake to make, because it's the shortest code path."
+    },
+    {
+     "type": "heading",
+     "level": 3,
+     "text": "3. Index for the question the app actually asks"
+    },
+    {
+     "type": "paragraph",
+     "text": "The hot path isn't \"get all questions\", it's \"give me the next N questions for this course and topic that this student hasn't recently answered\". Two composite indexes turned the slowest page from a few seconds into something that feels instant:"
+    },
+    {
+     "type": "code",
+     "lang": "sql",
+     "code": "-- the practice feed\nCREATE INDEX idx_q_feed ON questions (course_id, topic, id);\n\n-- what has this student already seen?\nCREATE INDEX idx_attempts_recent ON attempts (user_id, question_id, created_at DESC);"
+    },
+    {
+     "type": "callout",
+     "kind": "tip",
+     "text": "Write the query you need, then index for *that*. A schema that \"feels normalised\" and a schema that answers your hot path in one index read are different schemas."
+    },
+    {
+     "type": "heading",
+     "level": 3,
+     "text": "4. Explanations are part of the answer, not a nice-to-have"
+    },
+    {
+     "type": "paragraph",
+     "text": "The promise on the landing page is \"a little better, every day\". That only works if a wrong answer teaches something. Explanations are returned with the grade in the same response, so the feedback loop is one round trip, not two."
+    },
+    {
+     "type": "heading",
+     "level": 3,
+     "text": "5. Streaks are cheap if you store days, not counters"
+    },
+    {
+     "type": "paragraph",
+     "text": "A streak counter gets corrupted the first time a timezone or a missed midnight job shows up. Storing the distinct days a student was active and deriving the streak is boring, self-healing, and correct after a timezone change."
+    },
+    {
+     "type": "code",
+     "lang": "typescript",
+     "code": "function streak(activeDays: string[]): number {\n  const days = new Set(activeDays);\n  let n = 0;\n  const cursor = new Date();\n  // count back from today (or yesterday, if today hasn't started yet)\n  for (;;) {\n    const key = cursor.toISOString().slice(0, 10);\n    if (days.has(key)) {\n      n++;\n      cursor.setUTCDate(cursor.getUTCDate() - 1);\n    } else if (n === 0) {\n      cursor.setUTCDate(cursor.getUTCDate() - 1);\n      if (n > 1) break;\n      break;\n    } else break;\n  }\n  return n;\n}"
+    },
+    {
+     "type": "heading",
+     "level": 2,
+     "text": "What went wrong"
+    },
+    {
+     "type": "list",
+     "ordered": false,
+     "items": [
+      "**I shipped a study plan before I shipped enough questions.** Students wanted to practise; the grand plan was scaffolding. Questions first.",
+      "**I underestimated mobile.** Most students study on a phone in a lecture hall. Every layout decision after that has to start from a 360px screen.",
+      "**I let a wrong assumption about my own users sit for a week.** Watching five people use it for ten minutes taught me more than a month of guessing."
+     ]
+    },
+    {
+     "type": "heading",
+     "level": 2,
+     "text": "What I'd tell anyone building for students"
+    },
+    {
+     "type": "list",
+     "ordered": true,
+     "items": [
+      "**Meet the exam, not the ideal of studying.** Timed CBT practice is the feature people come for.",
+      "**Make the wrong answer the useful part.** Explanations are the product.",
+      "**Ship to five real users early.** Your friends will lie politely; a form's analytics won't.",
+      "**Say no with a number.** \"Not this week, we're fixing question loading\" is a complete answer."
+     ]
+    },
+    {
+     "type": "paragraph",
+     "text": "TestFlow is live at [testflow.com.ng](https://testflow.com.ng). I built the exam and practice backend: question delivery, scoring, study-plan progress, and the data behind the streaks."
+    }
+   ],
+   "readMinutes": 4
+  },
+  {
+   "slug": "typescript-patterns-in-production",
+   "title": "TypeScript patterns I actually use in production",
+   "excerpt": "No clever type gymnastics, just the handful of patterns that have saved me from real bugs in real codebases.",
+   "date": "2026-10-22",
+   "tags": [
+    "TypeScript",
+    "Code"
+   ],
+   "featured": false,
+   "draft": false,
+   "cover": "/projects/blueprint.webp",
+   "content": [
+    {
+     "type": "paragraph",
+     "text": "I've read the type-level programming books. In production, with a deadline and a codebase that other people (future me included) have to read, I use about five patterns. They've each prevented a class of bug I used to ship regularly."
+    },
+    {
+     "type": "heading",
+     "level": 2,
+     "text": "Discriminated unions over boolean flags"
+    },
+    {
+     "type": "paragraph",
+     "text": "The moment a type has two booleans that must stay in sync, you have a bug waiting for a tired Tuesday. A discriminated union makes the impossible states unrepresentable:"
+    },
+    {
+     "type": "code",
+     "lang": "typescript",
+     "code": "type EmailJob =\n  | { kind: \"queued\"; attempts: number }\n  | { kind: \"sent\"; providerId: string }\n  | { kind: \"failed\"; reason: string; attempts: number };\n\n// Exhaustive switch, add a variant, TypeScript finds every site to update.\nfunction describe(job: EmailJob): string {\n  switch (job.kind) {\n    case \"queued\": return `retrying (${job.attempts})`;\n    case \"sent\": return `delivered: ${job.providerId}`;\n    case \"failed\": return `gave up: ${job.reason}`;\n  }\n}"
+    },
+    {
+     "type": "heading",
+     "level": 2,
+     "text": "Result types for fallible operations"
+    },
+    {
+     "type": "paragraph",
+     "text": "Throwing for control flow is fine. Throwing for expected failures, a missing row, a declined card, buries the handling three stack frames deep. A Result makes the failure part of the type:"
+    },
+    {
+     "type": "code",
+     "lang": "typescript",
+     "code": "type Result<T, E> =\n  | { ok: true; value: T }\n  | { ok: false; error: E };\n\nasync function getUser(id: string): Promise<Result<User, \"not-found\">> {\n  const user = await db.user.findUnique({ where: { id } });\n  return user ? { ok: true, value: user } : { ok: false, error: \"not-found\" };\n}\n\n// The caller cannot forget to handle the failure case.\nconst res = await getUser(id);\nif (!res.ok) return notFound();"
+    },
+    {
+     "type": "heading",
+     "level": 2,
+     "text": "Const assertions for config"
+    },
+    {
+     "type": "paragraph",
+     "text": "For config objects, `as const` turns a string into a literal type, which means typos become compile errors instead of 3 a.m. mysteries:"
+    },
+    {
+     "type": "code",
+     "lang": "typescript",
+     "code": "const PLANS = { free: 0, pro: 12, team: 29 } as const;\ntype Plan = keyof typeof PLANS; // \"free\" | \"pro\" | \"team\"\n\nfunction price(plan: Plan) {\n  return PLANS[plan]; // always a number, never undefined\n}"
+    },
+    {
+     "type": "callout",
+     "kind": "tip",
+     "text": "If a pattern needs a blog post to explain, it's probably too clever for production. The best patterns are the ones a teammate reads once and understands forever."
+    },
+    {
+     "type": "paragraph",
+     "text": "That's the whole list. Unions, Results, const assertions, and the discipline to reach for them before the clever stuff. TypeScript's job isn't to be impressive, it's to make the wrong thing hard to write."
+    }
+   ],
+   "readMinutes": 1
+  },
+  {
+   "slug": "designing-interfaces-that-feel-alive",
+   "title": "Designing interfaces that feel alive",
+   "excerpt": "Motion is information. The 200ms rule, optimistic UI, and why restraint beats spectacle, notes from building the sticker wall you're reading this on.",
+   "date": "2026-09-30",
+   "tags": [
+    "Design",
+    "Motion"
+   ],
+   "featured": false,
+   "draft": false,
+   "cover": "/projects/orvn.webp",
+   "content": [
+    {
+     "type": "paragraph",
+     "text": "Two apps can do the same thing and feel completely different. One feels instant and intentional; the other feels like it's thinking about it. The difference is rarely performance, it's feedback. Interfaces that feel alive tell you what's happening, constantly, in small ways."
+    },
+    {
+     "type": "heading",
+     "level": 2,
+     "text": "Motion is information"
+    },
+    {
+     "type": "paragraph",
+     "text": "Every animation should answer a question: where did that come from, where did it go, did my action work? A button that presses down into its shadow says 'I heard you'. A card that lifts on hover says 'I'm interactive'. A page that fades in says 'this just arrived'. Decoration that answers no question is noise."
+    },
+    {
+     "type": "heading",
+     "level": 2,
+     "text": "The 200ms rule"
+    },
+    {
+     "type": "paragraph",
+     "text": "Humans perceive feedback under ~200ms as instant. Above that, they start wondering. Three techniques keep you under the line:"
+    },
+    {
+     "type": "list",
+     "ordered": false,
+     "items": [
+      "Optimistic UI, show the result immediately, reconcile with the server quietly.",
+      "Skeletons over spinners, a shaped placeholder reads as progress; a spinner reads as waiting.",
+      "Micro-feedback on every action, a check, a nudge, a color shift. Silence feels like failure."
+     ]
+    },
+    {
+     "type": "heading",
+     "level": 2,
+     "text": "Restraint"
+    },
+    {
+     "type": "paragraph",
+     "text": "The fastest way to make an interface feel dead is to animate everything. If every element bounces, nothing does. I keep a short list of allowed motions, reveals on scroll, lifts on hover, one marquee, one draggable thing, and everything else stays still. Restraint is what makes the allowed motions read as intentional."
+    },
+    {
+     "type": "callout",
+     "kind": "note",
+     "text": "Always honor prefers-reduced-motion. Alive for most users means calm for the users who need calm, same interface, no motion, no information lost."
+    },
+    {
+     "type": "paragraph",
+     "text": "This portfolio is my current answer to all of the above: thick outlines and hard shadows for tactility, doodles for warmth, and exactly one thing you can grab and throw around. If it feels alive, that's the design working."
+    }
+   ],
+   "readMinutes": 1
+  }
+ ]
+}

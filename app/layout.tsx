@@ -1,43 +1,60 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import "./globals.css";
 
+/* Runtime Google Fonts, Bricolage Grotesque (display), Inter (body),
+   JetBrains Mono (labels), Caveat (sticker handwriting). */
+const FONT_URL =
+  "https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Caveat:wght@500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap";
+
 export const metadata: Metadata = {
-  title: "Daniel Oluwadare (Emerald) | Software Engineer",
+  metadataBase: new URL("https://dev-emerald-one.vercel.app"),
+  title: {
+    default: "Emerald, Daniel Oluwadare · Full-Stack Developer",
+    template: "%s · Emerald",
+  },
   description:
-    "Daniel Oluwadare is a software engineer building AI developer infrastructure and production web applications. Full-stack work in TypeScript, React and Node, with projects pulled live from GitHub.",
-  metadataBase: new URL("https://danieloluwadare.dev"),
+    "Daniel 'Emerald' Oluwadare is a Computer Science student and backend developer building developer tools, web apps, and writing about shipping in public.",
   openGraph: {
-    title: "Daniel Oluwadare (Emerald) | Software Engineer",
+    title: "Emerald, Daniel Oluwadare · Computer Science Student",
     description:
-      "Full-stack by trade. Backend by circumstance. AI developer infrastructure, production web applications, and tools developers actually enjoy using.",
+      "Computer Science student building developer-first tools and web apps. Calder, Intake, TestFlow, ORREI, and more on the wall.",
+    url: "https://dev-emerald-one.vercel.app",
+    siteName: "Emerald",
+    locale: "en_NG",
     type: "website",
   },
-  robots: { index: true, follow: true },
+  twitter: {
+    card: "summary_large_image",
+    title: "Emerald, Daniel Oluwadare · Computer Science Student",
+    description:
+      "Computer Science student and backend developer shipping products in public.",
+  },
+  alternates: {
+    types: {
+      "application/rss+xml": [{ url: "/feed.xml", title: "Emerald's blog" }],
+    },
+  },
 };
 
-/**
- * Fonts are loaded at runtime via Google Fonts <link> (not next/font) so the
- * hand-drawn marker + pen faces render in the visitor's browser regardless of
- * build-time network. CSS variables in globals.css map to these families.
- */
-export default function RootLayout({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
+/* Set the theme before first paint so dark mode never flashes. */
+const themeScript = `(function(){try{var t=localStorage.getItem("emerald-theme");if(t){document.documentElement.dataset.theme=t;}}catch(e){}})();`;
+
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Caveat:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
-          rel="stylesheet"
-        />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="stylesheet" href={FONT_URL} />
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body className="paper-grain relative antialiased">{children}</body>
+      <body className="bg-paper font-sans text-ink antialiased">
+        <a href="#main" className="skip-link">
+          Skip to content
+        </a>
+        {children}
+      </body>
     </html>
   );
 }
