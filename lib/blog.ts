@@ -35,7 +35,7 @@ export type Post = {
   updated?: string;
   tags: string[];
   featured?: boolean;
-  /** Drafts are visible in /studio only, never on the public site. */
+  /** Drafts are visible in the admin only, never on the public site. */
   draft?: boolean;
   /** Cover image URL (repo path or Blob URL). */
   cover?: string;

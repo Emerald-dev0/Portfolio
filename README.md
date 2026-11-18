@@ -4,7 +4,7 @@
 
 **Computer Science student. Backend developer. Building in public.**
 
-`Next.js 15` · `React 19` · `TypeScript` · `Tailwind CSS v4` · `Framer Motion` · `Vercel Blob` · `GitHub API` · `Spotify API`
+`Next.js 15` · `React 19` · `TypeScript` · `Tailwind CSS v4` · `Framer Motion` · `libSQL` · `TipTap` · `Vercel Blob` · `GitHub API` · `Spotify API`
 
 </div>
 
@@ -22,9 +22,10 @@ well:
    footnote about what isn't shipped yet. No invented URLs.
 2. **The GitHub panel reads itself.** Live GraphQL read → committed snapshot →
    curated fallback, so it never shows a stale claim without saying so.
-3. **The blog is a real publishing pipeline.** Write Markdown in `/studio`,
-   hit publish, and it's live in seconds, with a proper index, post pages,
-   RSS, sitemap and SEO.
+3. **The blog is a real publishing platform.** A private dashboard at `/admin`
+   with a rich editor, autosave, revisions, scheduling, a media library and
+   analytics that only counts real events. Posts live in a database, and the
+   public blog, RSS and sitemap read the same rows. See [BLOG.md](./BLOG.md).
 
 ---
 
@@ -33,30 +34,31 @@ well:
 | Route | What it is |
 | --- | --- |
 | `/` | The wall: hero, services, poster strip, work, GitHub, about, process, content, blog teaser, contact, terminal footer |
-| `/blog` | Publication front page, featured story, instant search, tag rail, sidebar |
-| `/blog/[slug]` | Post with TOC, reading progress, cover art, share, prev/next, related |
-| `/studio` | The writing studio (password-protected). Markdown editor with live preview, drafts, publish |
-| `/feed.xml` | RSS 2.0, generated from the same post store |
-| `/sitemap.xml` | Home, blog, every published post |
+| `/blog` | Publication front page, featured story, search, category rail, load more |
+| `/blog/[slug]` | Post with TOC, reading progress, share, prev/next, related, JSON-LD |
+| `/blog/category/[slug]`, `/blog/tag/[slug]`, `/blog/page/[n]` | Filtered and paged views |
+| `/admin` | The private CMS: dashboard, posts, editor, categories, media, analytics |
+| `/feed.xml` | RSS 2.0, published posts only |
+| `/sitemap.xml` | Home, blog, categories, tags, every published post |
 | `/api/spotify/now-playing` | Now-playing proxy; hides itself when unconfigured |
 
 ---
 
 ## Writing posts
 
-Two sources, merged at read time:
+Posts live in a database (libSQL, hosted on Turso in production) and are written
+in the dashboard at **`/admin`**, protected by `STUDIO_PASSWORD`. The five
+articles in `content/blog/*.md` are imported once, on first boot, so the blog
+starts with its real archive.
 
-| Source | Where | Wins on conflict |
-| --- | --- | --- |
-| Markdown files | `content/blog/*.md` |, |
-| Studio posts | Vercel Blob `posts/<slug>.md` | ✅ |
+```bash
+npm run test        # the CMS, analytics and editor suite
+npm run typecheck
+npm run build
+```
 
-Set `STUDIO_PASSWORD` and `BLOB_READ_WRITE_TOKEN`, redeploy, and `/studio` is
-live. Full instructions, including the Markdown it understands, are in
-**[STUDIO.md](./STUDIO.md)**.
-
-After editing `content/blog/*.md` by hand, run `npm run sync:blog` to refresh
-`lib/blog.snapshot.json` (the fallback used if the Markdown isn't bundled).
+Setup, the four post states, scheduling, revisions, media and exactly how the
+analytics are counted are all in **[BLOG.md](./BLOG.md)**.
 
 ---
 

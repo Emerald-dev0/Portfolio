@@ -9,7 +9,6 @@
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "sync:github": "node scripts/sync-github.mjs",
-    "sync:blog": "tsx scripts/sync-blog.mts",
     "dev:clean": "rm -rf .next && next dev",
     "test": "vitest run",
     "test:watch": "vitest"
