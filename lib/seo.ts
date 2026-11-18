@@ -44,8 +44,8 @@ export function personSchema() {
     name: site.name,
     alternateName: site.persona,
     url: site.url,
-    jobTitle: "Backend developer",
-    description: site.role,
+    jobTitle: "Software engineer",
+    description: `${site.role} at TestFlow, building backend systems and developer tools.`,
     email: `mailto:${site.email}`,
     sameAs: [site.github],
     knowsAbout: [

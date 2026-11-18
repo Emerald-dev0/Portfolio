@@ -61,7 +61,7 @@ export function About() {
             </div>
             <Reveal delay={0.3}>
               <p className="mt-8 rotate-[-1deg] font-hand text-3xl font-bold">
-              , a human, not a résumé
+                {about.signature}
               </p>
             </Reveal>
           </div>

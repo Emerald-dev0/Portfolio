@@ -380,7 +380,7 @@ export function BlogIndex({
                       Daniel Oluwadare
                     </p>
                     <p className="font-mono text-[0.6rem] font-bold uppercase tracking-[0.14em] muted">
-                      Computer Science student
+                      Software engineer at TestFlow
                     </p>
                   </div>
                 </div>

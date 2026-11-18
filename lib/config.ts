@@ -10,8 +10,8 @@
  *  - A social with `href: null` is a PLACEHOLDER: it stays in this file,
  *    clearly marked, and renders nowhere on the site until a real link is
  *    added. Add the URL and it appears automatically.
- *  - The content brand handle (@dev_boy09 / DevEmerald) is display-only, 
- *    no URL is constructed from it. Follow CTAs point at verified accounts.
+ *  - There is no separate content brand. Writing and updates are Daniel's own,
+ *    so they point at the same verified accounts as everything else.
  * ============================================================================
  */
 
@@ -30,15 +30,12 @@ const CANONICAL = process.env.NEXT_PUBLIC_SITE_URL?.trim().replace(/\/$/, "");
 export const site = {
   name: "Daniel Oluwadare",
   persona: "Emerald",
-  role: "Computer Science student",
+  role: "Software engineer",
   location: "Ile-Ife, Nigeria",
   url: CANONICAL || "https://oluwadaredaniel.me",
   email: "oluwadare458@gmail.com",
   github: "https://github.com/Emerald-dev0",
   githubHandle: "@Emerald-dev0",
-  /** Content brand, shown in the Content section, never linked directly. */
-  contentHandle: "@dev_boy09",
-  contentName: "DevEmerald",
   availability: "Open for freelance work",
 } as const;
 

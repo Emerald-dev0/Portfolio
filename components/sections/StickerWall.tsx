@@ -6,7 +6,7 @@ import { Doodle } from "../ui/Doodle";
 
 /**
  * STICKER WALL, the grab-and-throw moment. A cluster of stickers pinned to an
- * invisible board: the build card, "on the bench", ship-it, commits, the OAU
+ * invisible board: the build card, "on the bench", ship-it, commits, the role
  * badge. Drag is constrained to the board and each sticker keeps its resting
  * angle after being moved.
  *
@@ -103,7 +103,7 @@ export function StickerWall({ compact = false }: { compact?: boolean }) {
           className="sticker absolute left-1/3 top-1/2 cursor-grab rotate-[-5deg] bg-grape px-3.5 py-2 text-bone active:cursor-grabbing"
         >
           <p className="font-mono text-[0.62rem] font-bold uppercase tracking-[0.14em]">
-            CS @ OAU
+            SWE @ TESTFLOW
           </p>
         </motion.div>
       ) : (
@@ -111,7 +111,7 @@ export function StickerWall({ compact = false }: { compact?: boolean }) {
           {...dragProps}
           className="sticker absolute left-1/2 top-[45%] cursor-grab rotate-[-6deg] bg-grape px-3 py-1.5 text-bone active:cursor-grabbing"
         >
-          <p className="font-mono text-[0.58rem] font-bold uppercase tracking-[0.14em]">CS @ OAU</p>
+          <p className="font-mono text-[0.58rem] font-bold uppercase tracking-[0.14em]">SWE @ TESTFLOW</p>
         </motion.div>
       )}
     </div>

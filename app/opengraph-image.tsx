@@ -14,7 +14,7 @@ import { site } from "../lib/config";
  */
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
-export const alt = `${site.name}, ${site.role} and backend developer`;
+export const alt = `${site.name}, ${site.role}, backend and developer tools`;
 
 /** The asterisk, the same path the site's Doodle component uses. */
 function Asterisk({ size: s, color }: { size: number; color: string }) {

@@ -9,7 +9,7 @@ export const revalidate = 0;
 export const metadata: Metadata = {
   title: "Blog, Notes from things I have built and learned",
   description:
-    "Build logs, architecture decisions and honest lessons from Daniel 'Emerald' Oluwadare, Computer Science student and backend developer building in public.",
+    "Build logs, architecture decisions and honest lessons from Daniel 'Emerald' Oluwadare, a software engineer at TestFlow building in public.",
   alternates: { canonical: "/blog" },
   openGraph: {
     title: "Blog, Notes from things I have built and learned",

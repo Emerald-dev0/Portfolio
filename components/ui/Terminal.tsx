@@ -15,7 +15,7 @@ import { useReducedMotion } from "framer-motion";
 const SCRIPT: { cmd: string; out: string[] }[] = [
   {
     cmd: "whoami",
-    out: ["daniel_oluwadare", "computer science student", "backend developer @ testflow"],
+    out: ["daniel_oluwadare", "software engineer", "backend @ testflow"],
   },
   {
     cmd: "cat stack.json",

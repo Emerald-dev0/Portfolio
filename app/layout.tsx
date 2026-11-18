@@ -18,25 +18,25 @@ export const metadata: Metadata = {
   },
   applicationName: site.name,
   description:
-    "Daniel 'Emerald' Oluwadare, a backend developer in Ile-Ife, Nigeria. Builds developer tools and web apps, and writes about architecture decisions and shipping in public.",
+    "Daniel 'Emerald' Oluwadare, a software engineer at TestFlow. Builds backend systems and developer tools, and writes about architecture decisions and shipping in public.",
   authors: [{ name: site.name, url: site.url }],
   creator: site.name,
   publisher: site.name,
   keywords: [
     "Daniel Oluwadare",
     "Emerald",
-    "backend developer Nigeria",
+    "software engineer Nigeria",
     "Next.js developer",
     "TypeScript",
     "PostgreSQL",
-    "full stack developer Ile-Ife",
+    "backend engineer Ile-Ife",
     "developer tools",
   ],
   category: "technology",
   openGraph: {
     title: "Emerald, Daniel Oluwadare · Computer Science Student",
     description:
-      "Computer Science student building developer-first tools and web apps. Calder, Intake, TestFlow, ORREI, and more on the wall.",
+      "Software engineer at TestFlow building developer-first tools and web apps. Calder, Intake, ORREI, and more on the wall.",
     url: site.url,
     siteName: "Emerald",
     locale: "en_NG",
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Emerald, Daniel Oluwadare · Computer Science Student",
     description:
-      "Computer Science student and backend developer shipping products in public.",
+      "Software engineer building backend systems, developer tools and products in public.",
   },
   alternates: {
     canonical: "/",

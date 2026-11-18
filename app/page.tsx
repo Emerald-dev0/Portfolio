@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: `${site.name}, Backend Developer`,
     description:
-      "Developer tools, web apps and honest build logs from a backend developer in Ile-Ife, Nigeria.",
+      "Developer tools, web apps and honest build logs from a software engineer in Ile-Ife, Nigeria.",
     url: "/",
     type: "website",
   },

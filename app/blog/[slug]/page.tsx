@@ -302,7 +302,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                   {site.name} <span className="muted-soft">· {site.persona}</span>
                 </p>
                 <p className="mt-1 text-sm leading-relaxed muted">
-                  Computer Science student, backend developer on TestFlow, and the person writing
+                  Software engineer on TestFlow, and the person writing
                   everything here. I build in public and post what I learn.
                 </p>
               </div>
