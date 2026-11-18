@@ -100,11 +100,11 @@ export function MediaLibrary({ media }: { media: MediaItem[] }) {
           dragging ? "border-leaf bg-leaf/10" : "border-ink/30"
         }`}
       >
-        <Icon icon={CloudUploadIcon} size={28} className="mx-auto opacity-60" />
+        <Icon icon={CloudUploadIcon} size={28} className="mx-auto muted-soft" />
         <p className="mt-3 font-display text-lg font-extrabold">
           {busy ? "Uploading" : "Drop images here"}
         </p>
-        <p className="mt-1 text-sm opacity-60">PNG, JPEG, WebP, GIF or AVIF, up to 8 MB each.</p>
+        <p className="mt-1 text-sm muted-soft">PNG, JPEG, WebP, GIF or AVIF, up to 8 MB each.</p>
         <button
           type="button"
           onClick={() => input.current?.click()}
@@ -153,7 +153,7 @@ export function MediaLibrary({ media }: { media: MediaItem[] }) {
               <div className="p-3">
                 {editing?.id === item.id ? (
                   <div>
-                    <label className="block text-[0.55rem] font-bold uppercase tracking-[0.12em] opacity-60" htmlFor={`alt-${item.id}`}>
+                    <label className="block text-[0.55rem] font-bold uppercase tracking-[0.12em] muted-soft" htmlFor={`alt-${item.id}`}>
                       Alt text
                     </label>
                     <input
@@ -162,7 +162,7 @@ export function MediaLibrary({ media }: { media: MediaItem[] }) {
                       onChange={(e) => setEditing({ ...editing, alt: e.target.value })}
                       className="mt-1 w-full rounded-lg border-2 border-ink/20 px-2 py-1 text-xs outline-none focus:border-ink"
                     />
-                    <label className="mt-2 block text-[0.55rem] font-bold uppercase tracking-[0.12em] opacity-60" htmlFor={`cap-${item.id}`}>
+                    <label className="mt-2 block text-[0.55rem] font-bold uppercase tracking-[0.12em] muted-soft" htmlFor={`cap-${item.id}`}>
                       Caption
                     </label>
                     <input
@@ -183,7 +183,7 @@ export function MediaLibrary({ media }: { media: MediaItem[] }) {
                 ) : (
                   <>
                     <p className="truncate text-xs font-semibold">{item.alt || "No alt text"}</p>
-                    <p className="mt-0.5 font-mono text-[0.55rem] uppercase tracking-[0.1em] opacity-50">
+                    <p className="mt-0.5 font-mono text-[0.55rem] uppercase tracking-[0.1em] muted-soft">
                       {item.bytes ? `${Math.max(1, Math.round(item.bytes / 1024))} KB` : "image"}
                     </p>
                     <div className="mt-2 flex gap-1">
@@ -220,7 +220,7 @@ export function MediaLibrary({ media }: { media: MediaItem[] }) {
       ) : (
         <div className="mt-6 rounded-2xl border-[2.5px] border-dashed border-ink/30 p-10 text-center">
           <p className="font-display text-xl font-extrabold">No images yet.</p>
-          <p className="mt-1 text-sm opacity-70">
+          <p className="mt-1 text-sm muted">
             Upload one and paste its URL, or drag it straight into a post.
           </p>
         </div>

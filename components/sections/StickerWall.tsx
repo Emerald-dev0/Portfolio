@@ -48,7 +48,7 @@ export function StickerWall({ compact = false }: { compact?: boolean }) {
         </>
       ) : null}
 
-      <p className="absolute -top-3 right-0 rotate-[3deg] font-hand text-xl font-bold opacity-70">
+      <p className="absolute -top-3 right-0 rotate-[3deg] font-hand text-xl font-bold muted">
         Drag me
       </p>
 
@@ -57,7 +57,7 @@ export function StickerWall({ compact = false }: { compact?: boolean }) {
         {...dragProps}
         className="sticker absolute left-0 top-6 w-[188px] cursor-grab rotate-[-4deg] p-3.5 active:cursor-grabbing"
       >
-        <p className="font-mono text-[0.55rem] font-bold uppercase tracking-[0.16em] opacity-55">
+        <p className="font-mono text-[0.55rem] font-bold uppercase tracking-[0.16em] muted-soft">
           currently shipping
         </p>
         <pre className="mt-1.5 font-mono text-[0.66rem] leading-relaxed">
@@ -70,7 +70,7 @@ export function StickerWall({ compact = false }: { compact?: boolean }) {
         {...dragProps}
         className="sticker absolute right-0 top-0 w-[190px] cursor-grab rotate-[4deg] border-ink bg-leaf p-3.5 text-bone active:cursor-grabbing"
       >
-        <p className="font-mono text-[0.55rem] font-bold uppercase tracking-[0.16em] opacity-80">
+        <p className="font-mono text-[0.55rem] font-bold uppercase tracking-[0.16em] muted">
           on the bench
         </p>
         <p className="mt-1 font-display text-lg font-extrabold leading-tight">
@@ -92,7 +92,7 @@ export function StickerWall({ compact = false }: { compact?: boolean }) {
         className="sticker absolute bottom-2 right-1 w-[178px] cursor-grab rotate-[3deg] p-3.5 active:cursor-grabbing"
       >
         <p className="font-display text-xl font-extrabold leading-none">2,600+</p>
-        <p className="mt-0.5 font-mono text-[0.6rem] font-bold uppercase tracking-[0.14em] opacity-65">
+        <p className="mt-0.5 font-mono text-[0.6rem] font-bold uppercase tracking-[0.14em] muted-soft">
           commits &amp; counting
         </p>
       </motion.div>

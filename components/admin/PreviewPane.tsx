@@ -115,7 +115,7 @@ export function PreviewPane({
     >
       <div className="flex flex-wrap items-center gap-2 border-b-[2.5px] border-ink bg-paper px-4 py-2.5">
         <span className="font-mono text-[0.6rem] font-bold uppercase tracking-[0.14em]">Preview</span>
-        <span className="hidden font-mono text-[0.55rem] uppercase tracking-[0.12em] opacity-50 sm:inline">
+        <span className="hidden font-mono text-[0.55rem] uppercase tracking-[0.12em] muted-soft sm:inline">
           Private, not indexed, not public
         </span>
 
@@ -140,7 +140,7 @@ export function PreviewPane({
           </button>
         </div>
 
-        <span className="font-mono text-[0.55rem] font-bold uppercase tracking-[0.12em] opacity-50">
+        <span className="font-mono text-[0.55rem] font-bold uppercase tracking-[0.12em] muted-soft">
           {loading ? "Rendering" : `${words} words · ${minutes} min`}
         </span>
 
@@ -161,7 +161,7 @@ export function PreviewPane({
           }`}
         >
           <div className="border-b-2 border-ink/10 px-5 py-3">
-            <p className="truncate font-mono text-[0.55rem] uppercase tracking-[0.12em] opacity-50">
+            <p className="truncate font-mono text-[0.55rem] uppercase tracking-[0.12em] muted-soft">
               /blog/{slug}
             </p>
           </div>
@@ -182,22 +182,22 @@ export function PreviewPane({
               <RichText text={title || "Untitled"} />
             </h1>
             {excerpt ? (
-              <p className="mt-3 text-base leading-relaxed opacity-75">{excerpt}</p>
+              <p className="mt-3 text-base leading-relaxed muted">{excerpt}</p>
             ) : null}
-            <p className="mt-4 font-mono text-[0.6rem] font-bold uppercase tracking-[0.14em] opacity-50">
+            <p className="mt-4 font-mono text-[0.6rem] font-bold uppercase tracking-[0.14em] muted-soft">
               {formatDate(new Date().toISOString().slice(0, 10))} · {minutes} min read
             </p>
 
             {entries.length ? (
               <div className="mt-6 rounded-xl border-2 border-ink/15 p-3">
-                <p className="font-mono text-[0.55rem] font-bold uppercase tracking-[0.14em] opacity-50">
+                <p className="font-mono text-[0.55rem] font-bold uppercase tracking-[0.14em] muted-soft">
                   On this page
                 </p>
                 <ul className="mt-1.5 flex flex-col gap-1">
                   {entries.map((e) => (
                     <li
                       key={e.id}
-                      className={`text-xs font-semibold ${e.level === 3 ? "pl-3 opacity-80" : ""}`}
+                      className={`text-xs font-semibold ${e.level === 3 ? "pl-3 muted" : ""}`}
                     >
                       {e.text}
                     </li>
@@ -215,7 +215,7 @@ export function PreviewPane({
               {blocks?.length ? (
                 blocks.map((block, i) => <BlockRenderer key={i} block={block} />)
               ) : (
-                <p className="text-sm opacity-50">Nothing to preview yet. Start writing and this fills in.</p>
+                <p className="text-sm muted-soft">Nothing to preview yet. Start writing and this fills in.</p>
               )}
             </div>
           </article>

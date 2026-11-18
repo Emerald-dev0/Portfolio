@@ -59,7 +59,7 @@ export default async function AnalyticsPage({
       <section className="mt-6 sticker-flat p-5">
         <h2 className="font-display text-xl font-extrabold">Views over time</h2>
         <Sparkline data={series} label={`Views, ${range}`} />
-        <p className="mt-1 font-mono text-[0.55rem] uppercase tracking-[0.12em] opacity-50">
+        <p className="mt-1 font-mono text-[0.55rem] uppercase tracking-[0.12em] muted-soft">
           {summary.from.slice(0, 10)} to {summary.to.slice(0, 10)} UTC
         </p>
       </section>
@@ -72,13 +72,13 @@ export default async function AnalyticsPage({
               <table className="w-full text-left text-sm">
                 <thead>
                   <tr className="border-b-2 border-ink/15">
-                    <th scope="col" className="py-2 font-mono text-[0.55rem] font-bold uppercase tracking-[0.12em] opacity-60">
+                    <th scope="col" className="py-2 font-mono text-[0.55rem] font-bold uppercase tracking-[0.12em] muted-soft">
                       Title
                     </th>
-                    <th scope="col" className="py-2 text-right font-mono text-[0.55rem] font-bold uppercase tracking-[0.12em] opacity-60">
+                    <th scope="col" className="py-2 text-right font-mono text-[0.55rem] font-bold uppercase tracking-[0.12em] muted-soft">
                       Views
                     </th>
-                    <th scope="col" className="py-2 text-right font-mono text-[0.55rem] font-bold uppercase tracking-[0.12em] opacity-60">
+                    <th scope="col" className="py-2 text-right font-mono text-[0.55rem] font-bold uppercase tracking-[0.12em] muted-soft">
                       Readers
                     </th>
                     <th scope="col" className="py-2" />
@@ -89,7 +89,7 @@ export default async function AnalyticsPage({
                     <tr key={row.id} className="border-b-2 border-ink/10 last:border-0">
                       <td className="max-w-[22rem] truncate py-2 font-semibold">{row.title}</td>
                       <td className="py-2 text-right font-mono text-xs">{row.views}</td>
-                      <td className="py-2 text-right font-mono text-xs opacity-70">{row.visitors}</td>
+                      <td className="py-2 text-right font-mono text-xs muted">{row.visitors}</td>
                       <td className="py-2 pl-3 text-right">
                         <Link
                           href={`/admin/analytics/${row.id}?range=${range}`}
@@ -105,7 +105,7 @@ export default async function AnalyticsPage({
               </table>
             </div>
           ) : (
-            <p className="mt-3 text-sm opacity-60">
+            <p className="mt-3 text-sm muted-soft">
               No views in this window. Publish something and share the link.
             </p>
           )}

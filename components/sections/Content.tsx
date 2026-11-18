@@ -55,7 +55,7 @@ export function Content() {
                   <Icon icon={ICONS[i]} size={24} />
                 </div>
                 <h3 className="display-card mt-5">{p.title}</h3>
-                <p className="mt-3 leading-relaxed opacity-80">{p.copy}</p>
+                <p className="mt-3 leading-relaxed muted">{p.copy}</p>
               </Card>
             </Reveal>
           ))}

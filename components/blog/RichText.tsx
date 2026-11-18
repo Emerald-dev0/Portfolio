@@ -56,7 +56,7 @@ export function RichText({ text, className }: Props) {
           return <strong key={i} className="font-extrabold">{part.slice(2, -2)}</strong>;
         }
         if (part.startsWith("~~") && part.endsWith("~~")) {
-          return <del key={i} className="opacity-70">{part.slice(2, -2)}</del>;
+          return <del key={i} className="muted">{part.slice(2, -2)}</del>;
         }
         if (part.startsWith("`") && part.endsWith("`")) {
           return (

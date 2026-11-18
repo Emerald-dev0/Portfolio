@@ -39,7 +39,7 @@ export function ShareRow({ url, title }: { url: string; title: string }) {
   return (
     <div className="sticker mt-14 flex flex-wrap items-center gap-3 p-5">
       <p className="font-hand text-2xl font-bold">Did this help?</p>
-      <p className="text-sm opacity-70">Send it to someone fighting the same bug.</p>
+      <p className="text-sm muted">Send it to someone fighting the same bug.</p>
 
       <div className="ml-auto flex flex-wrap gap-2">
         <a

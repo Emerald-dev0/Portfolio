@@ -64,7 +64,7 @@ export function RangePicker({ active }: { active: string }) {
             if (from && to) push("custom", { from, to });
           }}
         >
-          <label className="text-[0.55rem] font-bold uppercase tracking-[0.1em] opacity-60">
+          <label className="text-[0.55rem] font-bold uppercase tracking-[0.1em] muted-soft">
             From
             <input
               type="date"
@@ -73,7 +73,7 @@ export function RangePicker({ active }: { active: string }) {
               className="mt-0.5 block rounded-md border-2 border-ink/20 px-1.5 py-1 text-xs font-normal outline-none focus:border-ink"
             />
           </label>
-          <label className="text-[0.55rem] font-bold uppercase tracking-[0.1em] opacity-60">
+          <label className="text-[0.55rem] font-bold uppercase tracking-[0.1em] muted-soft">
             To
             <input
               type="date"

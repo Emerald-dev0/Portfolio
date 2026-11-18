@@ -85,7 +85,7 @@ export function NowPlaying({ className = "" }: { className?: string }) {
       </span>
 
       <span className="min-w-0 flex-1">
-        <span className="flex items-center gap-1.5 font-mono text-[0.55rem] font-bold uppercase tracking-[0.14em] opacity-55">
+        <span className="flex items-center gap-1.5 font-mono text-[0.55rem] font-bold uppercase tracking-[0.14em] muted-soft">
           {track.playing ? (
             <>
               <span className="flex items-end gap-[2px]" aria-hidden="true">
@@ -110,7 +110,7 @@ export function NowPlaying({ className = "" }: { className?: string }) {
         <span className="mt-0.5 block truncate text-[0.78rem] font-bold leading-tight">
           {track.title}
         </span>
-        <span className="block truncate text-[0.68rem] leading-tight opacity-60">
+        <span className="block truncate text-[0.68rem] leading-tight muted-soft">
           {track.artist}
         </span>
         {duration ? (
@@ -126,7 +126,7 @@ export function NowPlaying({ className = "" }: { className?: string }) {
       <Icon
         icon={ArrowUpRight01Icon}
         size={14}
-        className="shrink-0 opacity-30 transition group-hover:opacity-80"
+        className="shrink-0 muted-soft transition group-hover:opacity-80"
       />
     </a>
   );

@@ -34,7 +34,7 @@ export function Hero({ commits, repos }: { commits?: number; repos?: number }) {
       <div className="halftone pointer-events-none absolute inset-x-0 top-0 h-[420px] opacity-[0.07]" />
       <Doodle
         name="asterisk"
-        className="pointer-events-none absolute -right-14 top-28 w-52 text-ink/10 animate-spin-slow"
+        className="pointer-events-none absolute -right-14 top-28 w-52 muted-soft animate-spin-slow"
         strokeWidth={4}
       />
       <Doodle
@@ -50,7 +50,7 @@ export function Hero({ commits, repos }: { commits?: number; repos?: number }) {
           {/* ------------------------------------------------------------ */}
           <div className="lg:col-span-7">
             <Reveal>
-              <p className="font-mono text-[0.7rem] font-bold uppercase tracking-[0.18em] opacity-45">
+              <p className="font-mono text-[0.7rem] font-bold uppercase tracking-[0.18em] muted-soft">
                 {hero.location}
               </p>
             </Reveal>
@@ -74,7 +74,7 @@ export function Hero({ commits, repos }: { commits?: number; repos?: number }) {
             </Reveal>
 
             <Reveal delay={0.14}>
-              <div className="mt-7 flex max-w-xl flex-col gap-4 text-[1.02rem] leading-relaxed opacity-80">
+              <div className="mt-7 flex max-w-xl flex-col gap-4 text-[1.02rem] leading-relaxed muted">
                 {hero.intro.map((para, i) => (
                   <p key={i}>{para}</p>
                 ))}
@@ -99,18 +99,18 @@ export function Hero({ commits, repos }: { commits?: number; repos?: number }) {
 
             <Reveal delay={0.34}>
               <div className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-3">
-                <span className="inline-flex items-center gap-2 text-[0.82rem] opacity-75">
+                <span className="inline-flex items-center gap-2 text-[0.82rem] muted">
                   <span className="size-2 shrink-0 rounded-full bg-leaf" />
                   {hero.badge}
                 </span>
                 {repos ? (
-                  <span className="inline-flex items-center gap-1.5 font-mono text-[0.65rem] font-bold uppercase tracking-[0.14em] opacity-55">
+                  <span className="inline-flex items-center gap-1.5 font-mono text-[0.65rem] font-bold uppercase tracking-[0.14em] muted-soft">
                     <Icon icon={StarIcon} size={12} />
                     {repos} public repos
                   </span>
                 ) : null}
                 {commits ? (
-                  <span className="font-mono text-[0.65rem] font-bold uppercase tracking-[0.14em] opacity-55">
+                  <span className="font-mono text-[0.65rem] font-bold uppercase tracking-[0.14em] muted-soft">
                     {commits.toLocaleString()} commits
                   </span>
                 ) : null}
@@ -178,7 +178,7 @@ export function Hero({ commits, repos }: { commits?: number; repos?: number }) {
 
         <Reveal delay={0.5}>
           <div className="mt-14 flex flex-wrap items-center gap-4 sm:mt-10">
-            <p className="inline-flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-[0.18em] opacity-55">
+            <p className="inline-flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-[0.18em] muted-soft">
               <Icon icon={ArrowDown01Icon} size={15} className="animate-bob" />
               {hero.scrollNote}
             </p>

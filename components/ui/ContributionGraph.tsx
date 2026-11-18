@@ -79,7 +79,7 @@ export function ContributionGraph({ contributions }: { contributions: Contributi
     <div>
       <div className="flex gap-[3px]" aria-hidden="true">
         {monthLabels.map((label, i) => (
-          <span key={i} className="w-[11px] shrink-0 font-mono text-[9px] font-bold uppercase text-ink/50">
+          <span key={i} className="w-[11px] shrink-0 font-mono text-[9px] font-bold uppercase muted-soft">
             {label ?? ""}
           </span>
         ))}
@@ -105,7 +105,7 @@ export function ContributionGraph({ contributions }: { contributions: Contributi
           </div>
         ))}
       </div>
-      <div className="mt-3 flex items-center justify-end gap-1.5 font-mono text-[0.65rem] font-bold uppercase tracking-widest text-ink/50">
+      <div className="mt-3 flex items-center justify-end gap-1.5 font-mono text-[0.65rem] font-bold uppercase tracking-widest muted-soft">
         Less
         {LEVEL_CLASS.map((cls, i) => (
           <span key={i} className={`size-[11px] rounded-[3px] border border-ink/15 ${cls}`} />

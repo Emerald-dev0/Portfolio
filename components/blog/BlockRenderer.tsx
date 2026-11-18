@@ -52,7 +52,7 @@ export function BlockRenderer({ block }: { block: Block }) {
 
     case "paragraph":
       return (
-        <p className="text-[1.0625rem] leading-[1.75] opacity-90 sm:text-lg">
+        <p className="text-[1.0625rem] leading-[1.75] muted sm:text-lg">
           <RichText text={block.text} />
         </p>
       );
@@ -83,7 +83,7 @@ export function BlockRenderer({ block }: { block: Block }) {
       return block.ordered ? (
         <ol className="flex flex-col gap-3">
           {block.items.map((item, i) => (
-            <li key={i} className="flex gap-3.5 text-[1.0625rem] leading-relaxed opacity-90">
+            <li key={i} className="flex gap-3.5 text-[1.0625rem] leading-relaxed muted">
               <span className="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full border-2 border-ink bg-tang font-mono text-xs font-bold text-night">
                 {i + 1}
               </span>
@@ -94,7 +94,7 @@ export function BlockRenderer({ block }: { block: Block }) {
       ) : (
         <ul className="flex flex-col gap-3">
           {block.items.map((item, i) => (
-            <li key={i} className="flex gap-3 text-[1.0625rem] leading-relaxed opacity-90">
+            <li key={i} className="flex gap-3 text-[1.0625rem] leading-relaxed muted">
               <Doodle name="check" className="mt-1 w-5 shrink-0 text-leaf" strokeWidth={7} />
               <RichText text={item} />
             </li>
@@ -122,7 +122,7 @@ export function BlockRenderer({ block }: { block: Block }) {
             />
           </div>
           {block.caption ? (
-            <figcaption className="mt-3 text-center font-mono text-xs opacity-60">
+            <figcaption className="mt-3 text-center font-mono text-xs muted-soft">
               <RichText text={block.caption} />
             </figcaption>
           ) : null}
@@ -146,7 +146,7 @@ export function BlockRenderer({ block }: { block: Block }) {
               {block.rows.map((row, r) => (
                 <tr key={r} className="border-b border-ink/15 last:border-0">
                   {row.map((cell, c) => (
-                    <td key={c} className="px-4 py-3 align-top opacity-90">
+                    <td key={c} className="px-4 py-3 align-top muted">
                       <RichText text={cell} />
                     </td>
                   ))}
@@ -160,7 +160,7 @@ export function BlockRenderer({ block }: { block: Block }) {
     case "hr":
       return (
         <div className="flex justify-center py-4" aria-hidden="true">
-          <Doodle name="asterisk" className="w-7 text-ink/25" strokeWidth={6} />
+          <Doodle name="asterisk" className="w-7 muted-soft" strokeWidth={6} />
         </div>
       );
   }

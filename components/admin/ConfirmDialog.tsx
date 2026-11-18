@@ -56,7 +56,7 @@ export function ConfirmDialog({
         <h2 id="confirm-title" className="font-display text-2xl font-extrabold leading-tight">
           {title}
         </h2>
-        <p id="confirm-body" className="mt-3 text-sm leading-relaxed opacity-80">
+        <p id="confirm-body" className="mt-3 text-sm leading-relaxed muted">
           {body}
         </p>
         <div className="mt-6 flex flex-wrap justify-end gap-2">

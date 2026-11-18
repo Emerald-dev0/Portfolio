@@ -20,6 +20,14 @@
   --color-lagoon: #2ec4b6; /* teal */
   --color-ink-faint: #6f6a5c; /* secondary labels on paper */
 
+  /* Pastel card faces. The "what I do" cards referenced these by name for a
+     long time while they did not exist, so those four cards rendered with no
+     background at all, in both themes. */
+  --color-sage: #dcece1;
+  --color-butter: #fbecc8;
+  --color-lilac: #e6dcfb;
+  --color-mist: #d6efec;
+
   --font-display: "Bricolage Grotesque", "Inter", sans-serif;
   --font-sans: "Inter", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
@@ -86,6 +94,16 @@
   --color-paper: #1a1611;
   --color-cream: #2a2318;
   --color-night: #0f0d0a;
+  /* ink-faint is the secondary label colour. Its light value is a dark olive,
+     which on dark paper is invisible, so it flips to a warm grey here. Every
+     faint label on the site depends on this one line. */
+  --color-ink-faint: #bdb2a0;
+  /* The pastels are light surfaces. Left alone they glow out of a dark page,
+     so the same hues are dropped to dark surfaces that keep ink text legible. */
+  --color-sage: #22402f;
+  --color-butter: #423520;
+  --color-lilac: #332a4d;
+  --color-mist: #1e3a38;
   color-scheme: dark;
 }
 
@@ -127,6 +145,27 @@ body {
 }
 
 @layer components {
+  /* ------------------------------------------------------------------------
+     Muted text. Secondary copy used to be dimmed with opacity-60 and friends,
+     which on cream reads as grey but on dark paper reads as barely there, and
+     it compounded with whatever the parent was already doing. These are
+     colours, defined per theme, so legibility does not depend on arithmetic.
+     `.muted` is normal secondary, `.muted-soft` is the quietest label.
+     ------------------------------------------------------------------------ */
+  .muted {
+    color: color-mix(in srgb, var(--color-ink) 72%, var(--color-paper));
+  }
+  .muted-soft {
+    color: var(--color-ink-faint);
+  }
+  /* The same two steps for copy on the fixed dark panels. */
+  .muted-on-dark {
+    color: color-mix(in srgb, var(--color-bone) 74%, #16130f);
+  }
+  .muted-on-dark-soft {
+    color: color-mix(in srgb, var(--color-bone) 58%, #16130f);
+  }
+
   /* ------------------------------------------------------------------------
      Type scale, fluid clamp() headlines, tight & heavy.
      ------------------------------------------------------------------------ */

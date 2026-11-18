@@ -29,13 +29,13 @@ export function About() {
 
             <Reveal delay={0.2}>
               <div className="sticker mt-10 rotate-[-1deg] p-6">
-                <p className="font-mono text-[0.65rem] font-bold uppercase tracking-[0.16em] opacity-60">
+                <p className="font-mono text-[0.65rem] font-bold uppercase tracking-[0.16em] muted-soft">
                   currently
                 </p>
                 <dl className="mt-3 grid gap-x-6 gap-y-3 sm:grid-cols-2">
                   {Object.entries(about.currently).map(([k, v]) => (
                     <div key={k}>
-                      <dt className="font-mono text-[0.65rem] font-bold uppercase tracking-widest opacity-50">
+                      <dt className="font-mono text-[0.65rem] font-bold uppercase tracking-widest muted-soft">
                         {k}
                       </dt>
                       <dd className="mt-0.5 font-semibold">{v}</dd>
@@ -52,7 +52,7 @@ export function About() {
                 <Reveal key={f.label} delay={i * 0.07} className={FACT_OFFSET[i]}>
                   <Card rotate={FACT_ROTATE[i]} className="p-5">
                     <p className="font-display text-lg font-extrabold leading-snug">{f.label}</p>
-                    <p className="mt-1 font-mono text-[0.68rem] font-bold uppercase tracking-[0.12em] opacity-60">
+                    <p className="mt-1 font-mono text-[0.68rem] font-bold uppercase tracking-[0.12em] muted-soft">
                       {f.sub}
                     </p>
                   </Card>

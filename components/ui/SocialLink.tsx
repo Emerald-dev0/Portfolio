@@ -48,7 +48,7 @@ export function SocialLink({
       {icon ? <Icon icon={icon} size={17} /> : null}
       <span>{social.label}</span>
       {social.handle ? (
-        <span className="hidden opacity-55 normal-case tracking-normal md:inline">
+        <span className="hidden muted-soft normal-case tracking-normal md:inline">
           {social.handle}
         </span>
       ) : null}

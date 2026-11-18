@@ -77,7 +77,7 @@ export function MobileDock() {
             className="flex flex-1 flex-col items-center gap-0.5 rounded-2xl px-2 py-1.5 active:bg-ink/10"
           >
             <Icon icon={item.icon} size={19} />
-            <span className="font-mono text-[0.54rem] font-bold uppercase tracking-[0.1em] opacity-70">
+            <span className="font-mono text-[0.54rem] font-bold uppercase tracking-[0.1em] muted">
               {item.label}
             </span>
           </Link>
@@ -100,7 +100,7 @@ export function MobileDock() {
             className="flex flex-1 flex-col items-center gap-0.5 rounded-2xl px-2 py-1.5 active:bg-ink/10"
           >
             <Icon icon={item.icon} size={19} />
-            <span className="font-mono text-[0.54rem] font-bold uppercase tracking-[0.1em] opacity-70">
+            <span className="font-mono text-[0.54rem] font-bold uppercase tracking-[0.1em] muted">
               {item.label}
             </span>
           </a>
