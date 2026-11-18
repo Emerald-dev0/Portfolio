@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { BlogIndex } from "../../../../components/blog/BlogIndex";
+import { notFound } from "next/navigation";
 import { readIndex } from "../../../../lib/server/blog-source";
 import { PER_PAGE } from "../../../../lib/blog-paging";
 
@@ -27,6 +28,8 @@ export default async function TagPage({ params }: { params: Promise<{ slug: stri
   const { slug } = await params;
   const all = await readIndex({ limit: 1 });
   const match = all.tags.find((t) => t.slug === slug);
+  // A tag or category nobody uses is a 404, not an empty page.
+  if (!match) notFound();
   const index = await readIndex({ tag: match?.name ?? slug, category: undefined, limit: PER_PAGE });
 
   return (

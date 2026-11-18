@@ -137,7 +137,7 @@ export type IndexPage = {
 };
 
 /**
- * Everything the index needs, from one read of the published set.
+ * Everything the index needs, from two reads of the published set.
  *
  * Search, tag, category and paging all filter the same in-memory list, so the
  * four of them can never disagree, and the facet counts are computed from the
@@ -145,14 +145,20 @@ export type IndexPage = {
  * posts, one query) this is both simpler and faster than four SQL paths.
  */
 export async function readIndex(query: IndexQuery = {}): Promise<IndexPage> {
-  const rows = await all<PostRow>(
-    `${`SELECT p.*, c.slug AS category_slug, c.name AS category_name
-         FROM posts p LEFT JOIN categories c ON c.id = p.category_id
-        WHERE p.status = 'published' AND p.published_at IS NOT NULL
-        ORDER BY p.published_at DESC`.replace(/\s+/g, " ")} LIMIT 500`,
+  // `publishedPosts` already attaches tags in one query, so this read is two
+  // queries in total: the posts with their tags, and the category per slug.
+  const rows = await publishedPosts({ limit: 500 });
+  const categoryRows = await all<{ slug: string; category_name: string | null }>(
+    `SELECT p.slug, c.name AS category_name
+       FROM posts p LEFT JOIN categories c ON c.id = p.category_id
+      WHERE p.status = 'published'`,
   );
+  const categoryBySlug = new Map(categoryRows.map((r) => [r.slug, r.category_name]));
 
-  const posts: IndexPost[] = rows.map((row) => ({ ...toPost(row), category: row.category_name ?? null }));
+  const posts: IndexPost[] = rows.map((row) => ({
+    ...toPost(row),
+    category: categoryBySlug.get(row.slug) ?? null,
+  }));
 
   const tagCounts = new Map<string, number>();
   const catCounts = new Map<string, number>();
