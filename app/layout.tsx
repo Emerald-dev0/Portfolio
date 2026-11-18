@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import "./globals.css";
+import { site } from "../lib/config";
 
 /* Runtime Google Fonts, Bricolage Grotesque (display), Inter (body),
    JetBrains Mono (labels), Caveat (sticker handwriting). */
@@ -8,7 +9,8 @@ const FONT_URL =
   "https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Caveat:wght@500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://dev-emerald-one.vercel.app"),
+  // One origin for every canonical, OG and sitemap URL in the app.
+  metadataBase: new URL(site.url),
   title: {
     default: "Emerald, Daniel Oluwadare · Full-Stack Developer",
     template: "%s · Emerald",
@@ -19,7 +21,7 @@ export const metadata: Metadata = {
     title: "Emerald, Daniel Oluwadare · Computer Science Student",
     description:
       "Computer Science student building developer-first tools and web apps. Calder, Intake, TestFlow, ORREI, and more on the wall.",
-    url: "https://dev-emerald-one.vercel.app",
+    url: site.url,
     siteName: "Emerald",
     locale: "en_NG",
     type: "website",

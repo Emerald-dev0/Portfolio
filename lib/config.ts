@@ -15,12 +15,24 @@
  * ============================================================================
  */
 
+/**
+ * The canonical origin. Everything absolute is built from this: canonical tags,
+ * the sitemap, the RSS feed, the JSON-LD, the share cards and the links in
+ * share buttons.
+ *
+ * Set NEXT_PUBLIC_SITE_URL in the host's environment once the domain is
+ * attached, and this file needs no edit. The literal below is the fallback, so
+ * a preview deploy still produces correct, absolute URLs rather than relative
+ * ones that break in a feed reader.
+ */
+const CANONICAL = process.env.NEXT_PUBLIC_SITE_URL?.trim().replace(/\/$/, "");
+
 export const site = {
   name: "Daniel Oluwadare",
   persona: "Emerald",
   role: "Computer Science student",
   location: "Ile-Ife, Nigeria",
-  url: "https://dev-emerald-one.vercel.app",
+  url: CANONICAL || "https://oluwadaredaniel.me",
   email: "oluwadare458@gmail.com",
   github: "https://github.com/Emerald-dev0",
   githubHandle: "@Emerald-dev0",

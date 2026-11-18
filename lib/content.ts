@@ -307,7 +307,7 @@ export const moreProjects: ArchiveProject[] = [
       "The website you're currently exploring. I built it to bring together my projects, writing, GitHub activity and a little bit of personality.",
     stack: ["Next.js", "Tailwind CSS", "Framer Motion"],
     repo: "Portfolio",
-    liveUrl: "https://dev-emerald-one.vercel.app",
+    liveUrl: "https://oluwadaredaniel.me",
     color: "lagoon",
     status: "Live",
   },
