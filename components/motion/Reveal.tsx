@@ -4,7 +4,7 @@ import { motion, type Variants } from "framer-motion";
 import type { ReactNode } from "react";
 
 /**
- * Reveal — the workhorse entrance primitive. Ink-bleed rise with optional
+ * Reveal, the workhorse entrance primitive. Ink-bleed rise with optional
  * directional slide, used for nearly every block so the page unfolds instead
  * of dumping. Pair with <Stagger> to cascade children.
  */
@@ -55,7 +55,7 @@ export function Reveal({
   );
 }
 
-/** Stagger — parent that cascades <Stagger.Item> children into view. */
+/** Stagger, parent that cascades <Stagger.Item> children into view. */
 const containerVariants: Variants = {
   hidden: {},
   show: { transition: { staggerChildren: 0.09, delayChildren: 0.05 } },

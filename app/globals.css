@@ -1,180 +1,362 @@
 @import "tailwindcss";
 
-/* ------------------------------------------------------------------ *
- * ENGINEER'S JOURNAL — design tokens
- * The whole page is built from five materials (Part 3). Colors are
- * deliberately few: paper, ink, and exactly two marker colors.
- * ------------------------------------------------------------------ */
+/* ==========================================================================
+   THE STICKER WALL, design system
+   Thick ink outlines · hard offset shadows · flat vivid panels · doodles.
+   One signature, repeated everywhere: the sticker.
+   Materials live in @layer components so Tailwind utilities (utilities
+   layer) can override them, e.g. a colored sticker is `.sticker bg-leaf`.
+   ========================================================================== */
+
 @theme {
-  /* Paper — aged newsprint, warm and low-key */
-  --color-paper: #ece3d0;
-  --color-paper-raised: #f4ecda;
-  --color-paper-shadow: #d8cbaf;
+  --color-ink: #16130f; /* adaptive foreground / borders / shadows */
+  --color-night: #16130f; /* fixed dark (text on light vivid panels) */
+  --color-cream: #fff3df; /* adaptive light *surface* (nested cards, chips) */
+  --color-bone: #fff3df; /* FIXED light, text on dark panels, both themes */
+  --color-paper: #fff9ef; /* adaptive surface */
+  --color-leaf: #0e7c5b; /* emerald, the signature color */
+  --color-tang: #ff6b35; /* tangerine */
+  --color-grape: #6c4cf1; /* violet */
+  --color-lagoon: #2ec4b6; /* teal */
+  --color-ink-faint: #6f6a5c; /* secondary labels on paper */
 
-  /* Ink — warm near-black, like old letterpress. Never pure #000 */
-  --color-ink: #22201a;
-  --color-ink-muted: #5b5344;
-  --color-ink-faint: #938870;
+  --font-display: "Bricolage Grotesque", "Inter", sans-serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-hand: "Caveat", cursive;
 
-  /* Aged editorial accents — muted, cohesive, low-contrast */
-  --color-accent: #a4432f; /* faded oxblood / vintage comic red */
-  --color-accent-2: #3c6067; /* dusty teal */
-  --color-marker: #d19a3f; /* aged mustard highlighter */
-  --color-accent-soft: #e6d8c0;
-
-  /* ------------------------------------------------------------------ *
-   * THE CRAYON BOX
-   * The first two inks were the whole palette. Comic panels needed more
-   * than two, so here is a small box of crayons — all mixed on the same
-   * sheet of aged paper, so nothing screams. Every coloured thing on the
-   * page reads `--crayon` (the ink) and `--crayon-on` (what to write with
-   * on top of it), set by a `.crayon-*` class.
-   * ------------------------------------------------------------------ */
-  --color-crayon-oxblood: #a4432f;
-  --color-crayon-teal: #3c6067;
-  --color-crayon-mustard: #d19a3f;
-  --color-crayon-blue: #2f5d8c;
-  --color-crayon-green: #4a7346;
-  --color-crayon-purple: #6a4a80;
-  --color-crayon-orange: #b95f28;
-  --color-crayon-pink: #a84f6b;
-
-  /* Rules / hairlines */
-  --color-rule: #c8b99a;
-
-  /* Fonts — loaded at runtime via <link> in layout.tsx */
-  --font-marker: "Permanent Marker", "Comic Sans MS", cursive;
-  --font-pen: "Caveat", "Segoe Script", cursive;
-  --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, "Courier New", monospace;
-
-  /* Motion — borrowed timing/easing (approved) */
-  --ease-out-soft: cubic-bezier(0, 0, 0.2, 1);
-  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
-  --dur-underline: 300ms;
-  --dur-settle: 350ms;
-  --dur-type: 500ms;
-  --dur-hover-card: 300ms;
-  --dur-hover-sticker: 200ms;
-  --dur-hover-base: 150ms;
+  --animate-marquee: marquee 30s linear infinite;
+  --animate-marquee-rev: marquee-rev 38s linear infinite;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-bob: bob 3.4s ease-in-out infinite;
+  --animate-wiggle: wiggle 2.6s ease-in-out infinite;
+  --animate-spin-slow: spin-slow 16s linear infinite;
+  --animate-pulse-dot: pulse-dot 1.8s ease-in-out infinite;
+  --animate-halo: halo-pulse 9s ease-in-out infinite;
 }
 
-/* ------------------------------------------------------------------ *
- * Base
- * ------------------------------------------------------------------ */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes marquee-rev {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(var(--float-rot, 0deg)); }
+  50% { transform: translateY(-10px) rotate(var(--float-rot, 0deg)); }
+}
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-4deg); }
+  50% { transform: rotate(4deg); }
+}
+@keyframes spin-slow {
+  to { transform: rotate(360deg); }
+}
+@keyframes strip-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes halo-pulse {
+  0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.45; }
+  50% { transform: scale(1.06) rotate(6deg); opacity: 0.7; }
+}
+@keyframes gradient-drift {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+@keyframes pulse-dot {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-leaf) 55%, transparent); }
+  50% { box-shadow: 0 0 0 6px transparent; }
+}
+
+/* Dark theme: ink & paper swap. Cream / night / vivid colors stay fixed so
+   text on vivid panels keeps its contrast in both modes. */
+/* Dark theme: ink & paper swap, and *so does cream*, cream is used as a
+   "light surface" (nav buttons, nested cards), so leaving it fixed made text
+   vanish on cream panels inside dark sections. Night stays literal black so
+   text on the dark panels keeps its contrast. */
+[data-theme="dark"] {
+  --color-ink: #fff3df;
+  --color-paper: #1a1611;
+  --color-cream: #2a2318;
+  --color-night: #0f0d0a;
+  color-scheme: dark;
+}
+
+/* Two layer classes that stay legible in both themes. */
+@layer components {
+  .panel-dark {
+    background: #16130f;
+    color: var(--color-bone);
+  }
+  .panel-dark .chip,
+  .panel-dark .sticker-flat,
+  .panel-dark .sticker {
+    background: #221c14;
+    color: #fff3df;
+    border-color: #fff3df;
+    box-shadow: 5px 5px 0 #fff3df;
+  }
+}
+
 html {
   scroll-behavior: smooth;
 }
 
 body {
-  background-color: var(--color-paper);
+  background: var(--color-paper);
   color: var(--color-ink);
-  font-family: var(--font-body);
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-  overflow-x: hidden;
+  overflow-x: clip; /* clip, not hidden, keeps position: sticky working */
 }
 
 ::selection {
-  background: var(--color-marker);
-  color: var(--color-ink);
+  background: var(--color-leaf);
+  color: var(--color-cream);
 }
 
-body {
-  font-size: 15px;
+:focus-visible {
+  outline: 3px solid var(--color-leaf);
+  outline-offset: 3px;
+  border-radius: 6px;
 }
 
-/* Section vertical rhythm — editorial, lots of air */
-.section-pad {
-  padding-inline: 1.5rem;
-  padding-block: 6rem;
-}
-@media (min-width: 640px) {
-  .section-pad {
-    padding-block: 8rem;
+@layer components {
+  /* ------------------------------------------------------------------------
+     Type scale, fluid clamp() headlines, tight & heavy.
+     ------------------------------------------------------------------------ */
+  .display-hero {
+    font-family: var(--font-display);
+    font-weight: 800;
+    line-height: 0.92;
+    letter-spacing: -0.02em;
+    font-size: clamp(3.4rem, 11vw, 8.5rem);
+  }
+  .display-section {
+    font-family: var(--font-display);
+    font-weight: 800;
+    line-height: 0.98;
+    letter-spacing: -0.015em;
+    font-size: clamp(2.5rem, 6.5vw, 5rem);
+  }
+  .display-card {
+    font-family: var(--font-display);
+    font-weight: 800;
+    line-height: 1.02;
+    letter-spacing: -0.01em;
+    font-size: clamp(1.7rem, 3.2vw, 2.6rem);
+  }
+
+  /* ------------------------------------------------------------------------
+     Materials, the sticker system. Every card, badge, and button shares
+     the same thick outline + hard offset shadow so the page reads as one
+     wall. Colored variants: add a bg-* utility on top (utilities layer
+     wins over this layer).
+     ------------------------------------------------------------------------ */
+  .sticker {
+    background: var(--color-paper);
+    border: 2.5px solid var(--color-ink);
+    border-radius: 22px;
+    box-shadow: 8px 8px 0 var(--color-ink);
+  }
+  .sticker-sm {
+    background: var(--color-paper);
+    border: 2.5px solid var(--color-ink);
+    border-radius: 16px;
+    box-shadow: 5px 5px 0 var(--color-ink);
+  }
+  .sticker-flat {
+    background: var(--color-paper);
+    border: 2.5px solid var(--color-ink);
+    border-radius: 22px;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    border: 2.5px solid var(--color-ink);
+    border-radius: 999px;
+    padding: 0.85rem 1.6rem;
+    font-weight: 700;
+    font-size: 1rem;
+    line-height: 1;
+    box-shadow: 4px 4px 0 var(--color-ink);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .btn:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--color-ink);
+  }
+  .btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 var(--color-ink);
+  }
+  .btn-ink { background: var(--color-ink); color: var(--color-paper); }
+  .btn-leaf { background: var(--color-leaf); color: var(--color-cream); }
+  .btn-tang { background: var(--color-tang); color: var(--color-night); }
+  .btn-paper { background: var(--color-paper); color: var(--color-ink); }
+  .btn-grape { background: var(--color-grape); color: var(--color-cream); }
+
+  .label-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 2px solid var(--color-ink);
+    border-radius: 999px;
+    padding: 0.4rem 0.95rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    background: var(--color-paper);
+    color: var(--color-ink);
+    box-shadow: 3px 3px 0 var(--color-ink);
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    border: 2px solid var(--color-ink);
+    border-radius: 999px;
+    padding: 0.28rem 0.8rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    background: var(--color-paper);
+    color: var(--color-ink);
+  }
+
+  /* Giant outlined wordmark (footer, used once). */
+  .text-stroke {
+    -webkit-text-stroke: 2.5px var(--color-ink);
+    color: transparent;
+  }
+  @media (min-width: 768px) {
+    .text-stroke { -webkit-text-stroke-width: 4px; }
+  }
+
+  /* ------------------------------------------------------------------------
+     Patterns, pure CSS, no external images.
+     ------------------------------------------------------------------------ */
+  .pattern-dots {
+    background-image: radial-gradient(color-mix(in srgb, var(--color-ink) 16%, transparent) 1.4px, transparent 1.4px);
+    background-size: 24px 24px;
+  }
+  .pattern-grid {
+    background-image:
+      linear-gradient(color-mix(in srgb, var(--color-ink) 10%, transparent) 1.5px, transparent 1.5px),
+      linear-gradient(90deg, color-mix(in srgb, var(--color-ink) 10%, transparent) 1.5px, transparent 1.5px);
+    background-size: 30px 30px;
+  }
+  .pattern-dots-light {
+    background-image: radial-gradient(color-mix(in srgb, var(--color-cream) 22%, transparent) 1.4px, transparent 1.4px);
+    background-size: 24px 24px;
+  }
+
+  /* ------------------------------------------------------------------------
+     Marquee, pause on hover so it stays readable.
+     ------------------------------------------------------------------------ */
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    will-change: transform;
+  }
+  .marquee-track:hover {
+    animation-play-state: paused;
+  }
+
+  /* ------------------------------------------------------------------------
+     LOUD, gradient ink, halftone poster wash, marker highlight, ticker.
+     ------------------------------------------------------------------------ */
+
+  .halftone {
+    background-image: radial-gradient(
+      color-mix(in srgb, var(--color-ink) 35%, transparent) 1.6px,
+      transparent 1.7px
+    );
+    background-size: 7px 7px;
+  }
+
+  .marker {
+    background-image: linear-gradient(
+      transparent 55%,
+      color-mix(in srgb, var(--color-tang) 65%, transparent) 55%,
+      color-mix(in srgb, var(--color-tang) 65%, transparent) 92%,
+      transparent 92%
+    );
+    padding-inline: 0.1em;
+  }
+
+  .marker-leaf {
+    background-image: linear-gradient(
+      transparent 55%,
+      color-mix(in srgb, var(--color-lagoon) 70%, transparent) 55%,
+      color-mix(in srgb, var(--color-lagoon) 70%, transparent) 92%,
+      transparent 92%
+    );
+    padding-inline: 0.1em;
+  }
+
+  .tape {
+    position: absolute;
+    width: 92px;
+    height: 26px;
+    background: color-mix(in srgb, var(--color-cream) 72%, transparent);
+    border-left: 1px dashed color-mix(in srgb, var(--color-ink) 25%, transparent);
+    border-right: 1px dashed color-mix(in srgb, var(--color-ink) 25%, transparent);
+    box-shadow: 0 2px 6px rgb(0 0 0 / 0.12);
+  }
+
+  /* ------------------------------------------------------------------------
+     Skip link, first focusable element, appears on keyboard focus.
+     ------------------------------------------------------------------------ */
+  .skip-link {
+    position: fixed;
+    top: -100px;
+    left: 16px;
+    z-index: 100;
+    background: var(--color-ink);
+    color: var(--color-paper);
+    padding: 0.7rem 1.2rem;
+    border-radius: 999px;
+    font-weight: 700;
+    transition: top 0.2s ease;
+  }
+  .skip-link:focus {
+    top: 16px;
   }
 }
-@media (min-width: 1024px) {
-  .section-pad {
-    padding-inline: 2.5rem;
-    padding-block: 10rem;
-  }
-}
-@media (min-width: 1280px) {
-  .section-pad {
-    padding-inline: 3.5rem;
+
+/* --------------------------------------------------------------------------
+   Reduced motion, honor it everywhere, no exceptions.
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
 
-/* ------------------------------------------------------------------ *
- * BUTTON: the one pill language, used everywhere.
- * ------------------------------------------------------------------ */
-.pill {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  border-radius: 999px;
-  padding: 0.7rem 1.4rem;
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  line-height: 1;
-  white-space: nowrap;
-  cursor: pointer;
-  transition:
-    transform 0.25s var(--ease-out-soft),
-    box-shadow 0.25s var(--ease-out-soft),
-    background-color 0.2s var(--ease-standard),
-    color 0.2s var(--ease-standard);
-  will-change: transform;
-}
-.pill--ink {
-  background: var(--color-ink);
-  color: var(--color-paper);
-  box-shadow: 0 2px 0 rgba(34, 32, 26, 0.25);
-}
-.pill--ink:hover {
-  transform: translateY(-2px) rotate(-1deg);
-  box-shadow: 0 6px 16px -6px rgba(34, 32, 26, 0.55);
-}
-.pill--paper {
-  background: var(--color-paper-raised);
-  color: var(--color-ink);
-  border: 1.5px solid var(--color-ink);
-}
-.pill--paper:hover {
-  transform: translateY(-2px) rotate(1deg);
-  background: var(--color-paper);
-  box-shadow: 0 6px 14px -6px rgba(34, 32, 26, 0.35);
-}
-.pill--accent {
-  background: var(--color-accent);
-  color: #fff;
-  box-shadow: 0 2px 0 rgba(120, 40, 25, 0.35);
-}
-.pill--accent:hover {
-  transform: translateY(-2px) rotate(-1deg);
-  box-shadow: 0 6px 16px -6px rgba(164, 67, 47, 0.6);
-}
-.pill:active {
-  transform: translateY(0) rotate(0);
-}
-/* the little arrow nudges on hover */
-.pill .pill-arrow {
-  transition: transform 0.25s var(--ease-out-soft);
-}
-.pill:hover .pill-arrow {
-  transform: translateX(3px);
-}
+/* ==========================================================================
+   ILLUSTRATION SYSTEM
+   Every "image" on this site is drawn, not generated: comic panels with
+   halftone shading and crayon spines, tape, ruled paper and grain.
+   ========================================================================== */
 
-/* ------------------------------------------------------------------ *
- * MATERIAL: Paper — grain overlay
- * A very subtle fixed noise layer. Not visible as "static"; just
- * breaks up flat digital color.
- * ------------------------------------------------------------------ */
+/* Paper grain: a fixed, very faint noise layer over the whole page. */
 .paper-grain::before {
   content: "";
   position: fixed;
@@ -186,358 +368,45 @@ body {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* Faint ruled-notebook lines behind everything (architect paper feel) */
 .paper-ruled {
   background-image: repeating-linear-gradient(
     to bottom,
     transparent 0,
     transparent 31px,
-    color-mix(in srgb, var(--color-rule) 55%, transparent) 31px,
-    color-mix(in srgb, var(--color-rule) 55%, transparent) 32px
+    color-mix(in srgb, var(--color-ink) 8%, transparent) 31px,
+    color-mix(in srgb, var(--color-ink) 8%, transparent) 32px
   );
 }
 
-/* ------------------------------------------------------------------ *
- * MATERIAL: Marker — highlighter bar
- * A slightly skewed, uneven-edged band sitting *behind* text.
- * ------------------------------------------------------------------ */
-.marker-highlight {
-  position: relative;
-  display: inline;
-  white-space: pre-wrap;
-}
-.marker-highlight > .marker-highlight__bar {
-  position: absolute;
-  left: -0.15em;
-  right: -0.15em;
-  top: 0.15em;
-  bottom: 0.02em;
-  z-index: -1;
-  background: var(--color-marker);
-  opacity: 0.55;
-  transform: skewX(-3deg) rotate(-0.6deg);
-  border-radius: 0.15em 0.35em 0.2em 0.3em;
-}
-.marker-highlight--purple > .marker-highlight__bar {
-  background: var(--color-accent);
-  opacity: 0.14;
-}
-
-/* ------------------------------------------------------------------ *
- * MATERIAL: Stamp/Sticker — irregular rubber-stamp border.
- * Never a clean rounded rectangle. We fake the roughness with a
- * multi-radius border + a subtle double outline.
- * ------------------------------------------------------------------ */
-.stamp {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  border: 2.5px solid var(--color-ink);
-  border-radius: 14px 10px 13px 9px / 9px 13px 10px 14px;
-  padding: 0.7rem 1.15rem;
-  font-family: var(--font-mono);
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  line-height: 1;
-  transition: transform var(--dur-hover-sticker) var(--ease-standard);
-  will-change: transform;
-}
-.stamp::after {
-  content: "";
-  position: absolute;
-  inset: 2px;
-  border: 1px solid color-mix(in srgb, var(--color-ink) 35%, transparent);
-  border-radius: 12px 9px 11px 8px / 8px 11px 9px 12px;
-  pointer-events: none;
-}
-.stamp--ink {
-  background: var(--color-ink);
-  color: var(--color-paper);
-}
-.stamp--marker {
-  background: var(--color-marker);
-  color: var(--color-ink);
-}
-.stamp--accent {
-  background: var(--color-accent);
-  color: #fff;
-}
-.stamp--paper {
-  background: var(--color-paper-raised);
-  color: var(--color-ink);
-}
-a.stamp:hover,
-button.stamp:hover {
-  transform: translateY(-2px) rotate(-1deg);
-}
-a.stamp:active,
-button.stamp:active {
-  transform: translateY(0) rotate(0deg);
-}
-
-/* ------------------------------------------------------------------ *
- * MATERIAL: Sticky note & cards
- * ------------------------------------------------------------------ */
-.sticky-tab {
-  display: inline-block;
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--color-ink);
-  background: var(--color-marker);
-  padding: 0.3rem 0.7rem;
-  border-radius: 3px 3px 2px 2px;
-  box-shadow: 0 2px 5px -2px #26221b40;
-}
-.sticky-tab--purple {
-  background: var(--color-accent);
-  color: #fff;
-}
-/* any crayon in the box — reads --crayon / --crayon-on from the parent class */
-.sticky-tab--crayon {
-  background: var(--crayon, var(--color-marker));
-  color: var(--crayon-on, var(--color-ink));
-}
-
-.card-hand {
-  background: var(--color-paper-raised);
-  border: 1.5px solid var(--color-ink);
-  border-radius: 10px 8px 11px 7px / 7px 11px 8px 10px;
-  box-shadow: 0 1px 1px #26221b12, 0 8px 20px -8px #26221b30;
-}
-
-/* Card hover-settle (borrowed 300ms ease-out) */
-.card-tilt {
-  transition:
-    transform var(--dur-hover-card) var(--ease-out-soft),
-    box-shadow var(--dur-hover-card) var(--ease-out-soft);
-  will-change: transform;
-}
-@media (min-width: 768px) {
-  .card-tilt:hover {
-    transform: translateY(-4px) rotate(-0.8deg);
-    box-shadow: 0 2px 3px #26221b18, 0 18px 34px -12px #26221b40;
-  }
-}
-
-/* Global baseline micro-transition (borrowed 150ms) */
-.t-base {
-  transition:
-    color var(--dur-hover-base) var(--ease-standard),
-    background-color var(--dur-hover-base) var(--ease-standard),
-    border-color var(--dur-hover-base) var(--ease-standard),
-    opacity var(--dur-hover-base) var(--ease-standard);
-}
-
-/* Hand-drawn nav underline */
-.nav-underline {
-  position: relative;
-}
-.nav-underline::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -3px;
-  height: 3px;
-  background: var(--color-accent);
-  border-radius: 2px;
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform var(--dur-underline) var(--ease-out-soft);
-}
-.nav-underline:hover::after,
-.nav-underline[data-active="true"]::after {
-  transform: scaleX(1);
-}
-
-/* ------------------------------------------------------------------ *
- * DEPTH: layered paper, imperfect ink borders, halftone, grain
- * ------------------------------------------------------------------ */
-
-/* Hand-inked border via SVG filter displacement feel (faked with layered
-   box-shadows + uneven radius). Reusable across cards/notes. */
+/* Hand-inked border: uneven corners, never a perfect rectangle. */
 .ink-edge {
-  position: relative;
   border: 1.5px solid var(--color-ink);
   border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
 }
-.ink-edge--soft {
-  border-width: 1.25px;
-  border-radius: 14px 8px 16px 10px / 10px 16px 8px 14px;
-}
 
-/* Halftone dot field — vintage comic shading. Apply as a decorative layer. */
-.halftone {
-  background-image: radial-gradient(
-    var(--color-ink) 22%,
-    transparent 23%
-  );
-  background-size: 6px 6px;
-  opacity: 0.08;
-}
-
-/* Layered-paper drop: makes an element feel stacked on the desk. */
-.paper-stack {
-  box-shadow:
-    0 1px 0 var(--color-paper-shadow),
-    0 2px 2px rgba(34, 32, 26, 0.06),
-    0 10px 22px -10px rgba(34, 32, 26, 0.28);
-}
-
-/* ------------------------------------------------------------------ *
- * MOTION: keyframes for hand-drawn reveals
- * ------------------------------------------------------------------ */
-@keyframes ink-bleed {
-  0% { opacity: 0; filter: blur(4px); transform: translateY(6px); }
-  100% { opacity: 1; filter: blur(0); transform: translateY(0); }
-}
-@keyframes scribble-in {
-  0% { stroke-dashoffset: var(--dash, 400); }
-  100% { stroke-dashoffset: 0; }
-}
-@keyframes stamp-down {
-  0% { opacity: 0; transform: scale(1.25) rotate(-6deg); }
-  60% { opacity: 1; transform: scale(0.94) rotate(1deg); }
-  100% { opacity: 1; transform: scale(1) rotate(0); }
-}
-@keyframes float-soft {
-  0%, 100% { transform: translateY(0) rotate(var(--r, 0deg)); }
-  50% { transform: translateY(-5px) rotate(var(--r, 0deg)); }
-}
-@keyframes drift {
-  0%, 100% { transform: translate(0, 0) rotate(var(--r, 0deg)); }
-  33% { transform: translate(4px, -6px) rotate(calc(var(--r, 0deg) + 2deg)); }
-  66% { transform: translate(-3px, -3px) rotate(calc(var(--r, 0deg) - 1.5deg)); }
-}
-@keyframes sway {
-  0%, 100% { transform: rotate(var(--r, 0deg)); }
-  50% { transform: rotate(calc(var(--r, 0deg) + 3deg)); }
-}
-@keyframes breathe {
-  0%, 100% { opacity: 0.5; transform: scale(1); }
-  50% { opacity: 0.8; transform: scale(1.04); }
-}
-@keyframes dash-march {
-  to { stroke-dashoffset: -24; }
-}
-
-/* chibi character motion */
-@keyframes chibi-bob {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
-}
-@keyframes chibi-blink {
-  0%, 90%, 100% { transform: scaleY(1); }
-  95% { transform: scaleY(0.1); }
-}
-@keyframes chibi-wave {
-  0%, 100% { transform: rotate(6deg); }
-  50% { transform: rotate(-26deg); }
-}
-@keyframes chibi-legL {
-  0%, 100% { transform: rotate(16deg); }
-  50% { transform: rotate(-16deg); }
-}
-@keyframes chibi-legR {
-  0%, 100% { transform: rotate(-16deg); }
-  50% { transform: rotate(16deg); }
-}
-
-.animate-float {
-  animation: float-soft 6s ease-in-out infinite;
-}
-.animate-drift {
-  animation: drift 11s ease-in-out infinite;
-}
-.animate-sway {
-  transform-origin: top center;
-  animation: sway 7s ease-in-out infinite;
-}
-.animate-breathe {
-  animation: breathe 8s ease-in-out infinite;
-}
-
-/* marquee — infinite horizontal scroll, pauses on hover */
-@keyframes marquee-left {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-@keyframes marquee-right {
-  from { transform: translateX(-50%); }
-  to { transform: translateX(0); }
-}
-.marquee {
-  animation: marquee-left 38s linear infinite;
-}
-.marquee-rev {
-  animation: marquee-right 44s linear infinite;
-}
-.marquee-wrap:hover .marquee,
-.marquee-wrap:hover .marquee-rev {
-  animation-play-state: paused;
-}
-/* staggered starts so ambient elements never move in lockstep */
-.delay-1 { animation-delay: -2s; }
-.delay-2 { animation-delay: -4s; }
-.delay-3 { animation-delay: -6s; }
-
-/* ------------------------------------------------------------------ *
- * CRAYON UTILITIES
- * Set once, used everywhere: --crayon is the ink, --crayon-on is the
- * text colour that stays legible on top of it.
- * ------------------------------------------------------------------ */
-.crayon-oxblood { --crayon: var(--color-crayon-oxblood); --crayon-on: #fff; }
-.crayon-teal { --crayon: var(--color-crayon-teal); --crayon-on: #fff; }
-.crayon-blue { --crayon: var(--color-crayon-blue); --crayon-on: #fff; }
-.crayon-purple { --crayon: var(--color-crayon-purple); --crayon-on: #fff; }
-.crayon-green { --crayon: var(--color-crayon-green); --crayon-on: #fff; }
-.crayon-orange { --crayon: var(--color-crayon-orange); --crayon-on: #fff; }
-.crayon-pink { --crayon: var(--color-crayon-pink); --crayon-on: #fff; }
-.crayon-mustard { --crayon: var(--color-crayon-mustard); --crayon-on: var(--color-ink); }
-.crayon-ink { --crayon: var(--color-ink); --crayon-on: var(--color-paper); }
-
-/* Coloured ink for text/doodles: `text-crayon` on any .crayon-* parent.
-   (Plain classes, not Tailwind utilities, so they can't take a `hover:` prefix
-   — hence the two explicit variants below.) */
+/* Crayon box: --crayon is the ink, --crayon-on is legible text on top. */
+.crayon-oxblood { --crayon: #a4432f; --crayon-on: #fff; }
+.crayon-teal { --crayon: #3c6067; --crayon-on: #fff; }
+.crayon-mustard { --crayon: #d19a3f; --crayon-on: var(--color-ink); }
+.crayon-blue { --crayon: #2f5d8c; --crayon-on: #fff; }
+.crayon-green { --crayon: #0e7c5b; --crayon-on: #fff; }
+.crayon-purple { --crayon: #6c4cf1; --crayon-on: #fff; }
+.crayon-orange { --crayon: #ff6b35; --crayon-on: #fff; }
+.crayon-pink { --crayon: #a84f6b; --crayon-on: #fff; }
 .text-crayon { color: var(--crayon, currentColor); }
-.hover-crayon { transition: color 180ms var(--ease-standard); }
-.hover-crayon:hover { color: var(--crayon, var(--color-accent)); }
-.group:hover .group-hover-crayon { color: var(--crayon, var(--color-accent)); }
 
-/* ------------------------------------------------------------------ *
- * MATERIAL: Comic panel
- * A project card is a panel in a comic strip: heavy ink border, slightly
- * uneven corners, halftone shading bleeding in from one corner, and the
- * colour of its project. Deliberately not a rounded rectangle.
- * ------------------------------------------------------------------ */
+/* COMIC PANEL: the project artwork. Heavy ink border, uneven corners,
+   halftone shading bleeding from one corner, coloured spine on top. */
 .panel {
   position: relative;
-  background: var(--color-paper-raised);
+  background: var(--color-paper);
   border: 2px solid var(--color-ink);
   border-radius: 6px 9px 7px 10px / 10px 6px 9px 7px;
   box-shadow:
-    0 1px 0 var(--color-paper-shadow),
-    0 12px 24px -14px rgba(34, 32, 26, 0.42);
-  transition:
-    transform var(--dur-hover-card) var(--ease-out-soft),
-    box-shadow var(--dur-hover-card) var(--ease-out-soft);
-  will-change: transform;
+    0 1px 0 color-mix(in srgb, var(--color-ink) 12%, transparent),
+    0 12px 24px -14px rgb(22 19 15 / 0.42);
 }
-@media (min-width: 768px) {
-  .panel:hover {
-    transform: translateY(-5px) rotate(-0.5deg);
-    box-shadow:
-      0 2px 0 var(--color-paper-shadow),
-      0 22px 40px -18px rgba(34, 32, 26, 0.5);
-  }
-}
-
-/* halftone shading, tinted by the panel's crayon, faded out diagonally */
-.panel__shade {
+.panel-shade {
   position: absolute;
   inset: 0;
   border-radius: inherit;
@@ -547,13 +416,11 @@ button.stamp:active {
     transparent 1.1px
   );
   background-size: 6px 6px;
-  opacity: 0.16;
+  opacity: 0.18;
   -webkit-mask-image: linear-gradient(214deg, #000 0%, transparent 46%);
   mask-image: linear-gradient(214deg, #000 0%, transparent 46%);
 }
-
-/* a heavy coloured bar along the top edge — the "ink" of this panel */
-.panel__spine {
+.panel-spine {
   position: absolute;
   left: 10px;
   right: 10px;
@@ -561,185 +428,176 @@ button.stamp:active {
   height: 5px;
   border-radius: 0 0 3px 3px;
   background: var(--crayon, var(--color-ink));
+  opacity: 0.9;
+}
+
+/* Halftone dot field, for shading a block of colour. */
+.halftone-field {
+  background-image: radial-gradient(var(--color-ink) 22%, transparent 23%);
+  background-size: 6px 6px;
+  opacity: 0.08;
+}
+
+/* Tape: a translucent strip sitting on an edge. */
+.tape-strip {
+  position: absolute;
+  height: 26px;
+  background: color-mix(in srgb, var(--color-tang) 32%, #fff);
+  border-left: 1px dashed color-mix(in srgb, var(--color-ink) 22%, transparent);
+  border-right: 1px dashed color-mix(in srgb, var(--color-ink) 22%, transparent);
   opacity: 0.85;
 }
 
-/* an empty repository renders as a page that was never used */
-.panel--blank {
-  border-style: dashed;
-  background-image: repeating-linear-gradient(
-    to bottom,
-    transparent 0,
-    transparent 27px,
-    color-mix(in srgb, var(--color-rule) 60%, transparent) 27px,
-    color-mix(in srgb, var(--color-rule) 60%, transparent) 28px
-  );
+/* ==========================================================================
+   MOBILE
+   A phone is not a narrow desktop. Line lengths shorten, the display type
+   steps down less aggressively, tap targets reach 44px, the last line of the
+   page clears the dock, and anything that scrolls sideways is scrolled
+   horizontally by design rather than clipped.
+   ========================================================================== */
+@media (max-width: 640px) {
+  .display-hero {
+    letter-spacing: -0.025em;
+  }
+
+  /* Tap targets: the sticker chips and icon buttons grow to a thumb. */
+  .chip {
+    padding: 0.32rem 0.7rem;
+    font-size: 0.72rem;
+  }
+
+  /* Nothing narrower than a comfortable measure. */
+  p,
+  li {
+    max-width: 42ch;
+  }
+
+  /* Horizontal scrollers: a hint of the next card, never a hard cut. */
+  .edge-scroll {
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .edge-scroll::-webkit-scrollbar {
+    display: none;
+  }
+  .edge-scroll > * {
+    scroll-snap-align: center;
+  }
 }
 
-/* ------------------------------------------------------------------ *
- * MATERIAL: Sticker
- * Round, coloured, slightly rotated. Used for tags and status chips.
- * ------------------------------------------------------------------ */
-.sticker {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  background: var(--crayon, var(--color-marker));
-  color: var(--crayon-on, var(--color-ink));
-  border: 1.75px solid var(--color-ink);
-  border-radius: 999px;
-  padding: 0.26rem 0.6rem;
-  font-family: var(--font-mono);
-  font-size: 9.5px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  line-height: 1;
-  box-shadow: 0 2px 0 rgba(34, 32, 26, 0.22);
-  transform: rotate(var(--sticker-r, -1.5deg));
-  white-space: nowrap;
-}
-.sticker--ghost {
-  background: transparent;
-  color: var(--color-ink-muted);
-  box-shadow: none;
+/* Room for the dock on phones with a home indicator. */
+@supports (padding: env(safe-area-inset-bottom)) {
+  body {
+    padding-bottom: 0;
+  }
 }
 
-/* square-ish version for section tags */
-.sticker--tag {
-  border-radius: 5px 3px 6px 4px / 4px 6px 3px 5px;
-  transform: rotate(var(--sticker-r, -1deg));
+/* ---------------------------------------------------------------------------
+   ADMIN EDITOR. The ProseMirror surface inside the TipTap editor. It borrows
+   the article's own type rhythm so what you type looks like what publishes.
+   --------------------------------------------------------------------------- */
+.admin-prose {
+  min-height: 26rem;
+  font-size: 1rem;
+  line-height: 1.75;
+  color: var(--color-ink);
 }
-
-/* ------------------------------------------------------------------ *
- * MATERIAL: Page furniture
- * Page numbers, margin notes and other things a real notebook has.
- * ------------------------------------------------------------------ */
-.page-num {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--color-ink-faint);
+.admin-prose > * + * {
+  margin-top: 0.9em;
 }
-.margin-note {
-  font-family: var(--font-pen);
-  font-size: 1.05rem;
+.admin-prose h2 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.55rem;
   line-height: 1.1;
-  color: var(--color-accent-2);
+  letter-spacing: -0.01em;
+  margin-top: 1.8em;
 }
-/* the little "circled by hand" mark around a word */
-.circled {
-  position: relative;
-  display: inline-block;
+.admin-prose h3 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.2rem;
+  line-height: 1.2;
+  margin-top: 1.4em;
 }
-.circled > svg {
-  position: absolute;
-  inset: -0.35em -0.5em;
-  width: calc(100% + 1em);
-  height: calc(100% + 0.7em);
+.admin-prose h4 {
+  font-weight: 800;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 1.2em;
+}
+.admin-prose ul,
+.admin-prose ol {
+  padding-left: 1.4em;
+  list-style: disc;
+}
+.admin-prose ol {
+  list-style: decimal;
+}
+.admin-prose li + li {
+  margin-top: 0.35em;
+}
+.admin-prose blockquote {
+  border-left: 3px solid var(--color-leaf);
+  padding-left: 1em;
+  font-style: italic;
+  opacity: 0.85;
+}
+.admin-prose pre {
+  background: #16130f;
+  color: #fff3df;
+  border-radius: 14px;
+  padding: 1em 1.1em;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+.admin-prose code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: color-mix(in srgb, var(--color-ink) 8%, transparent);
+  border-radius: 5px;
+  padding: 0.12em 0.35em;
+}
+.admin-prose pre code {
+  background: none;
+  padding: 0;
+}
+.admin-prose a {
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--color-leaf);
+}
+.admin-prose img {
+  border-radius: 14px;
+  border: 2.5px solid var(--color-ink);
+  max-width: 100%;
+  height: auto;
+}
+.admin-prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+.admin-prose th,
+.admin-prose td {
+  border: 2px solid color-mix(in srgb, var(--color-ink) 20%, transparent);
+  padding: 0.45em 0.6em;
+  text-align: left;
+}
+.admin-prose hr {
+  border: 0;
+  border-top: 2.5px solid var(--color-ink);
+  margin: 1.8em 0;
+}
+.admin-prose p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
   pointer-events: none;
-  color: var(--crayon, var(--color-accent));
-}
-
-/* a hand-drawn horizontal rule, uneven on both ends */
-.ink-rule {
-  height: 2px;
-  background: linear-gradient(
-    to right,
-    transparent,
-    var(--color-rule) 8%,
-    var(--color-rule) 92%,
-    transparent
-  );
-}
-
-/* ------------------------------------------------------------------ *
- * MOTION: the cast
- * ------------------------------------------------------------------ */
-@keyframes chibi-hop {
-  0%, 100% { transform: translateY(0) scaleY(1); }
-  35% { transform: translateY(-7px) scaleY(1.03); }
-  70% { transform: translateY(0) scaleY(0.97); }
-}
-@keyframes chibi-sway-body {
-  0%, 100% { transform: rotate(-2deg); }
-  50% { transform: rotate(2deg); }
-}
-@keyframes chibi-tail {
-  0%, 100% { transform: rotate(-16deg); }
-  50% { transform: rotate(18deg); }
-}
-@keyframes chibi-ears {
-  0%, 92%, 100% { transform: rotate(0deg); }
-  96% { transform: rotate(-9deg); }
-}
-@keyframes chibi-zzz {
-  0% { opacity: 0; transform: translate(0, 0) scale(0.8); }
-  30% { opacity: 1; }
-  100% { opacity: 0; transform: translate(9px, -16px) scale(1.15); }
-}
-@keyframes chibi-arm-run {
-  0%, 100% { transform: rotate(-22deg); }
-  50% { transform: rotate(20deg); }
-}
-@keyframes chibi-arm-run-b {
-  0%, 100% { transform: rotate(20deg); }
-  50% { transform: rotate(-22deg); }
-}
-@keyframes blink-caret {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
-@keyframes sticker-pop {
-  0% { opacity: 0; transform: scale(1.35) rotate(-8deg); }
-  60% { opacity: 1; transform: scale(0.95) rotate(1deg); }
-  100% { opacity: 1; transform: scale(1) rotate(0deg); }
-}
-@keyframes wiggle {
-  0%, 100% { transform: rotate(-2deg); }
-  50% { transform: rotate(2deg); }
-}
-
-.animate-hop { animation: chibi-hop 1.5s ease-in-out infinite; }
-
-/* the "this is live" dot next to the GitHub line */
-.live-dot {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  flex-shrink: 0;
-  border-radius: 50%;
-  background: var(--color-crayon-green);
-  animation: live-pulse 2.6s ease-out infinite;
-}
-@keyframes live-pulse {
-  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-crayon-green) 55%, transparent); }
-  70% { box-shadow: 0 0 0 9px transparent; }
-  100% { box-shadow: 0 0 0 0 transparent; }
-}
-.animate-sway-body { animation: chibi-sway-body 3.4s ease-in-out infinite; transform-origin: 50% 90%; }
-.animate-pop { animation: sticker-pop 0.5s var(--ease-out-soft) both; }
-.hover-wiggle:hover { animation: wiggle 0.5s ease-in-out 2; }
-
-/* ------------------------------------------------------------------ *
- * FOCUS — a page this handmade should still be usable with a keyboard.
- * ------------------------------------------------------------------ */
-:focus-visible {
-  outline: 2.5px solid var(--color-accent);
-  outline-offset: 3px;
-  border-radius: 4px;
-}
-
-/* Respect reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.001ms !important;
-    transition-duration: 0.001ms !important;
-  }
+  opacity: 0.4;
 }

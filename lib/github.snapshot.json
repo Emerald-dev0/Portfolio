@@ -854,7 +854,7 @@
         }
       ],
       "topics": [],
-      "readmeTitle": "🛡️ CYPHER — Local Network PC Remote Control",
+      "readmeTitle": "🛡️ CYPHER, Local Network PC Remote Control",
       "lede": "Control your PC from anywhere on the same WiFi. No internet. No servers. 100% local.",
       "commits": 95
     },
@@ -1030,7 +1030,7 @@
       "owner": "Emerald-dev0",
       "name": "Calder",
       "displayName": null,
-      "description": "Avenor — developer-first communication infrastructure. Transactional email is the first primitive.",
+      "description": "Avenor, developer-first communication infrastructure. Transactional email is the first primitive.",
       "url": "https://github.com/Emerald-dev0/Calder",
       "homepage": "https://calder-web.vercel.app",
       "stars": 0,
@@ -1104,7 +1104,7 @@
         }
       ],
       "topics": [],
-      "readmeTitle": "Daniel Oluwadare — Portfolio",
+      "readmeTitle": "Daniel Oluwadare, Portfolio",
       "lede": "Software engineer. Building AI developer infrastructure and production web",
       "commits": 26
     },
@@ -1185,7 +1185,7 @@
         }
       ],
       "topics": [],
-      "readmeTitle": "CrowdFest — AI Crowd Simulation Platform",
+      "readmeTitle": "CrowdFest, AI Crowd Simulation Platform",
       "lede": "Open-source core · Hybrid execution (real browsers + HTTP virtual users)",
       "commits": 17
     },
@@ -1228,7 +1228,7 @@
         }
       ],
       "topics": [],
-      "readmeTitle": "Soro — banking should be as easy as having a conversation",
+      "readmeTitle": "Soro, banking should be as easy as having a conversation",
       "lede": "Soro is a conversational banking access layer: customers speak",
       "commits": 35
     },
@@ -1250,7 +1250,7 @@
       "languageColor": null,
       "languages": [],
       "topics": [],
-      "readmeTitle": "Forma — The Intelligent Creative Studio",
+      "readmeTitle": "Forma, The Intelligent Creative Studio",
       "lede": "Project 02 · Holiday Projects · Product vision and engineering README",
       "commits": 2
     },

@@ -1,6 +1,6 @@
 /**
  * ============================================================================
- * FORMAT — tiny, dependency-free text helpers for live data.
+ * FORMAT, tiny, dependency-free text helpers for live data.
  * ============================================================================
  * Kept separate from the components so the same string can be produced on the
  * server (no hydration mismatch, no Intl payload shipped twice).
@@ -12,7 +12,7 @@ const HOUR = 60 * MINUTE;
 const DAY = 24 * HOUR;
 
 /**
- * "3 days ago" / "yesterday" / "today" / "2 months ago" — deliberately plain,
+ * "3 days ago" / "yesterday" / "today" / "2 months ago", deliberately plain,
  * never "3d" or a timestamp, because the writing voice is a person's.
  */
 export function relativeTime(
@@ -41,13 +41,13 @@ export function relativeTime(
 
 /** 1600 → "1.6k". Stars and commits stay readable in a card corner. */
 export function compact(n: number | null | undefined): string {
-  if (n === null || n === undefined) return "—";
+  if (n === null || n === undefined) return ", ";
   if (n < 1_000) return String(n);
   if (n < 1_000_000) return `${(n / 1_000).toFixed(n < 10_000 ? 1 : 0)}k`;
   return `${(n / 1_000_000).toFixed(1)}m`;
 }
 
-/** "Aug 2026" — for the rare place a fixed date reads better than a duration. */
+/** "Aug 2026", for the rare place a fixed date reads better than a duration. */
 export function monthYear(iso: string | null | undefined): string | null {
   if (!iso) return null;
   const d = new Date(iso);

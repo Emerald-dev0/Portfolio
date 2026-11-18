@@ -1,25 +1,25 @@
 /**
  * ============================================================================
- * GITHUB — the living half of the portfolio.   [server only]
+ * GITHUB, the living half of the portfolio.   [server only]
  * ============================================================================
  * The pinned repos on github.com/Emerald-dev0 drive the "Pinned" section of
  * this site. Pin something new and it appears here; unpin it and it leaves.
  *
  * How it stays honest, in four layers (each one catches the one above it):
  *
- *   1. LIVE      — one GraphQL call reads the profile + pinned items. Runs at
+ *   1. LIVE    , one GraphQL call reads the profile + pinned items. Runs at
  *                  most once every REVALIDATE seconds (Next caches it), so the
  *                  page is a static file that quietly refreshes itself.
- *   2. SNAPSHOT  — `lib/github.snapshot.json`, committed to the repo. What the
+ *   2. SNAPSHOT, `lib/github.snapshot.json`, committed to the repo. What the
  *                  live call doesn't replace it gets merged with, so the
  *                  checked-in copy is never lost.
- *   3. FALLBACK  — no token / no network / GitHub down → the snapshot alone.
- *   4. CURATED   — if even the snapshot is empty, `lib/content.ts` still has a
+ *   3. FALLBACK, no token / no network / GitHub down → the snapshot alone.
+ *   4. CURATED , if even the snapshot is empty, `lib/content.ts` still has a
  *                  hand-written project list. The page must never break.
  *
  * Set GITHUB_TOKEN in the environment (Vercel → Settings → Environment
  * Variables) to turn layer 1 on. A read-only classic token, or a fine-grained
- * token with public read, is enough — pinned items are public data. Without it
+ * token with public read, is enough, pinned items are public data. Without it
  * the site runs on layer 2 and the scheduled Action keeps that fresh.
  *
  * Never import this from a client component.
@@ -39,7 +39,7 @@ export type RepoLanguage = {
 };
 
 export type PinnedRepo = {
-  slug: string; // "owner/name" — the stable key everything else joins on
+  slug: string; // "owner/name", the stable key everything else joins on
   owner: string;
   name: string;
   description: string | null;
@@ -106,7 +106,7 @@ export type GithubSnapshot = {
   stats: GithubStats;
   pins: PinnedRepo[];
   /**
-   * Most recently pushed owned repos, excluding pins — "what's alive" rather
+   * Most recently pushed owned repos, excluding pins, "what's alive" rather
    * than "what's featured". Written by the sync script; absent in snapshots
    * from before it existed. The live read never touches it (it spreads the
    * snapshot through), so it refreshes on every scheduled sync instead.
@@ -114,7 +114,7 @@ export type GithubSnapshot = {
   recent?: PinnedRepo[];
   /** true when this render came from the live API, false when from disk. */
   live: boolean;
-  /** short reason the live read didn't happen — surfaced in dev only. */
+  /** short reason the live read didn't happen, surfaced in dev only. */
   note?: string;
 };
 
@@ -133,7 +133,7 @@ const MAX_PINS = 6;
 const SNAPSHOT = snapshotJson as unknown as GithubSnapshot;
 
 /* --------------------------------------------------------------------------
- * The GraphQL read — profile + pins + commit counts in one request.
+ * The GraphQL read, profile + pins + commit counts in one request.
  * ------------------------------------------------------------------------ */
 
 const PINS_QUERY = /* GraphQL */ `
@@ -273,7 +273,7 @@ function shapeLiveRepo(node: GqlNode, known?: PinnedRepo): PinnedRepo {
     updatedAt: node.updatedAt ?? known?.updatedAt ?? null,
     language: node.primaryLanguage?.name ?? known?.language ?? null,
     languageColor: node.primaryLanguage?.color ?? known?.languageColor ?? null,
-    // GraphQL doesn't do language breakdowns or READMEs — keep what the
+    // GraphQL doesn't do language breakdowns or READMEs, keep what the
     // snapshot already knows, and let the sync script fill gaps over time.
     languages: known?.languages ?? [],
     topics: (node.repositoryTopics?.nodes ?? []).map((t) => t.topic.name),
@@ -284,7 +284,7 @@ function shapeLiveRepo(node: GqlNode, known?: PinnedRepo): PinnedRepo {
   };
 }
 
-/** Attempt one live read. Returns null on ANY problem — never throws. */
+/** Attempt one live read. Returns null on ANY problem, never throws. */
 async function readLive(): Promise<GithubSnapshot | null> {
   if (!TOKEN) return null;
 
@@ -373,7 +373,7 @@ export async function getGithubSnapshot(): Promise<GithubSnapshot> {
   return {
     ...SNAPSHOT,
     live: false,
-    note: TOKEN ? "github read failed — using last synced snapshot" : "no GITHUB_TOKEN — using last synced snapshot",
+    note: TOKEN ? "github read failed, using last synced snapshot" : "no GITHUB_TOKEN, using last synced snapshot",
   };
 }
 

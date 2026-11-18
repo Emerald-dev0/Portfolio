@@ -1,63 +1,90 @@
-import PaperBackground from "@/components/materials/PaperBackground";
-import Nav from "@/components/sections/Nav";
-import Hero from "@/components/sections/Hero";
-import About from "@/components/sections/About";
-import Projects from "@/components/sections/Projects";
-import GithubActivity from "@/components/sections/GithubActivity";
-import LogoMarquee from "@/components/sections/LogoMarquee";
-import WhatIDo from "@/components/sections/WhatIDo";
-import Journey from "@/components/sections/Journey";
-// import Testimonials from "@/components/sections/Testimonials"; // ← uncomment when real quotes exist
-import Connect from "@/components/sections/Connect";
-import Footer from "@/components/sections/Footer";
-import { getGithubSnapshot } from "@/lib/github";
-import { buildShowcase } from "@/lib/projects";
+import { Nav } from "../components/sections/Nav";
+import { MobileDock } from "../components/sections/MobileDock";
+import { ScrollRail } from "../components/motion/Motion";
+import { Hero } from "../components/sections/Hero";
+import { Marquee } from "../components/sections/Marquee";
+import { WhatIDo } from "../components/sections/WhatIDo";
+import { Work } from "../components/sections/Work";
+import { GithubSection } from "../components/sections/GithubSection";
+import { About } from "../components/sections/About";
+import { Process } from "../components/sections/Process";
+import { Content } from "../components/sections/Content";
+import { BlogTeaser } from "../components/sections/BlogTeaser";
+import { Contact } from "../components/sections/Contact";
+import { Footer } from "../components/sections/Footer";
+import { PosterStrip } from "../components/ui/PosterStrip";
+import { NowPlayingBand } from "../components/sections/NowPlayingBand";
+import { getGithubSnapshot } from "../lib/github";
+import type { Metadata } from "next";
+import { site } from "../lib/config";
 
 /**
- * The desk. A single continuous paper surface, separated by generous
- * whitespace rather than hard rules.
- *
- * This is a server component, which is the whole trick: the GitHub read
- * happens here, before the page is rendered, and the result is passed down as
- * plain props. The page is prerendered, then quietly re-rendered every
- * REVALIDATE_SECONDS with whatever is pinned on GitHub at that moment. No
- * client-side loading spinner, no API key in the browser, no build required
- * to unpin something.
- *
- * Extra bottom padding on mobile clears the fixed bottom nav dock.
+ * The home page inherits the root metadata, but states its own canonical so a
+ * crawler that lands on a query string variant (?utm_source=...) still folds
+ * every copy into one URL rather than indexing them separately.
  */
-// Literal on purpose: Next reads this value statically, so it can't be an
-// imported identifier. Keep it in step with REVALIDATE_SECONDS in lib/github.ts.
-export const revalidate = 10800; // 3 hours
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+  title: `${site.name}, Backend Developer and Computer Science Student`,
+  openGraph: {
+    title: `${site.name}, Backend Developer`,
+    description:
+      "Developer tools, web apps and honest build logs from a backend developer in Ile-Ife, Nigeria.",
+    url: "/",
+    type: "website",
+  },
+};
 
-export default async function Home() {
+/**
+ * HOME, the full wall, top to bottom:
+ *
+ *   hero (poster stack + draggable stickers)
+ *   ink marquee
+ *   what I do
+ *   poster strip  ← the loud break
+ *   work (four oversized panels + archive)
+ *   github wall
+ *   about (with the live Spotify sticker)
+ *   process
+ *   content
+ *   blog teaser
+ *   contact
+ *   footer (the terminal)
+ *
+ * Motion: a reading rail across the top, masked line reveals on every
+ * headline, panels that lean as they pass, a marquee that follows the scroll
+ * direction, counting stats, and (below lg) a swipeable project deck plus a
+ * thumb-zone dock.
+ *
+ * GitHub data is read server-side with a committed snapshot as the floor, so
+ * the page never renders a ", " where a number should be.
+ */
+export const revalidate = 10800;
+
+export default async function HomePage() {
   const snapshot = await getGithubSnapshot();
-  const showcase = buildShowcase(snapshot);
-  const githubUrl = `https://github.com/${snapshot.user.login}`;
+  const commits = snapshot.stats?.commitsPinned ?? snapshot.contributions?.total;
 
   return (
     <>
+      <ScrollRail />
       <Nav />
-      <PaperBackground ruled marginRule className="relative z-10">
-        <main className="pb-24 sm:pb-0">
-          <Hero
-            live={{
-              publicRepos: snapshot.user.publicRepos,
-              pinned: showcase.totals.pinned,
-              login: snapshot.user.login,
-              lastPushLabel: showcase.totals.lastPushLabel,
-            }}
-          />
-          <About />
-          <Projects showcase={showcase} githubUrl={githubUrl} login={snapshot.user.login} />
-          <GithubActivity showcase={showcase} />
-          <LogoMarquee />
-          <WhatIDo />
-          <Journey />
-          <Connect />
-        </main>
-      </PaperBackground>
+      <main id="main">
+        <Hero commits={commits} repos={snapshot.user?.publicRepos} />
+        <Marquee />
+        <WhatIDo />
+        <PosterStrip />
+        <Work snapshot={snapshot} />
+        <GithubSection snapshot={snapshot} />
+        <About />
+        <NowPlayingBand />
+        <Process />
+        <Content />
+        <BlogTeaser />
+        <Contact />
+      </main>
       <Footer />
+      <MobileDock />
     </>
   );
 }
