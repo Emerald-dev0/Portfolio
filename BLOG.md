@@ -97,10 +97,14 @@ publishing controls.
 Publishing, unpublishing, archiving and deleting all confirm first, because all
 of them are visible to the world.
 
-**Scheduling** is handled on the server. Vercel calls `/api/cron/publish` every
-ten minutes, and public reads also call the same function, so a scheduled post
-goes live even if the cron is late. That makes the cron an optimisation, not a
-single point of failure.
+**Scheduling** is handled on the server. Public reads call `publishDue()` on
+every render, so a scheduled post goes live on its first view after its time.
+`/api/cron/publish` also runs daily at 05:00 UTC as a backstop.
+
+That daily schedule is not a preference. Vercel's Hobby plan limits cron to once
+per day and **fails the deployment** for anything more frequent, before the build
+starts. Scheduling is therefore driven by the read path, and the cron only
+catches the case where nobody visits for a day.
 
 **Renaming a URL** leaves a permanent redirect from the old address, so
 existing links, search results and shared URLs keep working.
