@@ -2,15 +2,13 @@
  * ============================================================================
  * BLOG, types and pure helpers. Safe to import anywhere (client included).
  * ============================================================================
- * Posts are authored as Markdown. They come from two places, merged by
- * `lib/server/blog-store.ts`:
- *
- *   1. `content/blog/*.md` in the repo, the seed posts, version controlled.
- *   2. Vercel Blob, anything written in /studio, which wins over a file
- *      with the same slug.
+ * The database is the source of truth. Markdown stays the stored format, so a
+ * post is portable, diffable and readable by the renderer without a second
+ * representation. `lib/server/blog-source.ts` adapts rows into the `Post`
+ * shape, and `content/blog/*.md` seeds the first five articles.
  *
  * This file only knows about the shape of a post and how to format it, so a
- * client component can import it without pulling in `fs` or the Blob SDK.
+ * client component can import it without pulling in the database.
  * ============================================================================
  */
 

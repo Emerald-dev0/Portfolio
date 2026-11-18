@@ -4,15 +4,16 @@ import { Button } from "../ui/Button";
 import { Icon } from "../ui/Icon";
 import { Section, SectionHeader } from "../ui/Section";
 import { Reveal } from "../motion/Reveal";
-import { publishedPosts } from "../../lib/server/blog-store";
+import { listPublic } from "../../lib/server/blog-source";
 import { blogHeading } from "../../lib/content";
 
 /**
  * BLOG TEASER, the three latest published posts on the home page. Reads the
- * same store as /blog, so a studio publish shows up here on revalidate.
+ * same database the blog does, so anything published in the dashboard appears
+ * here and on /blog together.
  */
 export async function BlogTeaser() {
-  const posts = (await publishedPosts()).slice(0, 3);
+  const posts = (await listPublic({ limit: 3 }));
   if (!posts.length) return null;
 
   return (

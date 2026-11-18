@@ -71,10 +71,10 @@ export function Footer() {
                   Email
                 </a>
                 <Link
-                  href="/studio"
+                  href="/admin"
                   className="font-mono text-sm font-bold uppercase tracking-wider opacity-40 transition hover:text-leaf hover:opacity-100"
                 >
-                  Studio
+                  Admin
                 </Link>
               </nav>
 

@@ -44,3 +44,6 @@ Thumbs.db
 
 # Local CMS database (production uses Turso)
 .data/
+
+# Local media fallback when Blob is not configured
+public/uploads/
