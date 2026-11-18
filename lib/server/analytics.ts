@@ -225,16 +225,15 @@ export async function topPosts(
   to?: string,
 ) {
   const win = sinceFor(range, from, to);
-  return all<{ id: number; slug: string; title: string; views: number }>(
+  const rows = await all<{ id: number; slug: string; title: string; views: number; visitors: number }>(
     `SELECT p.id, p.slug, p.title, COUNT(a.id) AS views,
             COUNT(DISTINCT a.visitor) AS visitors
        FROM analytics a JOIN posts p ON p.id = a.post_id
       WHERE a.kind='view' AND a.created_at BETWEEN ? AND ?
       GROUP BY p.id ORDER BY views DESC LIMIT ?`,
     [win.from, win.to, limit],
-  ).then((rows) =>
-    rows.map((r) => ({ ...r, views: Number(r.views), visitors: Number(r.visitors) })),
   );
+  return rows.map((r) => ({ ...r, views: Number(r.views), visitors: Number(r.visitors) }));
 }
 
 export async function breakdowns(range: Range = "30d", from?: string, to?: string) {
