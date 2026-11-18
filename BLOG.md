@@ -13,7 +13,10 @@ get.
 Everything below is optional for local development. With no environment at all
 the blog runs on a SQLite file and writes uploads to `public/uploads`.
 
-The database is a single SQLite file. There is no hosted service, no account and
+The database is a single SQLite file, read through `node:sqlite`, which ships
+inside Node itself. That means there is no native module and no compile step, so
+installing on a fresh host cannot fail for want of a compiler or a prebuilt
+binary. There is no hosted service, no account and
 no connection string: the file is created on first request and the schema
 builds itself.
 

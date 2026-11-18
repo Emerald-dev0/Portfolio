@@ -18,25 +18,32 @@ describe("read only handling", () => {
     fs.writeFileSync(file, "");
     fs.chmodSync(file, 0o444);
 
-    const { default: Database } = await import("better-sqlite3");
-    const db = new Database(file);
+    const { DatabaseSync } = await import("node:sqlite");
+    const db = new DatabaseSync(file);
     let code = "";
     try {
       db.prepare("CREATE TABLE t (a TEXT)").run();
     } catch (err) {
       code = (err as { code?: string }).code ?? "";
     }
-    expect(code).toMatch(/SQLITE_READONLY/);
+    // node:sqlite reports everything as ERR_SQLITE_ERROR and carries the real
+    // SQLite result code in `errcode`, where 8 is SQLITE_READONLY.
+    expect(code).toBe("ERR_SQLITE_ERROR");
 
-    // Mirrors the helper in db.ts: the exact code, or the message on a
-    // connection that has already fallen back to read only.
+    // Mirrors the helper in db.ts. It has to match on the numeric code and the
+    // message, because the string `code` says nothing useful.
     const isReadOnly = (err: unknown) => {
-      const code = (err as { code?: string })?.code ?? "";
-      const message = (err as { message?: string })?.message ?? "";
-      return code.startsWith("SQLITE_READONLY") || /readonly database/i.test(message);
+      const e = err as { code?: string; errcode?: number; errstr?: string; message?: string };
+      const message = e?.errstr ?? e?.message ?? "";
+      if (/readonly database|read-only database/i.test(message)) return true;
+      if (typeof e?.errcode === "number") return (e.errcode & 0xff) === 8;
+      return (e?.code ?? "").startsWith("SQLITE_READONLY");
     };
-    expect(isReadOnly({ code: "SQLITE_READONLY" })).toBe(true);
+
+    expect(isReadOnly({ code: "ERR_SQLITE_ERROR", errcode: 8 })).toBe(true);
+    expect(isReadOnly({ errcode: 8 | (1 << 8) })).toBe(true); // extended form
     expect(isReadOnly(new Error("attempt to write a readonly database"))).toBe(true);
+    expect(isReadOnly({ code: "ERR_SQLITE_ERROR", errcode: 1 })).toBe(false);
     expect(isReadOnly(new Error("no such table"))).toBe(false);
 
     db.close();

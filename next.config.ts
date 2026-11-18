@@ -9,10 +9,11 @@ const nextConfig: NextConfig = {
    */
   allowedDevOrigins: ["*.e2b.app", "localhost:3001"],
   /**
-   * better-sqlite3 is a native module. Next must load it at runtime rather than
-   * try to bundle it, or the build breaks on the .node binary.
+   * Nothing to externalise any more. The database is `node:sqlite`, which is
+   * built into the runtime, so there is no native module to keep out of the
+   * bundle. That also means install never compiles anything on the host, which
+   * is what broke the Vercel build.
    */
-  serverExternalPackages: ["better-sqlite3"],
   images: {
     // Spotify album art comes from goose-owned CDNs.
     remotePatterns: [{ protocol: "https", hostname: "i.scdn.co" }],
