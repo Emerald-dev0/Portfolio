@@ -15,6 +15,25 @@ import { Footer } from "../components/sections/Footer";
 import { PosterStrip } from "../components/ui/PosterStrip";
 import { NowPlayingBand } from "../components/sections/NowPlayingBand";
 import { getGithubSnapshot } from "../lib/github";
+import type { Metadata } from "next";
+import { site } from "../lib/config";
+
+/**
+ * The home page inherits the root metadata, but states its own canonical so a
+ * crawler that lands on a query string variant (?utm_source=...) still folds
+ * every copy into one URL rather than indexing them separately.
+ */
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+  title: `${site.name}, Backend Developer and Computer Science Student`,
+  openGraph: {
+    title: `${site.name}, Backend Developer`,
+    description:
+      "Developer tools, web apps and honest build logs from a backend developer in Ile-Ife, Nigeria.",
+    url: "/",
+    type: "website",
+  },
+};
 
 /**
  * HOME, the full wall, top to bottom:

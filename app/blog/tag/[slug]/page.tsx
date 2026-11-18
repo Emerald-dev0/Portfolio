@@ -3,6 +3,7 @@ import { BlogIndex } from "../../../../components/blog/BlogIndex";
 import { notFound } from "next/navigation";
 import { readIndex } from "../../../../lib/server/blog-source";
 import { PER_PAGE } from "../../../../lib/blog-paging";
+import { site } from "../../../../lib/config";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -21,6 +22,12 @@ export async function generateMetadata({
     title: `Posts tagged ${name}`,
     description: `Every post tagged ${name} by Daniel 'Emerald' Oluwadare.`,
     alternates: { canonical: `/blog/tag/${slug}` },
+    openGraph: {
+      title: `Posts tagged ${name}`,
+      description: `Every post tagged ${name} by ${site.name}.`,
+      url: `/blog/tag/${slug}`,
+      type: "website",
+    },
   };
 }
 

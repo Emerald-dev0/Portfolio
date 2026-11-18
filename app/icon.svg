@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- The asterisk from the site's doodle set, on the signature leaf green. -->
+  <rect width="64" height="64" rx="14" fill="#0E7C5B"/>
+  <g transform="translate(9.6 9.6) scale(0.448)" stroke="#FFF9EF" stroke-width="9" stroke-linecap="round" fill="none">
+    <path d="M50 8v84M14 29l72 42M86 29L14 71"/>
+  </g>
+</svg>

@@ -20,7 +20,12 @@ export async function generateMetadata({
   const { n } = await params;
   return {
     title: `Blog, page ${n}`,
-    alternates: { canonical: `/blog/page/${n}` },
+    /**
+     * This route is deliberately noindex: page 2 of a list is duplicate
+     * content. A canonical pointing at itself would contradict that, so it
+     * points at /blog and passes its links along.
+     */
+    alternates: { canonical: "/blog" },
     robots: { index: false, follow: true },
   };
 }

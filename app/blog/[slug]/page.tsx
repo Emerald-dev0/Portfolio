@@ -11,6 +11,7 @@ import { Doodle } from "../../../components/ui/Doodle";
 import { Icon } from "../../../components/ui/Icon";
 import { ReadingProgress } from "../../../components/ui/ReadingProgress";
 import { site } from "../../../lib/config";
+import { breadcrumbSchema, graph, safeJsonLd, WEBSITE_ID } from "../../../lib/seo";
 import { formatDate, tocOf } from "../../../lib/blog";
 import {
   categoryNameFor,
@@ -96,19 +97,53 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
   const shareUrl = `${site.url}/blog/${post.slug}`;
 
-  const jsonLd = {
-    "@context": "https://schema.org",
+  /**
+   * Article structured data, plus the breadcrumb trail that lets Google print
+   * "portfolio > blog > article" instead of a bare URL in the result. The
+   * publisher points at the Person node declared in the root layout, so the
+   * byline resolves to one entity across the whole site.
+   */
+  const article = {
     "@type": "BlogPosting",
+    "@id": `${shareUrl}#article`,
     headline: post.title,
     description: post.excerpt,
     datePublished: post.date,
     dateModified: post.updated ?? post.date,
-    author: { "@type": "Person", name: site.name, url: site.url },
-    publisher: { "@type": "Person", name: site.name },
+    wordCount: post.content.reduce((total, block) => {
+      const text =
+        "text" in block ? block.text
+        : block.type === "code" ? block.code
+        : block.type === "list" ? block.items.join(" ")
+        : block.type === "table" ? [...block.head, ...block.rows.flat()].join(" ")
+        : "";
+      return total + text.trim().split(/\s+/).filter(Boolean).length;
+    }, 0),
+    timeRequired: `PT${post.readMinutes}M`,
+    inLanguage: "en",
+    author: { "@id": `${site.url}/#person` },
+    publisher: { "@id": `${site.url}/#person` },
+    isPartOf: { "@id": WEBSITE_ID },
     mainEntityOfPage: { "@type": "WebPage", "@id": shareUrl },
+    url: shareUrl,
     keywords: post.tags.join(", "),
-    image: post.cover ? `${site.url}${post.cover}` : undefined,
+    articleSection: category ?? undefined,
+    image: post.cover
+      ? [`${site.url}${post.cover}`]
+      : [`${shareUrl}/opengraph-image`],
   };
+
+  const jsonLd = graph(
+    article,
+    breadcrumbSchema([
+      { name: "Home", path: "/" },
+      { name: "Blog", path: "/blog" },
+      { name: post.title, path: `/blog/${post.slug}` },
+    ]),
+    // The Person node itself is declared once in app/layout.tsx. Repeating it
+    // here would be a second declaration of the same @id, so the article only
+    // references it.
+  );
 
   return (
     <>
@@ -337,11 +372,6 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       </div>
     </>
   );
-}
-
-/** JSON-LD, with "<" escaped so a title can never break out of the script tag. */
-function safeJsonLd(value: unknown): string {
-  return JSON.stringify(value).replace(/</g, "\\u003c");
 }
 
 /** Category and tag links share one slug shape. */
