@@ -1,31 +1,38 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { ArrowLeft01Icon, ArrowRight01Icon, Clock01Icon } from "@hugeicons/core-free-icons";
 import { BlockRenderer } from "../../../components/blog/BlockRenderer";
+import { ShareRow } from "../../../components/blog/ShareRow";
+import { AnalyticsBeacon } from "../../../components/blog/Analytics";
 import { RichText } from "../../../components/blog/RichText";
 import { Doodle } from "../../../components/ui/Doodle";
 import { Icon } from "../../../components/ui/Icon";
 import { ReadingProgress } from "../../../components/ui/ReadingProgress";
 import { site } from "../../../lib/config";
-import { adjacent, formatDate, tocOf } from "../../../lib/blog";
-import { findPost, publishedPosts } from "../../../lib/server/blog-store";
+import { formatDate, tocOf } from "../../../lib/blog";
+import {
+  categoryNameFor,
+  getNeighbours,
+  getPublicPost,
+  getPublicPostWithRow,
+  getRelated,
+} from "../../../lib/server/blog-source";
+import { resolveRedirect } from "../../../lib/server/cms";
 
 /**
- * POST VIEW, cover, title, byline, sticky table of contents with reading
- * progress, the rendered Markdown blocks, share links, and prev/next.
- * Posts come from Markdown files or the studio, so the page is rendered per
- * request and revalidated on publish rather than baked at build time.
+ * POST VIEW. Cover, title, byline, sticky table of contents with reading
+ * progress, the rendered blocks, share links, prev and next, related posts.
+ *
+ * Rendered per request from the database: a draft 404s, a scheduled post 404s
+ * until its time, and an archived post still resolves but is excluded from
+ * every feed and marked noindex.
  */
 
-export const revalidate = 300;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 export const dynamicParams = true;
-
-export async function generateStaticParams() {
-  const posts = await publishedPosts();
-  return posts.map((p) => ({ slug: p.slug }));
-}
 
 export async function generateMetadata({
   params,
@@ -33,52 +40,85 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const post = await findPost(slug);
-  if (!post) return { title: "Post not found" };
-  const image = post.cover
-    ? [{ url: post.cover, width: 1200, height: 800, alt: post.title }]
-    : undefined;
+  const found = await getPublicPostWithRow(slug);
+  if (!found) return { title: "Post not found", robots: { index: false, follow: false } };
+
+  const { post, row } = found;
+  const title = row.seo_title ?? post.title;
+  const description = row.seo_description ?? post.excerpt;
+  const image = row.og_image ?? post.cover ?? undefined;
+  const url = `${site.url}/blog/${post.slug}`;
+  const archived = row.status === "archived";
+
   return {
-    title: post.title,
-    description: post.excerpt,
-    alternates: { canonical: `${site.url}/blog/${post.slug}` },
+    title,
+    description,
+    alternates: { canonical: url },
+    robots: archived ? { index: false, follow: true } : undefined,
     openGraph: {
-      title: post.title,
-      description: post.excerpt,
+      title,
+      description,
       type: "article",
-      publishedTime: post.date,
-      modifiedTime: post.updated ?? post.date,
+      publishedTime: row.published_at ?? undefined,
+      modifiedTime: row.updated_at,
       tags: post.tags,
-      url: `${site.url}/blog/${post.slug}`,
-      images: image,
+      url,
+      images: image ? [{ url: image, width: 1200, height: 630, alt: post.title }] : undefined,
     },
     twitter: {
       card: image ? "summary_large_image" : "summary",
-      title: post.title,
-      description: post.excerpt,
-      images: image?.map((i) => i.url),
+      title,
+      description,
+      images: image ? [image] : undefined,
     },
   };
 }
 
 export default async function PostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const post = await findPost(slug);
-  if (!post) notFound();
+  const post = await getPublicPost(slug);
 
-  const posts = await publishedPosts();
-  const entries = tocOf(post.content);
-  const { prev, next } = adjacent(posts, slug);
+  // A renamed article keeps working: follow the redirect the CMS left behind.
+  if (!post) {
+    const target = await resolveRedirect(slug);
+    if (target && target !== slug && (await getPublicPost(target))) {
+      permanentRedirect(`/blog/${target}`);
+    }
+    notFound();
+  }
+
+  const [entries, { newer, older }, related, category] = await Promise.all([
+    Promise.resolve(tocOf(post.content)),
+    getNeighbours(post.slug),
+    getRelated(post.slug, 3),
+    categoryNameFor(post.slug),
+  ]);
+
   const shareUrl = `${site.url}/blog/${post.slug}`;
 
-  // Related: same tag, most recent, excluding this post.
-  const related = posts
-    .filter((p) => p.slug !== post.slug && p.tags.some((t) => post.tags.includes(t)))
-    .slice(0, 2);
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.excerpt,
+    datePublished: post.date,
+    dateModified: post.updated ?? post.date,
+    author: { "@type": "Person", name: site.name, url: site.url },
+    publisher: { "@type": "Person", name: site.name },
+    mainEntityOfPage: { "@type": "WebPage", "@id": shareUrl },
+    keywords: post.tags.join(", "),
+    image: post.cover ? `${site.url}${post.cover}` : undefined,
+  };
 
   return (
     <>
       <ReadingProgress />
+      <AnalyticsBeacon slug={post.slug} />
+      <script
+        type="application/ld+json"
+        // JSON.stringify of our own data, never user HTML.
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
 
       <article className="mx-auto max-w-7xl px-5 pb-8 pt-32 sm:px-8 lg:pt-40">
         <Link
@@ -91,15 +131,29 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
         <header className="mt-8 max-w-4xl">
           <div className="flex flex-wrap gap-2">
+            {category ? (
+              <Link
+                href={`/blog/category/${slugifyCategory(category)}`}
+                className="chip bg-ink text-paper transition hover:-translate-y-0.5"
+              >
+                {category}
+              </Link>
+            ) : null}
             {post.tags.map((t) => (
-              <Link key={t} href={`/blog?tag=${encodeURIComponent(t)}`} className="chip transition hover:-translate-y-0.5">
+              <Link
+                key={t}
+                href={`/blog/tag/${slugifyCategory(t)}`}
+                className="chip transition hover:-translate-y-0.5"
+              >
                 {t}
               </Link>
             ))}
           </div>
+
           <h1 className="display-section mt-5">
             <RichText text={post.title} />
           </h1>
+
           <p className="mt-5 max-w-3xl text-xl leading-relaxed opacity-80">
             <RichText text={post.excerpt} />
           </p>
@@ -113,7 +167,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                 <span className="block font-display text-base font-extrabold">{site.name}</span>
                 <span className="block font-mono text-[0.65rem] font-bold uppercase tracking-[0.14em] opacity-60">
                   {formatDate(post.date)}
-                  {post.updated && post.updated !== post.date
+                  {post.updated && post.updated.slice(0, 10) !== post.date
                     ? ` · updated ${formatDate(post.updated)}`
                     : ""}
                 </span>
@@ -142,7 +196,6 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
       <div className="mx-auto max-w-7xl px-5 pb-28 sm:px-8">
         <div className="grid gap-12 lg:grid-cols-12">
-          {/* Sticky TOC (desktop) */}
           <aside className="hidden lg:col-span-3 lg:block">
             <nav aria-label="On this page" className="sticky top-28">
               <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] opacity-50">
@@ -179,7 +232,6 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           </aside>
 
           <div className="lg:col-span-8 lg:col-start-5">
-            {/* Collapsible TOC (mobile) */}
             {entries.length ? (
               <details className="sticker-flat mb-10 p-5 lg:hidden">
                 <summary className="cursor-pointer font-mono text-xs font-bold uppercase tracking-[0.16em]">
@@ -188,10 +240,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                 <ul className="mt-4 flex flex-col gap-2.5">
                   {entries.map((e) => (
                     <li key={e.id}>
-                      <a
-                        href={`#${e.id}`}
-                        className={`block text-sm font-semibold ${e.level > 2 ? "pl-4" : ""}`}
-                      >
+                      <a href={`#${e.id}`} className={`block text-sm font-semibold ${e.level > 2 ? "pl-4" : ""}`}>
                         {e.text}
                       </a>
                     </li>
@@ -206,37 +255,8 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
               ))}
             </div>
 
-            {/* Share */}
-            <div className="sticker mt-14 flex flex-wrap items-center gap-3 p-5">
-              <p className="font-hand text-2xl font-bold">Did this help?</p>
-              <p className="text-sm opacity-70">Send it to someone who&apos;s fighting the same bug.</p>
-              <div className="ml-auto flex flex-wrap gap-2">
-                <a
-                  className="btn btn-ink px-4 py-2 text-sm"
-                  href={`https://x.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(shareUrl)}`}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                >
-                  Share on X
-                </a>
-                <a
-                  className="btn btn-paper px-4 py-2 text-sm"
-                  href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`${post.title}, ${shareUrl}`)}`}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                >
-                  WhatsApp
-                </a>
-                <a
-                  className="btn btn-lagoon px-4 py-2 text-sm"
-                  href={`mailto:?subject=${encodeURIComponent(post.title)}&body=${encodeURIComponent(shareUrl)}`}
-                >
-                  Email
-                </a>
-              </div>
-            </div>
+            <ShareRow url={shareUrl} title={post.title} />
 
-            {/* Author card */}
             <div className="sticker mt-6 flex flex-col gap-4 bg-paper p-6 sm:flex-row sm:items-center">
               <span className="grid size-16 shrink-0 place-items-center rounded-2xl border-[2.5px] border-ink bg-tang font-display text-2xl font-extrabold text-night shadow-[4px_4px_0_var(--color-ink)]">
                 DO
@@ -255,11 +275,10 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
               </Link>
             </div>
 
-            {/* Prev / next */}
             <nav aria-label="More posts" className="mt-8 grid gap-5 sm:grid-cols-2">
-              {prev ? (
+              {older ? (
                 <Link
-                  href={`/blog/${prev.slug}`}
+                  href={`/blog/${older.slug}`}
                   className="sticker-flat group p-5 transition duration-200 hover:-translate-y-1 hover:shadow-[6px_6px_0_var(--color-ink)]"
                 >
                   <span className="inline-flex items-center gap-2 font-mono text-[0.65rem] font-bold uppercase tracking-[0.14em] opacity-60">
@@ -267,15 +286,15 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                     Older post
                   </span>
                   <span className="mt-2 block font-display text-lg font-extrabold leading-snug">
-                    {prev.title}
+                    {older.title}
                   </span>
                 </Link>
               ) : (
                 <span />
               )}
-              {next ? (
+              {newer ? (
                 <Link
-                  href={`/blog/${next.slug}`}
+                  href={`/blog/${newer.slug}`}
                   className="sticker-flat group p-5 text-right transition duration-200 hover:-translate-y-1 hover:shadow-[6px_6px_0_var(--color-ink)]"
                 >
                   <span className="inline-flex items-center gap-2 font-mono text-[0.65rem] font-bold uppercase tracking-[0.14em] opacity-60">
@@ -283,7 +302,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                     <Icon icon={ArrowRight01Icon} size={13} />
                   </span>
                   <span className="mt-2 block font-display text-lg font-extrabold leading-snug">
-                    {next.title}
+                    {newer.title}
                   </span>
                 </Link>
               ) : null}
@@ -297,7 +316,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
               <h2 className="font-display text-3xl font-extrabold">Keep reading</h2>
               <Doodle name="squiggle" className="w-16 text-tang" strokeWidth={5} />
             </div>
-            <div className="mt-6 grid gap-5 sm:grid-cols-2">
+            <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {related.map((p) => (
                 <Link
                   key={p.slug}
@@ -317,4 +336,12 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       </div>
     </>
   );
+}
+
+/** Category and tag links share one slug shape. */
+function slugifyCategory(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 }

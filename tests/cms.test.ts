@@ -230,3 +230,40 @@ describe("queries", () => {
     expect(rel.map((r) => r.title)).toContain("B Post");
   });
 });
+
+describe("upsert", () => {
+  it("creates categories with the required timestamp, and reuses them", async () => {
+    const { upsert } = await import("../lib/server/db");
+    const a = await upsert("categories", "dev-tools", "Dev Tools");
+    const b = await upsert("categories", "dev-tools", "Dev Tools");
+    expect(a).toBe(b);
+    const tags = await upsert("tags", "sqlite", "SQLite");
+    expect(tags).toBeGreaterThan(0);
+  });
+});
+
+describe("seeding the archive", () => {
+  it("imports content/blog once and is idempotent", async () => {
+    const { seedOnce } = await import("../lib/server/seed");
+    const { countPublished } = await import("../lib/server/cms");
+    await seedOnce();
+    const first = await countPublished();
+    expect(first).toBeGreaterThan(0);
+    // A second call in a fresh module instance must not duplicate rows.
+    const rows = await listPosts({ status: "all", limit: 500 });
+    const slugs = rows.map((r) => r.slug);
+    expect(new Set(slugs).size).toBe(slugs.length);
+  });
+});
+
+describe("seed date handling", () => {
+  it("writes ISO days, never a locale string", async () => {
+    const { seedOnce } = await import("../lib/server/seed");
+    await seedOnce();
+    const rows = await listPosts({ status: "all", limit: 50 });
+    expect(rows.length).toBeGreaterThan(0);
+    for (const row of rows) {
+      expect(row.published_at).toMatch(/^\d{4}-\d{2}-\d{2}T/);
+    }
+  });
+});

@@ -41,3 +41,6 @@ Thumbs.db
 
 # empty scaffold placeholder (unused)
 /glide-portfolio-builder/
+
+# Local CMS database (production uses Turso)
+.data/

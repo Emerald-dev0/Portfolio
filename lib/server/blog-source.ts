@@ -14,7 +14,7 @@
 
 import "server-only";
 import { buildPost } from "../markdown";
-import type { Post } from "../blog";
+import { slugify, type Post } from "../blog";
 import {
   publishedPosts,
   postBySlug,
@@ -25,6 +25,7 @@ import {
   type PostRow,
 } from "./cms";
 import { seedOnce } from "./seed";
+import { all } from "./db";
 
 /** Row -> Post, through the same Markdown pipeline the files used. */
 export function toPost(row: PostRow): Post {
@@ -113,4 +114,86 @@ export async function totalPublished(): Promise<number> {
   await seedOnce();
   await publishDue();
   return countPublished();
+}
+
+/* ------------------------------------------------------------ index reads */
+
+/** A post plus the category it sits in, which is what the index shows. */
+export type IndexPost = Post & { category: string | null };
+
+export type IndexQuery = {
+  q?: string;
+  tag?: string;
+  category?: string;
+  limit?: number;
+  offset?: number;
+};
+
+export type IndexPage = {
+  posts: IndexPost[];
+  total: number;
+  categories: { name: string; slug: string; count: number }[];
+  tags: { name: string; slug: string; count: number }[];
+};
+
+/**
+ * Everything the index needs, from one read of the published set.
+ *
+ * Search, tag, category and paging all filter the same in-memory list, so the
+ * four of them can never disagree, and the facet counts are computed from the
+ * same rows the cards came from. At the scale of a personal blog (tens of
+ * posts, one query) this is both simpler and faster than four SQL paths.
+ */
+export async function readIndex(query: IndexQuery = {}): Promise<IndexPage> {
+  const rows = await all<PostRow>(
+    `${`SELECT p.*, c.slug AS category_slug, c.name AS category_name
+         FROM posts p LEFT JOIN categories c ON c.id = p.category_id
+        WHERE p.status = 'published' AND p.published_at IS NOT NULL
+        ORDER BY p.published_at DESC`.replace(/\s+/g, " ")} LIMIT 500`,
+  );
+
+  const posts: IndexPost[] = rows.map((row) => ({ ...toPost(row), category: row.category_name ?? null }));
+
+  const tagCounts = new Map<string, number>();
+  const catCounts = new Map<string, number>();
+  for (const p of posts) {
+    p.tags.forEach((t) => tagCounts.set(t, (tagCounts.get(t) ?? 0) + 1));
+    if (p.category) catCounts.set(p.category, (catCounts.get(p.category) ?? 0) + 1);
+  }
+
+  const q = (query.q ?? "").trim().toLowerCase();
+  const tag = (query.tag ?? "").trim().toLowerCase();
+  const category = (query.category ?? "").trim().toLowerCase();
+
+  const filtered = posts.filter((post) => {
+    if (tag && !post.tags.some((t) => t.toLowerCase() === tag)) return false;
+    if (category && (post.category ?? "").toLowerCase() !== category) return false;
+    if (!q) return true;
+    return (
+      post.title.toLowerCase().includes(q) ||
+      post.excerpt.toLowerCase().includes(q) ||
+      post.tags.some((t) => t.toLowerCase().includes(q)) ||
+      post.content.some((b) => JSON.stringify(b).toLowerCase().includes(q))
+    );
+  });
+
+  const offset = Math.max(0, query.offset ?? 0);
+  const limit = Math.min(100, Math.max(1, query.limit ?? 9));
+
+  return {
+    posts: filtered.slice(offset, offset + limit),
+    total: filtered.length,
+    categories: [...catCounts.entries()]
+      .map(([name, count]) => ({ name, slug: slugify(name), count }))
+      .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name)),
+    tags: [...tagCounts.entries()]
+      .map(([name, count]) => ({ name, slug: slugify(name), count }))
+      .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name)),
+  };
+}
+
+/** The category a post sits in, for metadata and cards. */
+export async function categoryNameFor(slug: string): Promise<string | null> {
+  const row = await postBySlug(slug);
+  return row?.category_name ?? null;
 }

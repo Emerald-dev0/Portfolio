@@ -16,7 +16,7 @@ import "server-only";
 import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
-import { all, run, upsert } from "./db";
+import { one, run, upsert } from "./db";
 import { readMinutes } from "./cms";
 import { slugify } from "../blog";
 
@@ -30,14 +30,29 @@ const CATEGORY_FOR: Record<string, string> = {
   "designing-interfaces-that-feel-alive": "Web Development",
 };
 
-let seeded = false;
+
+/**
+ * YAML turns an unquoted `date: 2026-11-10` into a Date object, so `String()`
+ * would give "Tue Nov 10" and every date comparison downstream would break.
+ * Normalise to a plain ISO day here, once, at the boundary.
+ */
+function isoDay(value: unknown): string {
+  if (value instanceof Date && !Number.isNaN(value.getTime())) {
+    return value.toISOString().slice(0, 10);
+  }
+  const raw = String(value ?? "").trim();
+  if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) return raw;
+  const parsed = new Date(raw);
+  return Number.isNaN(parsed.getTime())
+    ? new Date().toISOString().slice(0, 10)
+    : parsed.toISOString().slice(0, 10);
+}
 
 export async function seedOnce(): Promise<void> {
-  if (seeded) return;
-  seeded = true;
-
-  const existing = await all<{ slug: string }>("SELECT slug FROM posts");
-  if (existing.length) return;
+  // One indexed count per call. Cheap, and it stays correct if the table is
+  // emptied (a reset in tests, or a fresh database mid-flight).
+  const existing = await one<{ n: number }>("SELECT COUNT(*) AS n FROM posts");
+  if (Number(existing?.n ?? 0) > 0) return;
 
   let files: string[] = [];
   try {
@@ -53,7 +68,7 @@ export async function seedOnce(): Promise<void> {
     const title = String(data.title ?? slug);
     const excerpt = String(data.excerpt ?? "");
     const tags = Array.isArray(data.tags) ? data.tags.map(String) : [];
-    const date = String(data.date ?? new Date().toISOString()).slice(0, 10);
+    const date = isoDay(data.date);
     const catName = CATEGORY_FOR[slug] ?? "Software Engineering";
     const categoryId = await upsert("categories", slugify(catName), catName);
 

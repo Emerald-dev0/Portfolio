@@ -1,7 +1,8 @@
 import { site } from "../../lib/config";
-import { publishedPosts } from "../../lib/server/blog-store";
+import { readIndex } from "../../lib/server/blog-source";
 
-export const revalidate = 300;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 function esc(s: string): string {
   return s
@@ -13,13 +14,14 @@ function esc(s: string): string {
 }
 
 /**
- * RSS 2.0, generated from the same post store as the site, so anything
- * published in /studio appears in the feed on revalidate.
+ * RSS 2.0 from the same published set the site renders, so anything published
+ * in the dashboard is in the feed on the next request. Drafts and undated
+ * scheduled posts are never included.
  */
 export async function GET() {
-  const posts = await publishedPosts();
+  const index = await readIndex({ limit: 50 });
 
-  const items = posts
+  const items = index.posts
     .map((p) => {
       const url = `${site.url}/blog/${p.slug}`;
       const pub = new Date(`${p.date}T09:00:00Z`).toUTCString();

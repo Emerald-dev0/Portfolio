@@ -16,6 +16,8 @@
  */
 
 import "server-only";
+import fs from "node:fs";
+import nodePath from "node:path";
 import { createClient, type Client, type InValue } from "@libsql/client";
 
 const SCHEMA = [
@@ -114,6 +116,11 @@ function makeClient(): Client {
 
   // Local development: a file next to the project, or :memory: in tests.
   const file = process.env.CMS_DB_FILE ?? "file:./.data/cms.db";
+  // SQLite will not create a missing directory, so make one first.
+  const path = file.replace(/^file:/, "");
+  if (path !== ":memory:" && !path.startsWith(":memory:")) {
+    fs.mkdirSync(nodePath.dirname(nodePath.resolve(path)), { recursive: true });
+  }
   return createClient({ url: file });
 }
 
@@ -167,7 +174,15 @@ export async function upsert(
 ): Promise<number> {
   const found = await one<{ id: number }>(`SELECT id FROM ${table} WHERE slug = ?`, [slug]);
   if (found) return found.id;
-  const res = await run(`INSERT INTO ${table} (slug, name) VALUES (?, ?)`, [slug, name]);
+  // `categories` has a required created_at, `tags` does not, so this is the one
+  // place the two differ and it is handled here rather than by every caller.
+  const res =
+    table === "categories"
+      ? await run(
+          "INSERT INTO categories (slug, name, created_at) VALUES (?, ?, ?)",
+          [slug, name, new Date().toISOString()],
+        )
+      : await run("INSERT INTO tags (slug, name) VALUES (?, ?)", [slug, name]);
   return res.lastId;
 }
 

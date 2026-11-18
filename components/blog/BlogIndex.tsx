@@ -2,66 +2,131 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useMemo, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useRef, useState, useTransition } from "react";
 import {
   ArrowRight01Icon,
   ArrowUpRight01Icon,
   Clock01Icon,
   Search01Icon,
   Cancel01Icon,
+  Loading03Icon,
 } from "@hugeicons/core-free-icons";
-import { formatDate, tagsOf, type Post } from "../../lib/blog";
+import { formatDate, type Post } from "../../lib/blog";
 import { Reveal } from "../motion/Reveal";
 import { BlogCard, PostRow } from "../ui/BlogCard";
 import { Doodle } from "../ui/Doodle";
 import { Icon } from "../ui/Icon";
 import { Section } from "../ui/Section";
 
+export type IndexPost = Post & { category: string | null };
+
+type Facet = { name: string; slug: string; count: number };
+
+type Props = {
+  posts: IndexPost[];
+  total: number;
+  categories: Facet[];
+  tags: Facet[];
+  query: string;
+  activeCategory: string | null;
+  activeTag: string | null;
+  page: number;
+  perPage: number;
+  allPosts: IndexPost[];
+};
+
 /**
- * BLOG INDEX, a real publication front page, not a card grid:
+ * BLOG INDEX. A publication front page, not a card grid:
  *
- *   masthead + stats bar
- *   → big featured story with its cover
- *   → sticky search + tag rail
- *   → post grid, with a sidebar (author, latest, tags, elsewhere)
+ *   masthead and counts
+ *   featured story
+ *   sticky search and filter rail, with real URLs for every filter
+ *   post grid, load more, and a sidebar
  *
- * Search and tag filtering are client state over the server-rendered post
- * list, so they're instant and need no requests. `?tag=` from a post page
- * seeds the filter.
+ * Search is a client interaction, but it writes to the URL, so a filtered view
+ * is shareable, survives a reload, and the server does the actual filtering.
+ * Every post here comes from the database, so publishing in the dashboard
+ * changes this page on the next request.
  */
-export function BlogIndex({ posts, initialTag }: { posts: Post[]; initialTag?: string }) {
-  const [query, setQuery] = useState("");
-  const [active, setActive] = useState<string | null>(initialTag ?? null);
+export function BlogIndex({
+  posts,
+  total,
+  categories,
+  tags,
+  query,
+  activeCategory,
+  activeTag,
+  page,
+  perPage,
+  allPosts,
+}: Props) {
+  const router = useRouter();
+  const params = useSearchParams();
+  const [text, setText] = useState(query);
+  const [pending, start] = useTransition();
+  const [extra, setExtra] = useState<IndexPost[]>([]);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const sentinel = useRef<HTMLDivElement | null>(null);
 
-  const tags = useMemo(() => tagsOf(posts), [posts]);
-  const featured = posts.find((p) => p.featured) ?? posts[0];
+  useEffect(() => setText(query), [query]);
+  useEffect(() => {
+    setExtra([]);
+  }, [query, activeCategory, activeTag]);
 
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    return posts.filter((p) => {
-      if (active && !p.tags.includes(active)) return false;
-      if (!q) return true;
-      return (
-        p.title.toLowerCase().includes(q) ||
-        p.excerpt.toLowerCase().includes(q) ||
-        p.tags.some((t) => t.toLowerCase().includes(q))
-      );
-    });
-  }, [posts, query, active]);
+  const filtering = Boolean(query || activeCategory || activeTag);
+  const featured = !filtering ? (posts.find((p) => p.featured) ?? posts[0]) : null;
+  const gridInitial = featured ? posts.filter((p) => p.slug !== featured.slug) : posts;
+  const grid = [...gridInitial, ...extra];
+  const hasMore = !filtering && page * perPage < total;
+  const totalMinutes = allPosts.reduce((sum, p) => sum + p.readMinutes, 0);
 
-  const grid = active || query ? filtered : filtered.filter((p) => p.slug !== featured?.slug);
-  const totalMinutes = posts.reduce((sum, p) => sum + p.readMinutes, 0);
-  const filtering = Boolean(active || query.trim());
+  function go(next: { q?: string; category?: string | null; tag?: string | null }) {
+    const search = new URLSearchParams(params.toString());
+    const setOrDelete = (key: string, value: string | null | undefined) => {
+      if (value === undefined) return;
+      if (value) search.set(key, value);
+      else search.delete(key);
+    };
+    setOrDelete("q", next.q);
+    setOrDelete("category", next.category);
+    setOrDelete("tag", next.tag);
+    search.delete("page");
+    const qs = search.toString();
+    start(() => router.push(qs ? `/blog?${qs}` : "/blog", { scroll: false }));
+  }
+
+  // Load more fetches the next server page and appends it, so the URL and the
+  // rendered list never drift apart.
+  useEffect(() => {
+    const node = sentinel.current;
+    if (!node || !hasMore || loadingMore) return;
+    const observer = new IntersectionObserver(
+      async (entries) => {
+        if (!entries[0].isIntersecting) return;
+        setLoadingMore(true);
+        try {
+          const res = await fetch(`/api/blog/page?page=${page + 1}`, { cache: "no-store" });
+          if (res.ok) {
+            const data = (await res.json()) as { posts: IndexPost[] };
+            setExtra((prev) => [...prev, ...data.posts]);
+          }
+        } finally {
+          setLoadingMore(false);
+        }
+      },
+      { rootMargin: "400px" },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [hasMore, loadingMore, page]);
 
   return (
     <Section overlap={false} className="bg-paper">
-      {/* ---------------------------------------------------------------- */}
-      {/* Masthead                                                          */}
-      {/* ---------------------------------------------------------------- */}
       <div className="pattern-dots relative overflow-hidden border-b-[2.5px] border-ink">
         <Doodle
           name="asterisk"
-          className="pointer-events-none absolute -right-10 top-16 w-48 text-ink/8 animate-spin-slow"
+          className="pointer-events-none absolute -right-10 top-16 w-48 animate-spin-slow text-ink/8"
           strokeWidth={4}
         />
         <Doodle
@@ -105,9 +170,9 @@ export function BlogIndex({ posts, initialTag }: { posts: Post[]; initialTag?: s
           <Reveal delay={0.24}>
             <dl className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4">
               {[
-                [String(posts.length).padStart(2, "0"), "posts"],
+                [String(allPosts.length).padStart(2, "0"), "posts"],
                 [String(tags.length).padStart(2, "0"), "topics"],
-                [`${totalMinutes}`, "minutes of reading"],
+                [String(totalMinutes), "minutes of reading"],
               ].map(([n, label]) => (
                 <div key={label} className="flex items-baseline gap-2">
                   <dt className="font-display text-3xl font-extrabold leading-none">{n}</dt>
@@ -122,10 +187,8 @@ export function BlogIndex({ posts, initialTag }: { posts: Post[]; initialTag?: s
       </div>
 
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
-        {/* -------------------------------------------------------------- */}
-        {/* Featured story                                                  */}
-        {/* -------------------------------------------------------------- */}
-        {featured && !filtering ? (
+        {/* Featured story */}
+        {featured ? (
           <Reveal className="relative z-10 -mt-10">
             <Link
               href={`/blog/${featured.slug}`}
@@ -141,7 +204,11 @@ export function BlogIndex({ posts, initialTag }: { posts: Post[]; initialTag?: s
                     sizes="(max-width: 1024px) 100vw, 640px"
                     className="object-cover transition duration-500 group-hover:scale-[1.03]"
                   />
-                ) : null}
+                ) : (
+                  <div className="pattern-dots grid h-full place-items-center bg-lagoon">
+                    <Doodle name="star" className="w-24 text-ink/30" strokeWidth={4} />
+                  </div>
+                )}
                 <span className="absolute left-4 top-4 rotate-[-4deg] rounded-full border-2 border-ink bg-leaf px-3 py-1 font-hand text-xl font-bold text-bone shadow-[3px_3px_0_var(--color-ink)]">
                   featured
                 </span>
@@ -154,6 +221,7 @@ export function BlogIndex({ posts, initialTag }: { posts: Post[]; initialTag?: s
                     <Icon icon={Clock01Icon} size={12} />
                     {featured.readMinutes} min read
                   </span>
+                  {featured.category ? <span>{featured.category}</span> : null}
                 </div>
                 <h2 className="display-section mt-4 text-[clamp(1.9rem,4vw,3.1rem)] transition group-hover:translate-x-1">
                   {featured.title}
@@ -174,63 +242,73 @@ export function BlogIndex({ posts, initialTag }: { posts: Post[]; initialTag?: s
           </Reveal>
         ) : null}
 
-        {/* -------------------------------------------------------------- */}
-        {/* Filter rail                                                     */}
-        {/* -------------------------------------------------------------- */}
+        {/* Filter rail */}
         <div className="sticky top-20 z-30 -mx-1 mt-10 py-2">
           <div className="sticker-sm flex flex-col gap-3 rounded-3xl p-3 sm:flex-row sm:items-center">
-            <label className="flex flex-1 items-center gap-2 rounded-full border-2 border-ink bg-paper px-4 py-2">
+            <form
+              className="flex flex-1 items-center gap-2 rounded-full border-2 border-ink bg-paper px-4 py-2"
+              onSubmit={(e) => {
+                e.preventDefault();
+                go({ q: text.trim() });
+              }}
+            >
               <Icon icon={Search01Icon} size={16} className="shrink-0 opacity-60" />
-              <span className="sr-only">Search posts</span>
+              <label className="sr-only" htmlFor="blog-search">
+                Search posts
+              </label>
               <input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search posts, topics, tags…"
+                id="blog-search"
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                placeholder="Search posts, topics, tags"
                 className="w-full bg-transparent text-sm font-medium outline-none placeholder:opacity-50"
               />
-              {query ? (
+              {pending ? (
+                <Icon icon={Loading03Icon} size={15} className="shrink-0 animate-spin opacity-60" />
+              ) : null}
+              {text ? (
                 <button
                   type="button"
-                  onClick={() => setQuery("")}
+                  onClick={() => {
+                    setText("");
+                    go({ q: "" });
+                  }}
                   aria-label="Clear search"
                   className="shrink-0 opacity-60 transition hover:opacity-100"
                 >
                   <Icon icon={Cancel01Icon} size={15} />
                 </button>
               ) : null}
-            </label>
+            </form>
 
             <div
-              className="-mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1 sm:max-w-[52%] sm:flex-wrap sm:overflow-visible sm:pb-0"
+              className="-mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1 sm:max-w-[56%] sm:flex-wrap sm:overflow-visible sm:pb-0"
               role="group"
-              aria-label="Filter by tag"
+              aria-label="Filter by category"
             >
-              <button
-                type="button"
-                onClick={() => setActive(null)}
-                aria-pressed={active === null}
-                className={`chip shrink-0 transition hover:-translate-y-0.5 ${active === null ? "bg-ink text-paper" : ""}`}
+              <Link
+                href="/blog"
+                scroll={false}
+                aria-current={!activeCategory && !activeTag ? "page" : undefined}
+                className={`chip shrink-0 transition hover:-translate-y-0.5 ${!activeCategory && !activeTag ? "bg-ink text-paper" : ""}`}
               >
                 All
-              </button>
-              {tags.map((t) => (
-                <button
-                  key={t}
-                  type="button"
-                  onClick={() => setActive(active === t ? null : t)}
-                  aria-pressed={active === t}
-                  className={`chip shrink-0 transition hover:-translate-y-0.5 ${active === t ? "bg-ink text-paper" : ""}`}
+              </Link>
+              {categories.map((c) => (
+                <Link
+                  key={c.slug}
+                  href={`/blog/category/${c.slug}`}
+                  scroll={false}
+                  aria-current={activeCategory === c.name.toLowerCase() ? "page" : undefined}
+                  className={`chip shrink-0 transition hover:-translate-y-0.5 ${activeCategory === c.name.toLowerCase() ? "bg-ink text-paper" : ""}`}
                 >
-                  {t}
-                </button>
+                  {c.name}
+                </Link>
               ))}
             </div>
           </div>
         </div>
 
-        {/* -------------------------------------------------------------- */}
-        {/* Grid + sidebar                                                  */}
-        {/* -------------------------------------------------------------- */}
         <div className="grid gap-10 pb-28 pt-8 lg:grid-cols-12">
           <div className="lg:col-span-8">
             <div className="mb-5 flex items-baseline justify-between">
@@ -238,41 +316,58 @@ export function BlogIndex({ posts, initialTag }: { posts: Post[]; initialTag?: s
                 {filtering ? "Results" : "All posts"}
               </h2>
               <p className="font-mono text-[0.65rem] font-bold uppercase tracking-[0.14em] opacity-50">
-                {grid.length} {grid.length === 1 ? "post" : "posts"}
+                {total} {total === 1 ? "post" : "posts"}
               </p>
             </div>
 
             {grid.length ? (
-              <div className="grid gap-6 sm:grid-cols-2">
-                {grid.map((p) => (
-                  <Reveal key={p.slug}>
-                    <BlogCard post={p} />
-                  </Reveal>
-                ))}
-              </div>
+              <>
+                <div className="grid gap-6 sm:grid-cols-2">
+                  {grid.map((p) => (
+                    <Reveal key={p.slug}>
+                      <BlogCard post={p} category={activeCategory ? undefined : (p.category ?? undefined)} />
+                    </Reveal>
+                  ))}
+                </div>
+
+                {hasMore ? (
+                  <div ref={sentinel} className="mt-12 flex flex-col items-center gap-3">
+                    {loadingMore ? (
+                      <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] opacity-60">
+                        Loading more posts
+                      </p>
+                    ) : (
+                      <Link
+                        href={`/blog/page/${page + 1}`}
+                        className="btn btn-ink px-5 py-2.5 text-sm"
+                      >
+                        Load more posts
+                        <Icon icon={ArrowRight01Icon} size={15} />
+                      </Link>
+                    )}
+                  </div>
+                ) : null}
+              </>
             ) : (
               <div className="sticker-flat flex flex-col items-center p-12 text-center">
                 <Doodle name="spiral" className="w-16 text-tang" strokeWidth={4} />
-                <p className="mt-4 font-hand text-3xl font-bold">Nothing here yet.</p>
-                <p className="mt-1 max-w-sm text-sm opacity-70">
-                  No posts match “{query || active}”. Try a different word, or clear the filter to
-                  see everything.
+                <p className="mt-4 font-hand text-3xl font-bold">
+                  {filtering ? "Nothing matches that." : "No posts yet."}
                 </p>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setQuery("");
-                    setActive(null);
-                  }}
-                  className="btn btn-ink mt-6 px-4 py-2 text-sm"
-                >
-                  Clear filters
-                </button>
+                <p className="mt-1 max-w-sm text-sm opacity-70">
+                  {filtering
+                    ? `No posts match ${query ? `"${query}"` : (activeTag ?? activeCategory ?? "")}. Try a different word, or clear the filter to see everything.`
+                    : "The first one is being written. Check back soon."}
+                </p>
+                {filtering ? (
+                  <Link href="/blog" className="btn btn-ink mt-6 px-4 py-2 text-sm">
+                    Clear filters
+                  </Link>
+                ) : null}
               </div>
             )}
           </div>
 
-          {/* Sidebar */}
           <aside className="lg:col-span-4">
             <div className="flex flex-col gap-6 lg:sticky lg:top-40">
               <div className="sticker bg-leaf p-6 text-bone">
@@ -304,7 +399,7 @@ export function BlogIndex({ posts, initialTag }: { posts: Post[]; initialTag?: s
                   Latest
                 </h3>
                 <div className="mt-3">
-                  {posts.slice(0, 4).map((p, i) => (
+                  {allPosts.slice(0, 4).map((p, i) => (
                     <PostRow key={p.slug} post={p} index={i} />
                   ))}
                 </div>
@@ -316,17 +411,15 @@ export function BlogIndex({ posts, initialTag }: { posts: Post[]; initialTag?: s
                 </h3>
                 <div className="mt-3 flex flex-wrap gap-1.5">
                   {tags.map((t) => (
-                    <button
-                      key={t}
-                      type="button"
-                      onClick={() => {
-                        setActive(t);
-                        window.scrollTo({ top: 420, behavior: "smooth" });
-                      }}
-                      className={`chip text-[0.65rem] transition hover:-translate-y-0.5 ${active === t ? "bg-ink text-paper" : ""}`}
+                    <Link
+                      key={t.slug}
+                      href={`/blog/tag/${t.slug}`}
+                      scroll={false}
+                      className={`chip text-[0.65rem] transition hover:-translate-y-0.5 ${activeTag === t.name ? "bg-ink text-paper" : ""}`}
                     >
-                      {t}
-                    </button>
+                      {t.name}
+                      <span className="ml-1 opacity-50">{t.count}</span>
+                    </Link>
                   ))}
                 </div>
               </div>

@@ -6,10 +6,21 @@ import { Icon } from "./Icon";
 import { Doodle } from "./Doodle";
 
 /**
- * BLOG CARD, one post as a sticker: cover art on top, date + reading time in
- * mono, display-size title, excerpt, tags, and an arrow that slides on hover.
+ * BLOG CARD, one post as a sticker: cover art on top, date and reading time in
+ * mono, display size title, excerpt, tags, and an arrow that slides on hover.
+ *
+ * When a post has no cover, the plate is drawn rather than borrowed: a doodle
+ * on a pastel fill, which keeps the collage vocabulary without faking artwork.
  */
-export function BlogCard({ post, priority = false }: { post: Post; priority?: boolean }) {
+export function BlogCard({
+  post,
+  priority = false,
+  category,
+}: {
+  post: Post;
+  priority?: boolean;
+  category?: string | null;
+}) {
   return (
     <Link
       href={`/blog/${post.slug}`}
@@ -27,13 +38,18 @@ export function BlogCard({ post, priority = false }: { post: Post; priority?: bo
           />
         ) : (
           <div className="pattern-dots grid h-full place-items-center bg-lagoon">
-            <Doodle name="asterisk" className="w-16 text-ink/40 animate-spin-slow" strokeWidth={5} />
+            <Doodle name="asterisk" className="w-16 animate-spin-slow text-ink/40" strokeWidth={5} />
           </div>
         )}
         <span className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full border-2 border-ink bg-paper px-2.5 py-1 font-mono text-[0.6rem] font-bold uppercase tracking-[0.12em]">
           <Icon icon={Clock01Icon} size={11} />
           {post.readMinutes} min
         </span>
+        {category ? (
+          <span className="absolute right-3 top-3 rounded-full border-2 border-ink bg-leaf px-2.5 py-1 font-mono text-[0.6rem] font-bold uppercase tracking-[0.12em] text-bone">
+            {category}
+          </span>
+        ) : null}
       </div>
 
       <div className="flex flex-1 flex-col p-5">
@@ -67,10 +83,13 @@ export function BlogCard({ post, priority = false }: { post: Post; priority?: bo
   );
 }
 
-/** A compact row for the sidebar's "latest" list. */
+/** A compact row for the sidebar's latest list. */
 export function PostRow({ post, index }: { post: Post; index: number }) {
   return (
-    <Link href={`/blog/${post.slug}`} className="group flex gap-3 border-b-2 border-ink/10 py-3 last:border-0">
+    <Link
+      href={`/blog/${post.slug}`}
+      className="group flex gap-3 border-b-2 border-ink/10 py-3 last:border-0"
+    >
       <span className="font-mono text-sm font-bold opacity-30">
         {String(index + 1).padStart(2, "0")}
       </span>
