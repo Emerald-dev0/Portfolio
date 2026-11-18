@@ -130,10 +130,12 @@ export function Editor({ initialMarkdown, onChange, onSaveRequest, saveState, la
     [editor],
   );
 
-  // Word count re-runs whenever the document changes, which saveState tracks.
-  const words = useMemo(
-    () => countWords(docToMd(editor?.getJSON() ?? { type: "doc" })),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  // Word and character counts re-run whenever the document changes, which
+  // saveState tracks, since autosave fires on every content edit.
+  const { words, characters } = useMemo(() => {
+    const md = docToMd(editor?.getJSON() ?? { type: "doc" });
+    return { words: countWords(md), characters: md.trim().length };
+  }, // eslint-disable-next-line react-hooks/exhaustive-deps
     [editor, saveState],
   );
 
@@ -171,6 +173,7 @@ export function Editor({ initialMarkdown, onChange, onSaveRequest, saveState, la
 
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t-2 border-ink/10 px-5 py-2.5 font-mono text-[0.6rem] font-bold uppercase tracking-[0.12em] opacity-60 sm:px-7">
         <span>{words} words</span>
+        <span>{characters} characters</span>
         <SaveBadge state={saveState} lastSavedAt={lastSavedAt} />
         <span className="ml-auto hidden sm:inline">Ctrl or Cmd + S to save</span>
       </div>
