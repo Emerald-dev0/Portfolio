@@ -367,7 +367,7 @@ export function PostEditor({ post, categories, revisions, isNew }: Props) {
           <div className="flex flex-wrap items-center gap-3">
             <Link
               href="/admin/posts"
-              className="inline-flex items-center gap-1.5 font-mono text-[0.6rem] font-bold uppercase tracking-[0.14em] opacity-60 transition hover:opacity-100"
+              className="inline-flex items-center gap-1.5 font-mono text-[0.6rem] font-bold uppercase tracking-[0.14em] muted-soft transition hover:opacity-100"
             >
               <Icon icon={ArrowLeft01Icon} size={13} />
               All posts
@@ -433,7 +433,7 @@ export function PostEditor({ post, categories, revisions, isNew }: Props) {
         {/* Sidebar */}
         <aside className="flex flex-col gap-4">
           <section className="sticker-flat p-4">
-            <h2 className="font-mono text-[0.6rem] font-bold uppercase tracking-[0.16em] opacity-50">
+            <h2 className="font-mono text-[0.6rem] font-bold uppercase tracking-[0.16em] muted-soft">
               Publishing
             </h2>
 
@@ -465,7 +465,7 @@ export function PostEditor({ post, categories, revisions, isNew }: Props) {
               <div className="mt-2 rounded-xl border-2 border-ink/15 p-3">
                 <label
                   htmlFor="scheduled-for"
-                  className="font-mono text-[0.55rem] font-bold uppercase tracking-[0.14em] opacity-60"
+                  className="font-mono text-[0.55rem] font-bold uppercase tracking-[0.14em] muted-soft"
                 >
                   Schedule for
                 </label>
@@ -485,7 +485,7 @@ export function PostEditor({ post, categories, revisions, isNew }: Props) {
                   {status === "scheduled" ? "Update schedule" : "Schedule"}
                 </button>
                 {status === "scheduled" && post.scheduled_for ? (
-                  <p className="mt-2 text-[0.65rem] leading-snug opacity-60">
+                  <p className="mt-2 text-[0.65rem] leading-snug muted-soft">
                     Goes live {new Date(post.scheduled_for).toLocaleString("en-GB", { timeZone: "UTC" })} UTC.
                   </p>
                 ) : null}
@@ -504,11 +504,11 @@ export function PostEditor({ post, categories, revisions, isNew }: Props) {
           </section>
 
           <section className="sticker-flat p-4">
-            <h2 className="font-mono text-[0.6rem] font-bold uppercase tracking-[0.16em] opacity-50">
+            <h2 className="font-mono text-[0.6rem] font-bold uppercase tracking-[0.16em] muted-soft">
               Details
             </h2>
 
-            <label className="mt-3 block text-xs font-bold uppercase tracking-[0.1em] opacity-60" htmlFor="category">
+            <label className="mt-3 block text-xs font-bold uppercase tracking-[0.1em] muted-soft" htmlFor="category">
               Category
             </label>
             <select
@@ -525,7 +525,7 @@ export function PostEditor({ post, categories, revisions, isNew }: Props) {
               ))}
             </select>
 
-            <label className="mt-3 block text-xs font-bold uppercase tracking-[0.1em] opacity-60" htmlFor="tags">
+            <label className="mt-3 block text-xs font-bold uppercase tracking-[0.1em] muted-soft" htmlFor="tags">
               Tags
             </label>
             <input
@@ -535,13 +535,13 @@ export function PostEditor({ post, categories, revisions, isNew }: Props) {
               placeholder="SQLite, Testing, TypeScript"
               className="mt-1 w-full rounded-lg border-2 border-ink/20 bg-transparent px-2 py-2 text-sm outline-none focus:border-ink placeholder:opacity-40"
             />
-            <p className="mt-1 text-[0.62rem] leading-snug opacity-50">Comma separated, six at most.</p>
+            <p className="mt-1 text-[0.62rem] leading-snug muted-soft">Comma separated, six at most.</p>
 
-            <label className="mt-3 block text-xs font-bold uppercase tracking-[0.1em] opacity-60" htmlFor="slug">
+            <label className="mt-3 block text-xs font-bold uppercase tracking-[0.1em] muted-soft" htmlFor="slug">
               URL
             </label>
             <div className="mt-1 flex items-center gap-1 text-xs">
-              <span className="shrink-0 opacity-50">/blog/</span>
+              <span className="shrink-0 muted-soft">/blog/</span>
               <input
                 id="slug"
                 value={slug}
@@ -562,7 +562,7 @@ export function PostEditor({ post, categories, revisions, isNew }: Props) {
               type="button"
               onClick={() => setShowSettings((v) => !v)}
               aria-expanded={showSettings}
-              className="flex w-full items-center justify-between font-mono text-[0.6rem] font-bold uppercase tracking-[0.16em] opacity-70"
+              className="flex w-full items-center justify-between font-mono text-[0.6rem] font-bold uppercase tracking-[0.16em] muted"
             >
               <span className="inline-flex items-center gap-1.5">
                 <Icon icon={SlidersHorizontalIcon} size={12} />
@@ -573,7 +573,7 @@ export function PostEditor({ post, categories, revisions, isNew }: Props) {
 
             {showSettings ? (
               <div className="mt-3">
-                <label className="block text-xs font-bold uppercase tracking-[0.1em] opacity-60" htmlFor="seo-title">
+                <label className="block text-xs font-bold uppercase tracking-[0.1em] muted-soft" htmlFor="seo-title">
                   SEO title
                 </label>
                 <input
@@ -584,7 +584,7 @@ export function PostEditor({ post, categories, revisions, isNew }: Props) {
                   className="mt-1 w-full rounded-lg border-2 border-ink/20 bg-transparent px-2 py-2 text-sm outline-none focus:border-ink placeholder:opacity-40"
                 />
                 <label
-                  className="mt-3 block text-xs font-bold uppercase tracking-[0.1em] opacity-60"
+                  className="mt-3 block text-xs font-bold uppercase tracking-[0.1em] muted-soft"
                   htmlFor="seo-description"
                 >
                   Meta description
@@ -597,7 +597,7 @@ export function PostEditor({ post, categories, revisions, isNew }: Props) {
                   placeholder={excerpt || "Describe the post for search results."}
                   className="mt-1 w-full resize-none rounded-lg border-2 border-ink/20 bg-transparent px-2 py-2 text-sm outline-none focus:border-ink placeholder:opacity-40"
                 />
-                <p className="mt-1 text-[0.62rem] opacity-50">
+                <p className="mt-1 text-[0.62rem] muted-soft">
                   {seoDescription.length} characters, around 155 is a good target.
                 </p>
               </div>
@@ -605,10 +605,10 @@ export function PostEditor({ post, categories, revisions, isNew }: Props) {
           </section>
 
           <section className="sticker-flat p-4">
-            <h2 className="font-mono text-[0.6rem] font-bold uppercase tracking-[0.16em] opacity-50">
+            <h2 className="font-mono text-[0.6rem] font-bold uppercase tracking-[0.16em] muted-soft">
               Preview
             </h2>
-            <p className="mt-2 text-xs leading-relaxed opacity-60">
+            <p className="mt-2 text-xs leading-relaxed muted-soft">
               Renders with the same components as the public article, from the current draft.
             </p>
             <button
@@ -621,7 +621,7 @@ export function PostEditor({ post, categories, revisions, isNew }: Props) {
           </section>
 
           <section className="sticker-flat p-4">
-            <h2 className="font-mono text-[0.6rem] font-bold uppercase tracking-[0.16em] opacity-50">
+            <h2 className="font-mono text-[0.6rem] font-bold uppercase tracking-[0.16em] muted-soft">
               Revisions
             </h2>
             {revisions.length ? (
@@ -630,7 +630,7 @@ export function PostEditor({ post, categories, revisions, isNew }: Props) {
                   <li key={rev.id} className="flex items-center gap-2 border-b-2 border-ink/10 pb-2 last:border-0">
                     <span className="min-w-0 flex-1">
                       <span className="block truncate text-xs font-semibold">{rev.title}</span>
-                      <span className="block font-mono text-[0.55rem] uppercase tracking-[0.1em] opacity-50">
+                      <span className="block font-mono text-[0.55rem] uppercase tracking-[0.1em] muted-soft">
                         {new Date(rev.created_at).toLocaleString("en-GB", {
                           day: "numeric",
                           month: "short",
@@ -652,7 +652,7 @@ export function PostEditor({ post, categories, revisions, isNew }: Props) {
                 ))}
               </ul>
             ) : (
-              <p className="mt-2 text-xs opacity-60">A revision is saved on every edit, so this fills up as you work.</p>
+              <p className="mt-2 text-xs muted-soft">A revision is saved on every edit, so this fills up as you work.</p>
             )}
           </section>
 

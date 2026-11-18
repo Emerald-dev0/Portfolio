@@ -10,6 +10,20 @@ import { Icon } from "../ui/Icon";
 import { Section, SectionHeader } from "../ui/Section";
 import { NumberTicker } from "../motion/Motion";
 
+/** The fork mark, drawn in the same stroke language as the doodles. */
+function ForkMark() {
+  return (
+    <svg viewBox="0 0 24 24" className="w-3" fill="none" aria-hidden>
+      <path
+        d="M8 5v5a4 4 0 0 0 4 4a4 4 0 0 0 4-4V5M12 14v5M8 5V3M16 5V3"
+        stroke="currentColor"
+        strokeWidth="2.4"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
 /**
  * GITHUB, proof of work. A dark panel with the contribution heatmap on a
  * paper card, the pinned repos as sticker cards, and one Follow CTA.
@@ -53,7 +67,7 @@ export function GithubSection({ snapshot }: { snapshot: GithubSnapshot }) {
                 <p className="font-mono text-xs font-bold uppercase tracking-[0.14em]">
                   <NumberTicker value={contributions.total} /> contributions in the last year
                 </p>
-                <p className="font-mono text-[0.65rem] font-bold uppercase tracking-[0.14em] text-ink/50">
+                <p className="font-mono text-[0.65rem] font-bold uppercase tracking-[0.14em] muted-on-dark-soft">
                   {describeProvenance(snapshot)}
                 </p>
               </div>
@@ -78,27 +92,41 @@ export function GithubSection({ snapshot }: { snapshot: GithubSnapshot }) {
                   <Icon
                     icon={ArrowUpRight01Icon}
                     size={17}
-                    className="shrink-0 opacity-50 transition group-hover:opacity-100"
+                    className="shrink-0 muted-on-dark-soft transition group-hover:opacity-100"
                   />
                 </div>
-                <p className="mt-2 line-clamp-2 text-sm leading-relaxed opacity-75">
+                <p
+                  className={`mt-2 line-clamp-2 text-sm leading-relaxed ${
+                    r.description ? "muted-on-dark" : "font-hand text-base muted-on-dark-soft"
+                  }`}
+                >
                   {r.description ?? "No description yet, the code speaks."}
                 </p>
-                <div className="mt-5 flex flex-wrap items-center gap-4 font-mono text-xs font-bold uppercase tracking-wider opacity-70">
+                {/* Stats as labelled facts, not a row of loose numbers. The old
+                    line read "HTML 0 0 forks", where the zeros looked like a
+                    rendering fault; these name each count. */}
+                <div className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-2 font-mono text-[0.6rem] font-bold uppercase tracking-[0.1em]">
                   {r.language ? (
-                    <span className="inline-flex items-center gap-1.5">
+                    <span className="chip inline-flex items-center gap-1.5 px-2 py-0.5 text-[0.58rem]">
                       <span
-                        className="size-2.5 rounded-full border border-ink/30"
+                        className="size-2 rounded-full border border-ink/40"
                         style={{ background: r.languageColor ?? "var(--color-ink)" }}
                       />
                       {r.language}
                     </span>
                   ) : null}
-                  <span className="inline-flex items-center gap-1.5">
-                    <Doodle name="star" className="w-3.5" strokeWidth={7} />
+
+                  <span className="inline-flex items-center gap-1 muted-on-dark">
+                    <Doodle name="star" className="w-3" strokeWidth={8} />
                     {r.stars}
+                    <span className="muted-on-dark-soft">star{r.stars === 1 ? "" : "s"}</span>
                   </span>
-                  <span>{r.forks} forks</span>
+
+                  <span className="inline-flex items-center gap-1 muted-on-dark">
+                    <ForkMark />
+                    {r.forks}
+                    <span className="muted-on-dark-soft">fork{r.forks === 1 ? "" : "s"}</span>
+                  </span>
                 </div>
               </a>
             </Reveal>
@@ -110,7 +138,7 @@ export function GithubSection({ snapshot }: { snapshot: GithubSnapshot }) {
             <Icon icon={Github01Icon} size={18} />
             {githubSection.cta}: {site.githubHandle}
           </Button>
-          <p className="font-hand text-2xl opacity-80">new pins appear here automatically</p>
+          <p className="font-hand text-2xl muted-on-dark">new pins appear here automatically</p>
         </Reveal>
       </div>
     </Section>

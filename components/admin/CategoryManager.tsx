@@ -87,7 +87,7 @@ export function CategoryManager({ categories }: { categories: Category[] }) {
             ) : null}
           </div>
 
-          <p className="mt-4 text-xs leading-relaxed opacity-60">
+          <p className="mt-4 text-xs leading-relaxed muted-soft">
             Categories group posts on the blog index and get their own page at /blog/category/slug.
             Tags stay free form in the editor.
           </p>
@@ -129,7 +129,7 @@ export function CategoryManager({ categories }: { categories: Category[] }) {
                     <>
                       <span className="min-w-0 flex-1">
                         <span className="block truncate font-semibold">{cat.name}</span>
-                        <span className="font-mono text-[0.55rem] uppercase tracking-[0.1em] opacity-50">
+                        <span className="font-mono text-[0.55rem] uppercase tracking-[0.1em] muted-soft">
                           /blog/category/{cat.slug} · {cat.count} published
                         </span>
                       </span>
@@ -156,7 +156,7 @@ export function CategoryManager({ categories }: { categories: Category[] }) {
           ) : (
             <div className="rounded-2xl border-[2.5px] border-dashed border-ink/30 p-10 text-center">
               <p className="font-display text-xl font-extrabold">No categories yet.</p>
-              <p className="mt-1 text-sm opacity-70">
+              <p className="mt-1 text-sm muted">
                 Create one and it appears in the filter rail on the blog straight away.
               </p>
             </div>

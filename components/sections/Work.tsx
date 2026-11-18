@@ -1,4 +1,4 @@
-import { InkPoster, InkPlate } from "../ui/InkPoster";
+import { InkPoster } from "../ui/InkPoster";
 import Link from "next/link";
 import { Activity01Icon, ArrowUpRight01Icon, StarIcon } from "@hugeicons/core-free-icons";
 import { site } from "../../lib/config";
@@ -7,12 +7,12 @@ import {
   moreProjects,
   workHeading,
   archiveHeading,
-  type ArchiveProject,
   type Project,
 } from "../../lib/content";
 import type { GithubSnapshot } from "../../lib/github";
 import { Reveal } from "../motion/Reveal";
 import { ProjectDeck } from "./ProjectDeck";
+import { Clothesline } from "./Clothesline";
 import { TiltCard } from "../motion/Loud";
 import { Button } from "../ui/Button";
 import { Doodle } from "../ui/Doodle";
@@ -102,6 +102,8 @@ export function Work({ snapshot }: { snapshot: GithubSnapshot }) {
         {/* ---------------------------------------------------------------- */}
         {/* Featured                                                          */}
         {/* ---------------------------------------------------------------- */}
+        {/* Phones and tablets get the deal. Desktop gets the full spread below,
+            because four cards fanned into a pile is a small-screen gesture. */}
         <div className="mt-12 lg:hidden">
           <ProjectDeck />
         </div>
@@ -155,11 +157,11 @@ export function Work({ snapshot }: { snapshot: GithubSnapshot }) {
                       }`}
                     >
                       <h3 className="display-section text-[clamp(2.2rem,5vw,3.8rem)]">{p.name}</h3>
-                      <p className="mt-1.5 font-hand text-2xl leading-tight opacity-80">
+                      <p className="mt-1.5 font-hand text-2xl leading-tight muted">
                         {p.tagline}
                       </p>
 
-                      <p className="mt-4 text-[1.0625rem] leading-relaxed opacity-85">
+                      <p className="mt-4 text-[1.0625rem] leading-relaxed muted">
                         {p.description}
                       </p>
 
@@ -177,7 +179,7 @@ export function Work({ snapshot }: { snapshot: GithubSnapshot }) {
                       </div>
 
                       {p.footnote ? (
-                        <p className="mt-4 max-w-xl border-l-2 border-ink/25 pl-3 text-xs leading-relaxed opacity-60">
+                        <p className="mt-4 max-w-xl border-l-2 border-ink/25 pl-3 text-xs leading-relaxed muted-soft">
                           {p.footnote}
                         </p>
                       ) : null}
@@ -190,7 +192,7 @@ export function Work({ snapshot }: { snapshot: GithubSnapshot }) {
                         ) : null}
                         {url ? <LinkPill href={url}>Source</LinkPill> : null}
                         {repo ? (
-                          <span className="ml-auto flex items-center gap-3.5 font-mono text-[0.65rem] font-bold uppercase tracking-[0.1em] opacity-55">
+                          <span className="ml-auto flex items-center gap-3.5 font-mono text-[0.65rem] font-bold uppercase tracking-[0.1em] muted-soft">
                             <span className="inline-flex items-center gap-1">
                               <Icon icon={StarIcon} size={12} />
                               {repo.stars}
@@ -221,7 +223,7 @@ export function Work({ snapshot }: { snapshot: GithubSnapshot }) {
               <h3 className="display-section text-[clamp(2rem,4.5vw,3.2rem)]">
                 {archiveHeading.label}
               </h3>
-              <p className="mt-1.5 max-w-lg text-[0.95rem] opacity-70">
+              <p className="mt-1.5 max-w-lg text-[0.95rem] muted">
                 {archiveHeading.description}
               </p>
             </div>
@@ -229,42 +231,8 @@ export function Work({ snapshot }: { snapshot: GithubSnapshot }) {
           </div>
         </Reveal>
 
-        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {moreProjects.map((p: ArchiveProject) => {
-            const url = repoUrl(snapshot, p.repo);
-            return (
-              <Reveal key={p.name}>
-                <article className="sticker group flex h-full flex-col overflow-hidden transition duration-200 hover:-translate-y-1.5">
-                  <div className="relative aspect-[16/10] shrink-0 overflow-hidden border-b-[2.5px] border-ink">
-                    <InkPlate name={p.name} role={p.stack[0] ?? "project"} crayon={p.color} />
-                    <span
-                      className={`absolute left-3 top-3 rounded-full border-2 border-ink px-2.5 py-0.5 font-mono text-[0.55rem] font-bold uppercase tracking-[0.1em] ${COLOR_BG[p.color]} ${COLOR_TEXT[p.color]}`}
-                    >
-                      {p.status}
-                    </span>
-                  </div>
-
-                  <div className="flex flex-1 flex-col p-5">
-                    <h4 className="font-display text-xl font-extrabold leading-tight">{p.name}</h4>
-                    <p className="mt-2 line-clamp-3 text-sm leading-relaxed opacity-80">{p.blurb}</p>
-                    <div className="mt-3 flex flex-wrap gap-1.5">
-                      {p.stack.slice(0, 3).map((s) => (
-                        <span key={s} className="chip px-2 py-0.5 text-[0.58rem]">
-                          {s}
-                        </span>
-                      ))}
-                    </div>
-                    {url || p.liveUrl ? (
-                      <div className="mt-auto flex flex-wrap gap-x-4 gap-y-1.5 pt-4">
-                        {p.liveUrl ? <LinkPill href={p.liveUrl}>Live</LinkPill> : null}
-                        {url ? <LinkPill href={url}>Code</LinkPill> : null}
-                      </div>
-                    ) : null}
-                  </div>
-                </article>
-              </Reveal>
-            );
-          })}
+        <div className="mt-12">
+          <Clothesline projects={moreProjects} />
         </div>
 
         <Reveal className="mt-14 flex flex-wrap items-center justify-center gap-4">

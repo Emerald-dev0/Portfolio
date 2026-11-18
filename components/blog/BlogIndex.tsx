@@ -126,7 +126,7 @@ export function BlogIndex({
       <div className="pattern-dots relative overflow-hidden border-b-[2.5px] border-ink">
         <Doodle
           name="asterisk"
-          className="pointer-events-none absolute -right-10 top-16 w-48 animate-spin-slow text-ink/8"
+          className="pointer-events-none absolute -right-10 top-16 w-48 animate-spin-slow muted-soft"
           strokeWidth={4}
         />
         <Doodle
@@ -160,7 +160,7 @@ export function BlogIndex({
           </Reveal>
 
           <Reveal delay={0.16}>
-            <p className="mt-6 max-w-2xl text-lg leading-relaxed opacity-85">
+            <p className="mt-6 max-w-2xl text-lg leading-relaxed muted">
               I write about projects, technical decisions, interesting problems and lessons from
               working through them. Not perfect technical papers, just what I learned, in case it is
               useful to someone else.
@@ -176,7 +176,7 @@ export function BlogIndex({
               ].map(([n, label]) => (
                 <div key={label} className="flex items-baseline gap-2">
                   <dt className="font-display text-3xl font-extrabold leading-none">{n}</dt>
-                  <dd className="font-mono text-[0.65rem] font-bold uppercase tracking-[0.14em] opacity-60">
+                  <dd className="font-mono text-[0.65rem] font-bold uppercase tracking-[0.14em] muted-soft">
                     {label}
                   </dd>
                 </div>
@@ -206,7 +206,7 @@ export function BlogIndex({
                   />
                 ) : (
                   <div className="pattern-dots grid h-full place-items-center bg-lagoon">
-                    <Doodle name="star" className="w-24 text-ink/30" strokeWidth={4} />
+                    <Doodle name="star" className="w-24 muted-soft" strokeWidth={4} />
                   </div>
                 )}
                 <span className="absolute left-4 top-4 rotate-[-4deg] rounded-full border-2 border-ink bg-leaf px-3 py-1 font-hand text-xl font-bold text-bone shadow-[3px_3px_0_var(--color-ink)]">
@@ -215,7 +215,7 @@ export function BlogIndex({
               </div>
 
               <div className="flex flex-col justify-center p-7 sm:p-10">
-                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-[0.65rem] font-bold uppercase tracking-[0.14em] opacity-60">
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-[0.65rem] font-bold uppercase tracking-[0.14em] muted-soft">
                   <span>{formatDate(featured.date)}</span>
                   <span className="inline-flex items-center gap-1.5">
                     <Icon icon={Clock01Icon} size={12} />
@@ -226,7 +226,7 @@ export function BlogIndex({
                 <h2 className="display-section mt-4 text-[clamp(1.9rem,4vw,3.1rem)] transition group-hover:translate-x-1">
                   {featured.title}
                 </h2>
-                <p className="mt-4 line-clamp-3 text-lg leading-relaxed opacity-80">
+                <p className="mt-4 line-clamp-3 text-lg leading-relaxed muted">
                   {featured.excerpt}
                 </p>
                 <span className="mt-7 inline-flex w-fit items-center gap-2 font-mono text-sm font-bold uppercase tracking-wider">
@@ -252,7 +252,7 @@ export function BlogIndex({
                 go({ q: text.trim() });
               }}
             >
-              <Icon icon={Search01Icon} size={16} className="shrink-0 opacity-60" />
+              <Icon icon={Search01Icon} size={16} className="shrink-0 muted-soft" />
               <label className="sr-only" htmlFor="blog-search">
                 Search posts
               </label>
@@ -264,7 +264,7 @@ export function BlogIndex({
                 className="w-full bg-transparent text-sm font-medium outline-none placeholder:opacity-50"
               />
               {pending ? (
-                <Icon icon={Loading03Icon} size={15} className="shrink-0 animate-spin opacity-60" />
+                <Icon icon={Loading03Icon} size={15} className="shrink-0 animate-spin muted-soft" />
               ) : null}
               {text ? (
                 <button
@@ -274,7 +274,7 @@ export function BlogIndex({
                     go({ q: "" });
                   }}
                   aria-label="Clear search"
-                  className="shrink-0 opacity-60 transition hover:opacity-100"
+                  className="shrink-0 muted-soft transition hover:opacity-100"
                 >
                   <Icon icon={Cancel01Icon} size={15} />
                 </button>
@@ -315,7 +315,7 @@ export function BlogIndex({
               <h2 className="font-display text-2xl font-extrabold">
                 {filtering ? "Results" : "All posts"}
               </h2>
-              <p className="font-mono text-[0.65rem] font-bold uppercase tracking-[0.14em] opacity-50">
+              <p className="font-mono text-[0.65rem] font-bold uppercase tracking-[0.14em] muted-soft">
                 {total} {total === 1 ? "post" : "posts"}
               </p>
             </div>
@@ -333,7 +333,7 @@ export function BlogIndex({
                 {hasMore ? (
                   <div ref={sentinel} className="mt-12 flex flex-col items-center gap-3">
                     {loadingMore ? (
-                      <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] opacity-60">
+                      <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] muted-soft">
                         Loading more posts
                       </p>
                     ) : (
@@ -354,7 +354,7 @@ export function BlogIndex({
                 <p className="mt-4 font-hand text-3xl font-bold">
                   {filtering ? "Nothing matches that." : "No posts yet."}
                 </p>
-                <p className="mt-1 max-w-sm text-sm opacity-70">
+                <p className="mt-1 max-w-sm text-sm muted">
                   {filtering
                     ? `No posts match ${query ? `"${query}"` : (activeTag ?? activeCategory ?? "")}. Try a different word, or clear the filter to see everything.`
                     : "The first one is being written. Check back soon."}
@@ -379,12 +379,12 @@ export function BlogIndex({
                     <p className="font-display text-lg font-extrabold leading-tight">
                       Daniel Oluwadare
                     </p>
-                    <p className="font-mono text-[0.6rem] font-bold uppercase tracking-[0.14em] opacity-80">
-                      Computer Science student
+                    <p className="font-mono text-[0.6rem] font-bold uppercase tracking-[0.14em] muted">
+                      Software engineer at TestFlow
                     </p>
                   </div>
                 </div>
-                <p className="mt-4 text-sm leading-relaxed opacity-95">
+                <p className="mt-4 text-sm leading-relaxed muted">
                   I build in public: backend systems, developer tools, and interfaces with a pulse.
                   This is where the lessons land first.
                 </p>
@@ -395,7 +395,7 @@ export function BlogIndex({
               </div>
 
               <div className="sticker-flat p-5">
-                <h3 className="font-mono text-[0.65rem] font-bold uppercase tracking-[0.16em] opacity-50">
+                <h3 className="font-mono text-[0.65rem] font-bold uppercase tracking-[0.16em] muted-soft">
                   Latest
                 </h3>
                 <div className="mt-3">
@@ -406,7 +406,7 @@ export function BlogIndex({
               </div>
 
               <div className="sticker-flat p-5">
-                <h3 className="font-mono text-[0.65rem] font-bold uppercase tracking-[0.16em] opacity-50">
+                <h3 className="font-mono text-[0.65rem] font-bold uppercase tracking-[0.16em] muted-soft">
                   Topics
                 </h3>
                 <div className="mt-3 flex flex-wrap gap-1.5">
@@ -418,7 +418,7 @@ export function BlogIndex({
                       className={`chip text-[0.65rem] transition hover:-translate-y-0.5 ${activeTag === t.name ? "bg-ink text-paper" : ""}`}
                     >
                       {t.name}
-                      <span className="ml-1 opacity-50">{t.count}</span>
+                      <span className="ml-1 muted-soft">{t.count}</span>
                     </Link>
                   ))}
                 </div>

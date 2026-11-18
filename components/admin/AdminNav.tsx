@@ -70,7 +70,7 @@ export function AdminNav() {
             </span>
             <div className="leading-tight">
               <p className="font-display text-base font-extrabold">Blog admin</p>
-              <p className="font-mono text-[0.55rem] font-bold uppercase tracking-[0.14em] opacity-50">
+              <p className="font-mono text-[0.55rem] font-bold uppercase tracking-[0.14em] muted-soft">
                 Private
               </p>
             </div>

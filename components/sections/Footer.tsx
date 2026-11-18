@@ -45,7 +45,7 @@ export function Footer() {
           {/* Links */}
           <div className="flex flex-col justify-between gap-10 lg:col-span-5 lg:pl-6">
             <div>
-              <p className="font-mono text-[0.65rem] font-bold uppercase tracking-[0.18em] opacity-55">
+              <p className="font-mono text-[0.65rem] font-bold uppercase tracking-[0.18em] muted-soft">
                 {footer.brand}
               </p>
 
@@ -60,7 +60,7 @@ export function Footer() {
                     <Icon
                       icon={ArrowUpRight01Icon}
                       size={12}
-                      className="opacity-0 transition group-hover:opacity-100"
+                      className="muted-soft transition group-hover:opacity-100"
                     />
                   </Link>
                 ))}
@@ -72,7 +72,7 @@ export function Footer() {
                 </a>
                 <Link
                   href="/admin"
-                  className="font-mono text-sm font-bold uppercase tracking-wider opacity-40 transition hover:text-leaf hover:opacity-100"
+                  className="font-mono text-sm font-bold uppercase tracking-wider muted-soft transition hover:text-leaf hover:opacity-100"
                 >
                   Admin
                 </Link>
@@ -87,10 +87,10 @@ export function Footer() {
 
             <div className="flex flex-wrap items-end justify-between gap-4 border-t-2 border-ink/15 pt-6">
               <div>
-                <p className="font-mono text-[0.62rem] font-bold uppercase tracking-[0.14em] opacity-60">
+                <p className="font-mono text-[0.62rem] font-bold uppercase tracking-[0.14em] muted-soft">
                   <LocalTime suffix={false} /> · {footer.location}
                 </p>
-                <p className="mt-1 font-mono text-[0.62rem] font-bold uppercase tracking-[0.14em] opacity-40">
+                <p className="mt-1 font-mono text-[0.62rem] font-bold uppercase tracking-[0.14em] muted-soft">
                   {footer.availability}
                 </p>
               </div>
@@ -102,7 +102,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-14 flex flex-wrap items-center justify-between gap-3 border-t-2 border-ink/15 pt-6 text-[0.72rem] opacity-60">
+        <div className="mt-14 flex flex-wrap items-center justify-between gap-3 border-t-2 border-ink/15 pt-6 text-[0.72rem] muted-soft">
           <p>{footer.copyright}</p>
           <p>{footer.builtNote}</p>
         </div>

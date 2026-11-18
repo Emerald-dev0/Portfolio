@@ -92,7 +92,7 @@ export function Sparkline({ data, label }: { data: Point[]; label: string }) {
         ))}
       </svg>
 
-      <figcaption className="mt-1 flex items-center justify-between font-mono text-[0.6rem] font-bold uppercase tracking-[0.12em] opacity-60">
+      <figcaption className="mt-1 flex items-center justify-between font-mono text-[0.6rem] font-bold uppercase tracking-[0.12em] muted-soft">
         <span>{data[0]?.day ?? ""}</span>
         <span aria-live="polite">
           {hover !== null ? `${data[hover].day}: ${data[hover].views} views` : `${total} views`}
@@ -114,7 +114,7 @@ export function BarList({
   const max = useMemo(() => Math.max(1, ...items.map((i) => i.count)), [items]);
 
   if (!items.length) {
-    return <p className="py-6 text-sm opacity-60">{emptyLabel}</p>;
+    return <p className="py-6 text-sm muted-soft">{emptyLabel}</p>;
   }
 
   return (
@@ -123,7 +123,7 @@ export function BarList({
         <li key={item.name}>
           <div className="flex items-baseline justify-between gap-3 text-sm">
             <span className="truncate font-semibold">{item.name}</span>
-            <span className="shrink-0 font-mono text-xs font-bold opacity-60">{item.count}</span>
+            <span className="shrink-0 font-mono text-xs font-bold muted-soft">{item.count}</span>
           </div>
           <div className="mt-1 h-2 w-full overflow-hidden rounded-full border border-ink/15 bg-ink/5">
             <div
@@ -158,10 +158,10 @@ export function Stat({
   return (
     <div className={`sticker-sm p-4 ${styles}`}>
       <p className="font-display text-3xl font-extrabold leading-none">{value}</p>
-      <p className="mt-2 font-mono text-[0.6rem] font-bold uppercase tracking-[0.14em] opacity-70">
+      <p className="mt-2 font-mono text-[0.6rem] font-bold uppercase tracking-[0.14em] muted">
         {label}
       </p>
-      {hint ? <p className="mt-1.5 text-xs opacity-70">{hint}</p> : null}
+      {hint ? <p className="mt-1.5 text-xs muted">{hint}</p> : null}
     </div>
   );
 }

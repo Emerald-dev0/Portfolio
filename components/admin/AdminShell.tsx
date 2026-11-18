@@ -24,7 +24,7 @@ export function AdminShell({
           <div>
             <h1 className="font-display text-3xl font-extrabold leading-none sm:text-4xl">{title}</h1>
             {description ? (
-              <p className="mt-2 max-w-2xl text-sm leading-relaxed opacity-70">{description}</p>
+              <p className="mt-2 max-w-2xl text-sm leading-relaxed muted">{description}</p>
             ) : null}
           </div>
           {actions ? <div className="flex flex-wrap items-center gap-2">{actions}</div> : null}

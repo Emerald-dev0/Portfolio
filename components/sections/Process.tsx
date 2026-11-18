@@ -45,7 +45,7 @@ export function Process() {
                     {i + 1}
                   </span>
                   <h3 className="display-card mt-6">{s.title}</h3>
-                  <p className="mt-3 leading-relaxed opacity-90">{s.copy}</p>
+                  <p className="mt-3 leading-relaxed muted">{s.copy}</p>
                   <span className="chip mt-5">you get: {s.deliverable}</span>
                 </li>
               </Reveal>

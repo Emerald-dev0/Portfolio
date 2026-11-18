@@ -19,9 +19,9 @@ export const hero = {
   greeting: "Hey, I'm Daniel.",
   headline: "I build software.",
   intro: [
-    "I'm a Computer Science student at Obafemi Awolowo University with a genuine interest in technology and building things that solve real problems.",
-    "I spend most of my time working on backend systems, full-stack applications and developer tools. I enjoy taking an idea, working through the technical challenges and turning it into something people can actually use.",
-    "Some of that work is already live. Some is still a work in progress. I share the journey as I go.",
+    "I'm a software engineer at TestFlow, where I work on the backend behind computer-based testing: how questions are delivered, scored and turned into something students can actually learn from.",
+    "Most of what I build is on the server side, APIs, background jobs and the data behind a product. I also ship the interfaces, because a backend nobody can use is only half a product.",
+    "Calder, Intake and ORREI are what I'm building now. This is where they live.",
   ],
   ctaWork: "Explore my work",
   ctaContact: "Let's work together",
@@ -55,7 +55,7 @@ export const marquee = {
     "Framer Motion",
     "Groq",
   ],
-  note: "currently building: Calder & TestFlow",
+  note: "software engineer at TestFlow, building Calder",
   projects: [
     "Calder",
     "TestFlow",
@@ -144,8 +144,8 @@ export const workHeading = {
   label: "Selected work",
   heading: "A few things I've been working on.",
   intro:
-    "Most of these started with a problem I wanted to solve. Others came from curiosity and a desire to understand how something could be built.",
-  closing: "They're real projects, with real engineering decisions behind them.",
+    "Each of these started with a problem I kept running into. What follows is what the thing is, the decision that shaped it, and where it stands today.",
+  closing: "Real projects, with the engineering decisions written down.",
   count: "4 featured",
   archiveCount: "8 other projects and experiments",
 };
@@ -185,11 +185,11 @@ export const featuredProjects: Project[] = [
     name: "TestFlow",
     tagline: "Exam confidence for Nigerian university students.",
     description:
-      "TestFlow is a computer-based testing and practice platform built initially for students at Obafemi Awolowo University. It gives students a place to practise questions across their courses, take timed tests, review explanations and keep track of their progress. I've been responsible for much of the backend engineering behind the exam experience, including question delivery, scoring, study-plan progress and the systems that support the practice experience. Working on TestFlow has been one of my most valuable learning experiences because the decisions I make in the code have a direct impact on how students use the platform.",
+      "TestFlow is a computer-based testing and practice platform for Nigerian university students. Students practise questions across their courses, sit timed tests, read explanations and track progress against a study plan. I'm a software engineer on it, working on the exam engine: question delivery, scoring, study-plan progress and the services that hold the practice experience together. It's the work I'm proudest of, because a mistake in the code is a student's wasted study session.",
     stack: ["Next.js", "Node.js", "PostgreSQL", "Question Bank"],
     repo: null,
     liveUrl: "https://testflow.com.ng",
-    role: "Backend developer.",
+    role: "Software engineer, backend.",
     color: "leaf",
     status: "Live",
     note: "in students' hands",
@@ -335,32 +335,29 @@ export const about = {
   label: "About",
   heading: "A little more about me.",
   body: [
-    "I've always been interested in technology and how things work. That curiosity eventually led me to start learning programming before gaining admission to Obafemi Awolowo University, where I'm now studying Computer Science.",
-    "What started as an interest in understanding how software works gradually turned into something I genuinely enjoy doing. I'd come across an idea, try to build it, run into problems, spend time figuring things out and learn something new in the process.",
-    "That's still how I approach development today.",
-    "I'm particularly interested in backend engineering. I enjoy understanding how systems fit together, how data moves through an application and what happens behind the scenes to make things work reliably.",
-    "At the same time, I don't like restricting myself to one part of development. Building actual products has exposed me to frontend engineering, databases, infrastructure, deployment and product decisions. I've learned to appreciate how all these pieces come together.",
-    "Lately, I've also been exploring AI infrastructure and developer tooling, particularly ways to make software development more efficient without losing the engineering thinking behind it.",
-    "There's still a lot I want to learn, and plenty of things I want to build. For now, I'm focused on getting better by doing the work, taking on challenging problems and learning from the things I create.",
+    "I write software for a living and mostly on the server side. Databases, APIs, background workers, the parts that have to stay standing when a product gets busy.",
+    "I got here by building things. An idea, a weekend, a problem I did not yet know how to solve. That loop never really stopped, and it is still how I learn fastest: ship something small, find out what I got wrong, fix it properly.",
+    "I care about the reasoning behind a decision, not just whether the code runs. Why this schema, why this queue, why not the simpler option. That is the part of engineering I find worth writing down, so I do.",
+    "Alongside the client work I build my own products. That is where the harder lessons are, because nobody hands you the requirements and nobody tells you when to stop.",
   ],
   currentlyLabel: "Currently",
   facts: [
-    { label: "Computer Science student", sub: "Obafemi Awolowo University" },
-    { label: "Ile-Ife, Osun State", sub: "Nigeria · UTC+1" },
+    { label: "Software engineer", sub: "Backend, APIs and data" },
+    { label: "Ile-Ife, Nigeria", sub: "UTC+1" },
     {
       label: "Building in public",
-      sub: "Sharing projects, development tips and things I'm learning.",
+      sub: "Projects, decisions and things I got wrong.",
     },
-    { label: "GDG OAU", sub: "Community member." },
+    { label: "Open to freelance", sub: "Backend and full-stack work." },
     {
       label: "Usually working on something",
       sub: "even when I should probably be sleeping.",
     },
   ],
-  signature: "A human, not a résumé.",
+  signature: "a human, not a résumé",
   currently: {
-    building: "Calder, a communication infrastructure platform for developers.",
-    learning: "System design, distributed systems and AI infrastructure.",
+    building: "Calder, communication infrastructure for developers.",
+    learning: "System design and distributed systems.",
     reading: "Designing Data-Intensive Applications.",
     listening: "Whatever happens to be playing on Spotify.",
   },
@@ -417,8 +414,8 @@ export const contentHeading = {
   heading: "I share what I'm learning along the way.",
   intro:
     "I enjoy documenting my experiences as a developer. Not just the finished projects, but the decisions, mistakes, tools and lessons that come with building software.",
-  note: "You'll find me sharing things on my social platforms.",
-  cta: "Follow the journey",
+  note: "Everything I write ends up on the blog first.",
+  cta: "Read the blog",
   ctaSecondary: "See the code",
 };
 
@@ -429,7 +426,7 @@ export const contentPillars = [
   },
   {
     title: "Learning as I go",
-    copy: "Notes from my Computer Science journey, technical concepts I'm exploring and things I've learned while working on actual projects.",
+    copy: "Notes on concepts I'm working through, things I got wrong the first time and what I'd do differently now.",
   },
   {
     title: "Tools and technology",

@@ -58,7 +58,7 @@ export function Contact() {
   };
 
   const inputCls =
-    "w-full rounded-2xl border-2 border-ink bg-paper px-4 py-3 font-medium text-ink placeholder:text-ink/40 focus:outline-none focus:ring-4 focus:ring-leaf/40";
+    "w-full rounded-2xl border-2 border-ink bg-paper px-4 py-3 font-medium text-ink placeholder:muted-soft focus:outline-none focus:ring-4 focus:ring-leaf/40";
 
   return (
     <Section id="contact" className="pattern-dots-light bg-night text-bone">
@@ -82,7 +82,7 @@ export function Contact() {
               </div>
             </Reveal>
             <Reveal delay={0.36}>
-              <p className="mt-10 flex items-center gap-3 font-hand text-2xl opacity-80">
+              <p className="mt-10 flex items-center gap-3 font-hand text-2xl muted">
                 <Doodle name="arrow" className="w-8 shrink-0 text-lagoon" strokeWidth={5} />
                 the form is faster, I read every one
               </p>
@@ -98,7 +98,7 @@ export function Contact() {
                       <Doodle name="check" className="w-10" strokeWidth={7} />
                     </span>
                     <h3 className="display-card mt-6">{contact.successTitle}</h3>
-                    <p className="mt-3 max-w-sm leading-relaxed opacity-80">{contact.successCopy}</p>
+                    <p className="mt-3 max-w-sm leading-relaxed muted">{contact.successCopy}</p>
                     <Button variant="paper" className="mt-7" onClick={reset}>
                       Send another message
                     </Button>
@@ -178,7 +178,7 @@ export function Contact() {
                         {status === "sending" ? "Sending…" : contact.form.submit}
                         <Icon icon={ArrowUpRight01Icon} size={16} />
                       </Button>
-                      <p className="text-sm opacity-60">
+                      <p className="text-sm muted-soft">
                         Prefer email?{" "}
                         <a href={`mailto:${site.email}`} className="font-bold underline underline-offset-4 hover:opacity-70">
                           {site.email}

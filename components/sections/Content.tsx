@@ -9,13 +9,21 @@ import { contentPillars, contentHeading } from "../../lib/content";
 import { Reveal } from "../motion/Reveal";
 import { Button } from "../ui/Button";
 import { Card } from "../ui/Card";
+import { Chibi } from "../ui/Chibi";
+import { Doodle } from "../ui/Doodle";
 import { Icon } from "../ui/Icon";
 import { Section, SectionHeader } from "../ui/Section";
 
 /**
- * CONTENT, the @dev_boy09 / DevEmerald community section. The handle is
- * display-only (no URL is constructed from it); the follow CTA points at
- * the verified X account from config. Three rotated pillar cards.
+ * CONTENT, what I write and why.
+ * ------------------------------------------------------------------------
+ * This used to be dominated by a display-size handle and a brand pill, which
+ * said less than the three cards underneath it and shouted louder than them.
+ * The same space now holds a small drawing of me at a laptop, a plain sentence
+ * about what I write, and the cards.
+ *
+ * The drawing is the only illustration on the page, so it earns its place:
+ * sunglasses down, mid-keystroke, drawn in the same ink as everything else.
  */
 
 const ICONS = [Rocket01Icon, Book01Icon, Wrench01Icon];
@@ -34,14 +42,33 @@ export function Content() {
           copy={`${contentHeading.intro} ${contentHeading.note}`}
         />
 
+        {/* The drawing and the sentence beside it, instead of a giant handle. */}
         <Reveal className="mt-12">
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
-            <span className="font-display text-[clamp(2.6rem,8vw,5.5rem)] font-extrabold leading-none tracking-tight">
-              {site.contentHandle}
-            </span>
-            <span className="rotate-[-4deg] rounded-full border-2 border-ink bg-lagoon px-4 py-1.5 font-hand text-2xl font-bold text-night shadow-[4px_4px_0_var(--color-ink)]">
-              {site.contentName}
-            </span>
+          <div className="flex flex-col items-center gap-7 sm:flex-row sm:items-end sm:gap-10">
+            <div className="relative shrink-0">
+              <Chibi
+                className="w-[168px] sm:w-[196px]"
+                title="Daniel at a laptop, sunglasses on"
+              />
+              <Doodle
+                name="asterisk"
+                className="absolute -right-3 -top-1 w-7 text-tang animate-spin-slow"
+                strokeWidth={6}
+              />
+            </div>
+
+            <div className="max-w-md">
+              <p className="font-display text-[clamp(1.35rem,3vw,1.9rem)] font-extrabold leading-[1.15] tracking-tight">
+                I write to think, then publish so the thinking survives.
+              </p>
+              <p className="mt-3 leading-relaxed muted">
+                Mostly the decisions behind the software: why a schema looks like this, why a
+                queue was worth it, why the obvious approach was the wrong one.
+              </p>
+              <p className="mt-3 font-hand text-2xl muted">
+                the blog is where it lands first
+              </p>
+            </div>
           </div>
         </Reveal>
 
@@ -55,16 +82,20 @@ export function Content() {
                   <Icon icon={ICONS[i]} size={24} />
                 </div>
                 <h3 className="display-card mt-5">{p.title}</h3>
-                <p className="mt-3 leading-relaxed opacity-80">{p.copy}</p>
+                <p className="mt-3 leading-relaxed muted">{p.copy}</p>
               </Card>
             </Reveal>
           ))}
         </div>
 
         <Reveal className="mt-14 flex flex-wrap gap-4">
+          <Button href="/blog" variant="ink">
+            Read the blog
+            <Icon icon={ArrowUpRight01Icon} size={16} />
+          </Button>
           {x?.href ? (
-            <Button href={x.href} variant="ink" external>
-              Follow the journey
+            <Button href={x.href} variant="paper" external>
+              Follow along
               <Icon icon={ArrowUpRight01Icon} size={16} />
             </Button>
           ) : null}

@@ -38,7 +38,7 @@ export function BlogCard({
           />
         ) : (
           <div className="pattern-dots grid h-full place-items-center bg-lagoon">
-            <Doodle name="asterisk" className="w-16 animate-spin-slow text-ink/40" strokeWidth={5} />
+            <Doodle name="asterisk" className="w-16 animate-spin-slow muted-soft" strokeWidth={5} />
           </div>
         )}
         <span className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full border-2 border-ink bg-paper px-2.5 py-1 font-mono text-[0.6rem] font-bold uppercase tracking-[0.12em]">
@@ -53,7 +53,7 @@ export function BlogCard({
       </div>
 
       <div className="flex flex-1 flex-col p-5">
-        <div className="flex flex-wrap items-center gap-x-3 font-mono text-[0.65rem] font-bold uppercase tracking-[0.14em] opacity-60">
+        <div className="flex flex-wrap items-center gap-x-3 font-mono text-[0.65rem] font-bold uppercase tracking-[0.14em] muted-soft">
           <span className="inline-flex items-center gap-1.5">
             <Icon icon={Calendar01Icon} size={12} />
             {formatDate(post.date)}
@@ -62,7 +62,7 @@ export function BlogCard({
         <h3 className="display-card mt-2.5 text-[1.4rem] transition group-hover:translate-x-1">
           {post.title}
         </h3>
-        <p className="mt-2.5 line-clamp-3 text-sm leading-relaxed opacity-80">{post.excerpt}</p>
+        <p className="mt-2.5 line-clamp-3 text-sm leading-relaxed muted">{post.excerpt}</p>
         <div className="mt-auto flex flex-wrap items-center gap-1.5 pt-5">
           {post.tags.slice(0, 2).map((t) => (
             <span key={t} className="chip px-2.5 py-0.5 text-[0.62rem]">
@@ -90,14 +90,14 @@ export function PostRow({ post, index }: { post: Post; index: number }) {
       href={`/blog/${post.slug}`}
       className="group flex gap-3 border-b-2 border-ink/10 py-3 last:border-0"
     >
-      <span className="font-mono text-sm font-bold opacity-30">
+      <span className="font-mono text-sm font-bold muted-soft">
         {String(index + 1).padStart(2, "0")}
       </span>
       <span>
         <span className="block text-sm font-bold leading-snug transition group-hover:text-leaf">
           {post.title}
         </span>
-        <span className="mt-0.5 block font-mono text-[0.6rem] font-bold uppercase tracking-[0.12em] opacity-50">
+        <span className="mt-0.5 block font-mono text-[0.6rem] font-bold uppercase tracking-[0.12em] muted-soft">
           {formatDate(post.date)} · {post.readMinutes} min
         </span>
       </span>

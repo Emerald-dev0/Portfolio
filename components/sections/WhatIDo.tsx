@@ -73,7 +73,7 @@ export function WhatIDo() {
                   <Icon icon={ICONS[s.icon]} size={24} />
                 </div>
                 <h3 className="display-card mt-5">{s.title}</h3>
-                <p className="mt-3 leading-relaxed opacity-80">{s.copy}</p>
+                <p className="mt-3 leading-relaxed muted">{s.copy}</p>
                 <div className="mt-5 flex flex-wrap gap-2">
                   {s.chips.map((c) => (
                     <span key={c} className="chip">

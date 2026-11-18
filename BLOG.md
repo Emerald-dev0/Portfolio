@@ -13,7 +13,10 @@ get.
 Everything below is optional for local development. With no environment at all
 the blog runs on a SQLite file and writes uploads to `public/uploads`.
 
-The database is a single SQLite file. There is no hosted service, no account and
+The database is a single SQLite file, read through `node:sqlite`, which ships
+inside Node itself. That means there is no native module and no compile step, so
+installing on a fresh host cannot fail for want of a compiler or a prebuilt
+binary. There is no hosted service, no account and
 no connection string: the file is created on first request and the schema
 builds itself.
 
@@ -94,10 +97,14 @@ publishing controls.
 Publishing, unpublishing, archiving and deleting all confirm first, because all
 of them are visible to the world.
 
-**Scheduling** is handled on the server. Vercel calls `/api/cron/publish` every
-ten minutes, and public reads also call the same function, so a scheduled post
-goes live even if the cron is late. That makes the cron an optimisation, not a
-single point of failure.
+**Scheduling** is handled on the server. Public reads call `publishDue()` on
+every render, so a scheduled post goes live on its first view after its time.
+`/api/cron/publish` also runs daily at 05:00 UTC as a backstop.
+
+That daily schedule is not a preference. Vercel's Hobby plan limits cron to once
+per day and **fails the deployment** for anything more frequent, before the build
+starts. Scheduling is therefore driven by the read path, and the cron only
+catches the case where nobody visits for a day.
 
 **Renaming a URL** leaves a permanent redirect from the old address, so
 existing links, search results and shared URLs keep working.

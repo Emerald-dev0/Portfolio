@@ -69,10 +69,10 @@ export function SectionHeader({
       </div>
       {copy ? (
         <Reveal delay={0.16}>
-          <p className="mt-4 max-w-xl text-[1.05rem] leading-relaxed opacity-80">{copy}</p>
+          <p className="mt-4 max-w-xl text-[1.05rem] leading-relaxed muted">{copy}</p>
         </Reveal>
       ) : null}
-      <Hairline className="mt-7 w-full opacity-15" />
+      <Hairline className="mt-7 w-full muted-soft" />
     </div>
   );
 }

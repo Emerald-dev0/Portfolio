@@ -190,7 +190,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             <RichText text={post.title} />
           </h1>
 
-          <p className="mt-5 max-w-3xl text-xl leading-relaxed opacity-80">
+          <p className="mt-5 max-w-3xl text-xl leading-relaxed muted">
             <RichText text={post.excerpt} />
           </p>
 
@@ -201,7 +201,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
               </span>
               <span className="leading-tight">
                 <span className="block font-display text-base font-extrabold">{site.name}</span>
-                <span className="block font-mono text-[0.65rem] font-bold uppercase tracking-[0.14em] opacity-60">
+                <span className="block font-mono text-[0.65rem] font-bold uppercase tracking-[0.14em] muted-soft">
                   {formatDate(post.date)}
                   {post.updated && post.updated.slice(0, 10) !== post.date
                     ? ` · updated ${formatDate(post.updated)}`
@@ -234,7 +234,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
         <div className="grid gap-12 lg:grid-cols-12">
           <aside className="hidden lg:col-span-3 lg:block">
             <nav aria-label="On this page" className="sticky top-28">
-              <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] opacity-50">
+              <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] muted-soft">
                 On this page
               </p>
               {entries.length ? (
@@ -244,8 +244,8 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                       <a
                         href={`#${e.id}`}
                         className={`block text-sm font-semibold leading-snug transition hover:text-leaf ${
-                          e.level === 3 ? "pl-4 opacity-80" : ""
-                        } ${e.level === 4 ? "pl-8 text-xs opacity-70" : ""}`}
+                          e.level === 3 ? "pl-4 muted" : ""
+                        } ${e.level === 4 ? "pl-8 text-xs muted" : ""}`}
                       >
                         {e.text}
                       </a>
@@ -253,14 +253,14 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                   ))}
                 </ul>
               ) : (
-                <p className="mt-4 text-sm opacity-60">A short one.</p>
+                <p className="mt-4 text-sm muted-soft">A short one.</p>
               )}
 
               <div className="sticker-flat mt-10 p-4">
                 <p className="font-hand text-2xl font-bold leading-tight">
                   Written by hand, shipped from the studio.
                 </p>
-                <p className="mt-2 font-mono text-[0.62rem] font-bold uppercase tracking-[0.14em] opacity-60">
+                <p className="mt-2 font-mono text-[0.62rem] font-bold uppercase tracking-[0.14em] muted-soft">
                   {site.githubHandle}
                 </p>
               </div>
@@ -299,10 +299,10 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
               </span>
               <div>
                 <p className="font-display text-xl font-extrabold">
-                  {site.name} <span className="opacity-50">· {site.persona}</span>
+                  {site.name} <span className="muted-soft">· {site.persona}</span>
                 </p>
-                <p className="mt-1 text-sm leading-relaxed opacity-80">
-                  Computer Science student, backend developer on TestFlow, and the person writing
+                <p className="mt-1 text-sm leading-relaxed muted">
+                  Software engineer on TestFlow, and the person writing
                   everything here. I build in public and post what I learn.
                 </p>
               </div>
@@ -317,7 +317,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                   href={`/blog/${older.slug}`}
                   className="sticker-flat group p-5 transition duration-200 hover:-translate-y-1 hover:shadow-[6px_6px_0_var(--color-ink)]"
                 >
-                  <span className="inline-flex items-center gap-2 font-mono text-[0.65rem] font-bold uppercase tracking-[0.14em] opacity-60">
+                  <span className="inline-flex items-center gap-2 font-mono text-[0.65rem] font-bold uppercase tracking-[0.14em] muted-soft">
                     <Icon icon={ArrowLeft01Icon} size={13} />
                     Older post
                   </span>
@@ -333,7 +333,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                   href={`/blog/${newer.slug}`}
                   className="sticker-flat group p-5 text-right transition duration-200 hover:-translate-y-1 hover:shadow-[6px_6px_0_var(--color-ink)]"
                 >
-                  <span className="inline-flex items-center gap-2 font-mono text-[0.65rem] font-bold uppercase tracking-[0.14em] opacity-60">
+                  <span className="inline-flex items-center gap-2 font-mono text-[0.65rem] font-bold uppercase tracking-[0.14em] muted-soft">
                     Newer post
                     <Icon icon={ArrowRight01Icon} size={13} />
                   </span>
@@ -359,11 +359,11 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                   href={`/blog/${p.slug}`}
                   className="sticker-flat group p-5 transition duration-200 hover:-translate-y-1 hover:shadow-[6px_6px_0_var(--color-ink)]"
                 >
-                  <p className="font-mono text-[0.65rem] font-bold uppercase tracking-[0.14em] opacity-60">
+                  <p className="font-mono text-[0.65rem] font-bold uppercase tracking-[0.14em] muted-soft">
                     {formatDate(p.date)} · {p.readMinutes} min
                   </p>
                   <p className="mt-2 font-display text-xl font-extrabold leading-snug">{p.title}</p>
-                  <p className="mt-2 line-clamp-2 text-sm opacity-75">{p.excerpt}</p>
+                  <p className="mt-2 line-clamp-2 text-sm muted">{p.excerpt}</p>
                 </Link>
               ))}
             </div>

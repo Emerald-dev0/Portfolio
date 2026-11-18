@@ -47,11 +47,11 @@ export function LoginForm() {
         <Icon icon={LockPasswordIcon} size={22} />
       </span>
       <h1 className="mt-5 font-display text-3xl font-extrabold leading-none">Blog admin</h1>
-      <p className="mt-2 text-sm opacity-70">
+      <p className="mt-2 text-sm muted">
         The password is the one in your environment, nothing is stored in the browser.
       </p>
 
-      <label className="mt-6 block font-mono text-[0.65rem] font-bold uppercase tracking-[0.14em] opacity-60">
+      <label className="mt-6 block font-mono text-[0.65rem] font-bold uppercase tracking-[0.14em] muted-soft">
         Password
         <span className="mt-2 flex items-center gap-2 rounded-xl border-2 border-ink bg-paper px-3 py-2">
           <input
@@ -67,7 +67,7 @@ export function LoginForm() {
             type="button"
             onClick={() => setShow((v) => !v)}
             aria-label={show ? "Hide password" : "Show password"}
-            className="shrink-0 opacity-60 transition hover:opacity-100"
+            className="shrink-0 muted-soft transition hover:opacity-100"
           >
             <Icon icon={show ? ViewOffSlashIcon : ViewIcon} size={16} />
           </button>

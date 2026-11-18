@@ -11,7 +11,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "Daniel Oluwadare, Emerald",
     short_name: "Emerald",
     description:
-      "Computer Science student and backend developer building developer tools, and writing about it in public.",
+      "Software engineer building backend systems and developer tools, and writing about it in public.",
     start_url: "/",
     display: "standalone",
     background_color: "#FFF9EF",

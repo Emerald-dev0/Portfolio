@@ -18,22 +18,22 @@ export function NowPlayingBand() {
             <Icon icon={MusicNoteIcon} size={18} />
           </span>
           <span>
-            <span className="block font-mono text-[0.55rem] font-bold uppercase tracking-[0.16em] opacity-60">
+            <span className="block font-mono text-[0.55rem] font-bold uppercase tracking-[0.16em] muted-soft">
               {spotifySection.label}
             </span>
             <span className="mt-1 block font-display text-[1.05rem] font-extrabold leading-tight">
               {spotifySection.heading}
             </span>
-            <span className="mt-1 block max-w-sm text-[0.85rem] leading-snug opacity-70">
+            <span className="mt-1 block max-w-sm text-[0.85rem] leading-snug muted">
               {spotifySection.body}
             </span>
-            <span className="mt-1 block font-mono text-[0.55rem] font-bold uppercase tracking-[0.14em] opacity-50">
+            <span className="mt-1 block font-mono text-[0.55rem] font-bold uppercase tracking-[0.14em] muted-soft">
               {spotifySection.note}
             </span>
           </span>
         </span>
 
-        <Doodle name="squiggle" className="hidden w-16 opacity-50 sm:block" strokeWidth={5} />
+        <Doodle name="squiggle" className="hidden w-16 muted-soft sm:block" strokeWidth={5} />
 
         <NowPlaying className="w-full bg-paper text-ink shadow-[4px_4px_0_var(--color-ink)] sm:ml-auto sm:w-auto sm:min-w-[280px]" />
       </div>

@@ -1,6 +1,6 @@
 /**
  * ============================================================================
- * DATABASE, server-only. One SQLite file, through better-sqlite3.
+ * DATABASE, server-only. One SQLite file, through node:sqlite.
  * ============================================================================
  * A personal blog does not need a hosted database. The whole dataset is a few
  * hundred kilobytes of text, so it lives in a single SQLite file: no account to
@@ -27,7 +27,7 @@
 import "server-only";
 import fs from "node:fs";
 import nodePath from "node:path";
-import Database from "better-sqlite3";
+import { DatabaseSync } from "node:sqlite";
 
 const SCHEMA = [
   `CREATE TABLE IF NOT EXISTS categories (
@@ -116,7 +116,7 @@ const SCHEMA = [
 
 type Value = string | number | null;
 
-let handle: Database.Database | null = null;
+let handle: DatabaseSync | null = null;
 let readOnly = false;
 
 /** Where the database file lives, and whether we can write to it. */
@@ -147,31 +147,53 @@ function resolveFile(): string {
   return ":memory:";
 }
 
-function open(): Database.Database {
+/**
+ * Open the database and build the schema.
+ *
+ * `node:sqlite` ships inside Node itself, which is the whole point: there is no
+ * compiler, no prebuilt binary to download, and nothing to build on the host.
+ * The previous driver was native, and Vercel's install step failed on it before
+ * the build ever started.
+ */
+function open(): DatabaseSync {
   if (handle) return handle;
 
   const file = resolveFile();
   const isMemory = file === ":memory:";
 
   try {
-    handle = new Database(file);
+    handle = new DatabaseSync(file);
   } catch {
     readOnly = true;
-    handle = new Database(":memory:");
+    handle = new DatabaseSync(":memory:");
   }
 
-  handle.pragma("journal_mode = WAL");
-  handle.pragma("foreign_keys = ON");
-  handle.pragma("busy_timeout = 5000");
+  // node:sqlite has no pragma() helper, so these are plain statements. A file
+  // that cannot take them is not writable, and the schema step below says so.
+  for (const pragma of [
+    "PRAGMA journal_mode = WAL",
+    "PRAGMA foreign_keys = ON",
+    "PRAGMA busy_timeout = 5000",
+  ]) {
+    try {
+      handle.exec(pragma);
+    } catch {
+      readOnly = true;
+    }
+  }
 
   // Schema creation is a write. If it fails, this process is read only.
   try {
-    const tx = handle.transaction(() => {
-      for (const stmt of SCHEMA) handle!.exec(stmt);
-    });
-    tx();
+    handle.exec("BEGIN");
+    for (const stmt of SCHEMA) handle.exec(stmt);
+    handle.exec("COMMIT");
   } catch {
     readOnly = true;
+    try {
+      handle.exec("ROLLBACK");
+    } catch {
+      // no transaction to roll back, which is expected when BEGIN itself failed
+    }
   }
 
   if (!isMemory) {
@@ -181,7 +203,7 @@ function open(): Database.Database {
 }
 
 /** The connection. Synchronous, so callers can await it without thinking. */
-export function db(): Database.Database {
+export function db(): DatabaseSync {
   return open();
 }
 
@@ -196,7 +218,10 @@ export async function all<T = Record<string, unknown>>(
   args: Value[] = [],
 ): Promise<T[]> {
   try {
-    return db().prepare(sql).all(...args) as T[];
+    // node:sqlite binds an array, and returns null prototype objects, so the
+    // rows are copied into plain objects before they reach a caller.
+    const rows = db().prepare(sql).all(...args) as Record<string, unknown>[];
+    return rows.map((row) => ({ ...row })) as T[];
   } catch (err) {
     if (isReadOnlyError(err)) return [];
     throw err;
@@ -233,14 +258,27 @@ export async function run(
 }
 
 /**
- * SQLite reports a readonly failure in two ways: the exact code when the file
- * itself refuses, and a plain SQLITE_ERROR whose message says so when the open
- * connection has already gone read only. Both mean the same thing here.
+ * Detect a read only failure.
+ *
+ * `node:sqlite` does not use a code of the form SQLITE_READONLY. It reports
+ * `code: "ERR_SQLITE_ERROR"` for everything, with the numeric SQLite result
+ * code in `errcode` and the reason in `errstr`. SQLITE_READONLY is 8, and its
+ * extended forms (READONLY_RECOVERY and friends) occupy 8 | (1 << 8) and up.
+ *
+ * Getting this wrong is not cosmetic: the caller swallows these errors so a
+ * reader never sees a 500 caused by a log write, and a missed match means the
+ * throw escapes and does exactly that.
  */
 function isReadOnlyError(err: unknown): boolean {
-  const code = (err as { code?: string })?.code ?? "";
-  const message = (err as { message?: string })?.message ?? "";
-  return code.startsWith("SQLITE_READONLY") || /readonly database/i.test(message);
+  const e = err as { code?: string; errcode?: number; errstr?: string; message?: string };
+  const message = e?.errstr ?? e?.message ?? "";
+  if (/readonly database|read-only database/i.test(message)) return true;
+  if (typeof e?.errcode === "number") {
+    // 8 is SQLITE_READONLY, 23 is SQLITE_AUTH, both mean "this is not allowed".
+    const primary = e.errcode & 0xff;
+    return primary === 8;
+  }
+  return (e?.code ?? "").startsWith("SQLITE_READONLY");
 }
 
 /** Insert-or-update a single row, returning the id. */

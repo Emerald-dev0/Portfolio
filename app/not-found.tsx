@@ -12,7 +12,7 @@ export default function NotFound() {
         <Doodle name="asterisk" className="mx-auto w-14 text-tang animate-wiggle" strokeWidth={5} />
         <p className="display-hero mt-4">404</p>
         <h1 className="display-card mt-2">That page isn&rsquo;t here.</h1>
-        <p className="mt-3 leading-relaxed opacity-80">
+        <p className="mt-3 leading-relaxed muted">
           The link may be out of date, or the page may have moved. The work and the contact
           details are both a click away.
         </p>

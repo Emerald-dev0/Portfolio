@@ -83,7 +83,7 @@ function StackCard({
             <span className="font-display text-[2.6rem] font-extrabold leading-none tracking-tight text-ink">
               {String(index + 1).padStart(2, "0")}
             </span>
-            <span className="font-mono text-[0.58rem] font-bold uppercase tracking-[0.16em] text-ink/50">
+            <span className="font-mono text-[0.58rem] font-bold uppercase tracking-[0.16em] muted-soft">
               of {String(total).padStart(2, "0")}
             </span>
           </div>
@@ -98,13 +98,13 @@ function StackCard({
           <h3 className="font-display text-[1.6rem] font-extrabold leading-[1.08] tracking-tight text-ink">
             {service.title}
           </h3>
-          <p className="mt-3 text-[0.95rem] leading-relaxed text-ink/75">{service.copy}</p>
+          <p className="mt-3 text-[0.95rem] leading-relaxed muted">{service.copy}</p>
 
           <div className="mt-5 flex flex-wrap gap-1.5">
             {service.chips.map((c) => (
               <span
                 key={c}
-                className="rounded-full border-[1.5px] border-ink/30 bg-paper/70 px-2.5 py-1 font-mono text-[0.6rem] font-bold uppercase tracking-[0.08em] text-ink/80"
+                className="rounded-full border-[1.5px] border-ink/30 bg-paper/70 px-2.5 py-1 font-mono text-[0.6rem] font-bold uppercase tracking-[0.08em] muted"
               >
                 {c}
               </span>
@@ -112,8 +112,8 @@ function StackCard({
           </div>
 
           <div className="mt-6 flex items-center gap-2 border-t border-ink/15 pt-4">
-            <Doodle name="squiggle" className="w-7 text-ink/30" strokeWidth={6} />
-            <span className="font-mono text-[0.56rem] font-bold uppercase tracking-[0.14em] text-ink/45">
+            <Doodle name="squiggle" className="w-7 muted-soft" strokeWidth={6} />
+            <span className="font-mono text-[0.56rem] font-bold uppercase tracking-[0.14em] muted-soft">
               {index === total - 1 ? "that's the set" : "keep scrolling"}
             </span>
           </div>

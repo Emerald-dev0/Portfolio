@@ -20,7 +20,7 @@ export default async function CategoriesPage() {
 
       <section className="mt-10">
         <h2 className="font-display text-xl font-extrabold">Tags in use</h2>
-        <p className="mt-1 text-sm opacity-70">
+        <p className="mt-1 text-sm muted">
           Tags are created by typing them into a post. A tag with no posts disappears on its own.
         </p>
         {tags.length ? (
@@ -28,12 +28,12 @@ export default async function CategoriesPage() {
             {tags.map((t) => (
               <li key={t.id} className="chip">
                 {t.name}
-                <span className="opacity-50">{t.count}</span>
+                <span className="muted-soft">{t.count}</span>
               </li>
             ))}
           </ul>
         ) : (
-          <p className="mt-3 text-sm opacity-60">No tags yet.</p>
+          <p className="mt-3 text-sm muted-soft">No tags yet.</p>
         )}
       </section>
     </AdminShell>

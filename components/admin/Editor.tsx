@@ -171,7 +171,7 @@ export function Editor({ initialMarkdown, onChange, onSaveRequest, saveState, la
         <EditorContent editor={editor} />
       </div>
 
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t-2 border-ink/10 px-5 py-2.5 font-mono text-[0.6rem] font-bold uppercase tracking-[0.12em] opacity-60 sm:px-7">
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t-2 border-ink/10 px-5 py-2.5 font-mono text-[0.6rem] font-bold uppercase tracking-[0.12em] muted-soft sm:px-7">
         <span>{words} words</span>
         <span>{characters} characters</span>
         <SaveBadge state={saveState} lastSavedAt={lastSavedAt} />
@@ -197,7 +197,7 @@ export function Editor({ initialMarkdown, onChange, onSaveRequest, saveState, la
           </p>
         ) : null}
         {uploading ? (
-          <p className="border-t-2 border-ink/10 px-5 py-2 text-sm opacity-70">Uploading image</p>
+          <p className="border-t-2 border-ink/10 px-5 py-2 text-sm muted">Uploading image</p>
         ) : null}
       </div>
     </div>
@@ -222,7 +222,7 @@ export function SaveBadge({ state, lastSavedAt }: { state: SaveState; lastSavedA
         ? "text-ink"
         : state === "saved"
           ? "text-leaf"
-          : "text-ink/60";
+          : "muted-soft";
   return (
     <span className={`inline-flex items-center gap-1.5 ${tone}`} aria-live="polite">
       <span className="size-1.5 rounded-full bg-current" aria-hidden="true" />
@@ -325,7 +325,7 @@ function Toolbar({
         <Icon icon={RedoIcon} size={15} />
       </Btn>
 
-      <span className="ml-auto hidden pr-1 font-mono text-[0.55rem] font-bold uppercase tracking-[0.12em] opacity-40 lg:inline">
+      <span className="ml-auto hidden pr-1 font-mono text-[0.55rem] font-bold uppercase tracking-[0.12em] muted-soft lg:inline">
         Drag an image in, anywhere
       </span>
     </div>

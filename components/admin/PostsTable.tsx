@@ -131,7 +131,7 @@ export function PostsTable({ posts, categories }: Props) {
           className="flex flex-1 items-center gap-2 rounded-xl border-2 border-ink px-3 py-2"
           onSubmit={(e) => e.preventDefault()}
         >
-          <Icon icon={Search01Icon} size={15} className="opacity-60" />
+          <Icon icon={Search01Icon} size={15} className="muted-soft" />
           <label className="sr-only" htmlFor="post-search">
             Search posts
           </label>
@@ -144,7 +144,7 @@ export function PostsTable({ posts, categories }: Props) {
           />
           {query ? (
             <button type="button" onClick={() => setQuery("")} aria-label="Clear search">
-              <Icon icon={Cancel01Icon} size={14} className="opacity-60" />
+              <Icon icon={Cancel01Icon} size={14} className="muted-soft" />
             </button>
           ) : null}
         </form>
@@ -198,15 +198,15 @@ export function PostsTable({ posts, categories }: Props) {
                     >
                       {post.title}
                     </Link>
-                    <span className="font-mono text-[0.6rem] uppercase tracking-[0.1em] opacity-50">
+                    <span className="font-mono text-[0.6rem] uppercase tracking-[0.1em] muted-soft">
                       /blog/{post.slug}
                     </span>
                   </td>
                   <td className="px-3 py-3">
                     <StatusPill status={post.status} />
                   </td>
-                  <td className="px-3 py-3 text-xs opacity-70">{categoryName(post.category_id)}</td>
-                  <td className="whitespace-nowrap px-3 py-3 font-mono text-[0.6rem] uppercase tracking-[0.1em] opacity-60">
+                  <td className="px-3 py-3 text-xs muted">{categoryName(post.category_id)}</td>
+                  <td className="whitespace-nowrap px-3 py-3 font-mono text-[0.6rem] uppercase tracking-[0.1em] muted-soft">
                     {formatDay(post.updated_at)}
                   </td>
                   <td className="px-3 py-3">
@@ -257,7 +257,7 @@ export function PostsTable({ posts, categories }: Props) {
                   </Link>
                   <StatusPill status={post.status} />
                 </div>
-                <p className="mt-1 font-mono text-[0.6rem] uppercase tracking-[0.1em] opacity-50">
+                <p className="mt-1 font-mono text-[0.6rem] uppercase tracking-[0.1em] muted-soft">
                   {categoryName(post.category_id)} · {formatDay(post.updated_at)}
                 </p>
                 <div className="mt-3 flex flex-wrap gap-2">
@@ -289,7 +289,7 @@ export function PostsTable({ posts, categories }: Props) {
           <p className="font-display text-xl font-extrabold">
             {posts.length ? "No posts match this filter." : "No posts yet."}
           </p>
-          <p className="mt-1 text-sm opacity-70">
+          <p className="mt-1 text-sm muted">
             {posts.length
               ? "Try a different status or clear the search."
               : "Write the first one and it appears on the blog the moment you publish."}
@@ -314,7 +314,7 @@ export function PostsTable({ posts, categories }: Props) {
       )}
 
       {busy ? (
-        <p className="mt-3 inline-flex items-center gap-2 font-mono text-[0.6rem] font-bold uppercase tracking-[0.14em] opacity-60">
+        <p className="mt-3 inline-flex items-center gap-2 font-mono text-[0.6rem] font-bold uppercase tracking-[0.14em] muted-soft">
           <Icon icon={Loading03Icon} size={12} className="animate-spin" />
           Working
         </p>

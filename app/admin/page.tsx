@@ -107,14 +107,14 @@ export default async function AdminOverview() {
                 >
                   <span className="min-w-0 flex-1 truncate font-semibold">{post.title}</span>
                   <StatusPill status={post.status} />
-                  <span className="font-mono text-[0.6rem] font-bold uppercase tracking-[0.12em] opacity-50">
+                  <span className="font-mono text-[0.6rem] font-bold uppercase tracking-[0.12em] muted-soft">
                     {formatWhen(post.updated_at)}
                   </span>
                 </Link>
               </li>
             ))}
             {!recent.length ? (
-              <li className="py-6 text-sm opacity-60">
+              <li className="py-6 text-sm muted-soft">
                 No posts yet. Start with the first one.
               </li>
             ) : null}
