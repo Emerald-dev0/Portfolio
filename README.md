@@ -4,7 +4,7 @@
 
 **Computer Science student. Backend developer. Building in public.**
 
-`Next.js 15` · `React 19` · `TypeScript` · `Tailwind CSS v4` · `Framer Motion` · `libSQL` · `TipTap` · `Vercel Blob` · `GitHub API` · `Spotify API`
+`Next.js 15` · `React 19` · `TypeScript` · `Tailwind CSS v4` · `Framer Motion` · `SQLite` · `TipTap` · `Vercel Blob` · `GitHub API` · `Spotify API`
 
 </div>
 
@@ -46,10 +46,11 @@ well:
 
 ## Writing posts
 
-Posts live in a database (libSQL, hosted on Turso in production) and are written
-in the dashboard at **`/admin`**, protected by `STUDIO_PASSWORD`. The five
-articles in `content/blog/*.md` are imported once, on first boot, so the blog
-starts with its real archive.
+Posts live in a single SQLite file and are written in the dashboard at
+**`/admin`**, protected by `STUDIO_PASSWORD`. Nothing to sign up for: cloning
+the repo and running `npm run dev` gives you a working blog. The five articles
+in `content/blog/*.md` are imported once, on first boot, so the blog starts with
+its real archive.
 
 ```bash
 npm run test        # the CMS, analytics and editor suite

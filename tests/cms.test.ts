@@ -1,5 +1,5 @@
 /**
- * The CMS data layer, exercised against a real in-memory libSQL database.
+ * The CMS data layer, exercised against a real in-memory SQLite database.
  * Every one of these hits actual SQL, so a broken query fails the suite.
  */
 import { beforeEach, describe, expect, it } from "vitest";

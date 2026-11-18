@@ -19,7 +19,7 @@ content format on disk.
 ## New layers
 
 ```
-lib/server/db.ts        libSQL client (Turso in prod, local file in dev) + idempotent schema
+lib/server/db.ts        SQLite (better-sqlite3) + idempotent schema
 lib/server/cms.ts       every query: posts, categories, tags, media, revisions, redirects
 lib/server/analytics.ts event ingestion, dedupe, bot filter, aggregation
 lib/server/admin-auth.ts existing cookie auth + rate limiting

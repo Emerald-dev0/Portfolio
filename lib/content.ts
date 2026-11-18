@@ -60,7 +60,6 @@ export const marquee = {
     "Calder",
     "TestFlow",
     "ORREI",
-    "GitBot",
     "Intake",
     "Blueprint",
     "Cypher",
@@ -148,7 +147,7 @@ export const workHeading = {
     "Most of these started with a problem I wanted to solve. Others came from curiosity and a desire to understand how something could be built.",
   closing: "They're real projects, with real engineering decisions behind them.",
   count: "4 featured",
-  archiveCount: "10+ other projects and experiments",
+  archiveCount: "8 other projects and experiments",
 };
 
 export const featuredProjects: Project[] = [
@@ -159,7 +158,7 @@ export const featuredProjects: Project[] = [
       "Every application needs to communicate with its users. I kept running into the same problem whenever I worked on a new product: setting up transactional email meant rebuilding much of the same infrastructure. That's what led me to start Calder. It's a transactional email API with its own queue, background workers, AWS SES integration and dashboard. The idea is to give developers a straightforward way to handle application email without having to manage all the underlying infrastructure themselves. I'm building it with the intention of expanding beyond email into other communication channels.",
     stack: ["TypeScript", "Next.js", "PostgreSQL", "AWS SES", "Turborepo"],
     repo: "Calder",
-    liveUrl: "https://calder-web.vercel.app",
+    liveUrl: "https://calder.click",
     role: "Solo developer: architecture, API, worker and dashboard.",
     color: "leaf",
     status: "In development",
@@ -174,7 +173,7 @@ export const featuredProjects: Project[] = [
       "Creating a form shouldn't mean spending the next twenty minutes clicking through settings and arranging questions. Intake lets you describe the form you want in plain language. It interprets your request, puts together a proposed structure and lets you review everything before creating the form in your Google Forms or Typeform account. I built it around a simple idea: people should spend more time thinking about what information they need and less time figuring out how to collect it.",
     stack: ["TypeScript", "Next.js", "Neon", "Better Auth", "Groq"],
     repo: "Intake",
-    liveUrl: "https://intak.vercel.app",
+    liveUrl: "https://intake.calder.click",
     role: "Solo developer: full-stack development, AI pipeline and provider integrations.",
     color: "tang",
     status: "Live",
@@ -204,7 +203,7 @@ export const featuredProjects: Project[] = [
       "ORREI is being developed under ORVN Labs for real estate wholesalers and disposition teams in the United States. The idea is to take property information that's often scattered across documents, messages and spreadsheets and turn it into a structured, shareable presentation for potential buyers. One of the things I care about most with this project is data accuracy. Property information needs to retain its source, and AI-generated suggestions shouldn't automatically become published facts. People should be able to review and approve information before it goes live.",
     stack: ["TypeScript", "Next.js", "Neon", "PostgreSQL RLS", "Cloudflare R2"],
     repo: "Orvn-labs2",
-    liveUrl: "https://www.orvnlabs.com",
+    liveUrl: "https://orvnlabs.com",
     role: "Platform engineering, data modelling and publishing workflow.",
     color: "grape",
     status: "In development · Private beta",
@@ -251,16 +250,6 @@ export const moreProjects: ArchiveProject[] = [
     liveUrl: null,
     color: "grape",
     status: "Alpha",
-  },
-  {
-    name: "GitBot",
-    blurb:
-      "A Telegram bot that brings GitHub activity into chat. It sends updates about commits, pushes and branches, making it easier to keep up with what's happening across my repositories.",
-    stack: ["TypeScript", "Telegram Bot API", "GitHub Webhooks"],
-    repo: null,
-    liveUrl: null,
-    color: "leaf",
-    status: "In development",
   },
   {
     name: "PhoneDock",

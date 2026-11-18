@@ -8,6 +8,11 @@ const nextConfig: NextConfig = {
    * /_next/* assets and the Spotify proxy to it.
    */
   allowedDevOrigins: ["*.e2b.app", "localhost:3001"],
+  /**
+   * better-sqlite3 is a native module. Next must load it at runtime rather than
+   * try to bundle it, or the build breaks on the .node binary.
+   */
+  serverExternalPackages: ["better-sqlite3"],
   images: {
     // Spotify album art comes from goose-owned CDNs.
     remotePatterns: [{ protocol: "https", hostname: "i.scdn.co" }],

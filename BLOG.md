@@ -13,23 +13,53 @@ get.
 Everything below is optional for local development. With no environment at all
 the blog runs on a SQLite file and writes uploads to `public/uploads`.
 
+The database is a single SQLite file. There is no hosted service, no account and
+no connection string: the file is created on first request and the schema
+builds itself.
+
 | Variable | What it does | Needed for |
 | --- | --- | --- |
 | `STUDIO_PASSWORD` | The one admin password | Signing in to `/admin` |
-| `TURSO_DATABASE_URL` | Hosted libSQL database | Production data |
-| `TURSO_AUTH_TOKEN` | Token for that database | Production data |
+| `CMS_DB_FILE` | Absolute path to the SQLite file | Only to override the default |
 | `ANALYTICS_SALT` | Salt for the daily visitor hash | Meaningful unique reader counts |
 | `CRON_SECRET` | Shared secret the cron sends | Scheduled publishing |
-| `BLOB_READ_WRITE_TOKEN` | Vercel Blob | Media library in production |
+| `BLOB_READ_WRITE_TOKEN` | Vercel Blob | Images in production |
 
 Copy `.env.example` to `.env.local` and fill in what you have.
 
 **Local development** uses `./.data/cms.db`, created on first request, and
-`src/blog/*.md` is imported once so the blog starts with its five real
+`content/blog/*.md` is imported once so the blog starts with its five real
 articles. Delete `.data/` to start from an empty database.
 
-**Production** needs Turso (database), Vercel Blob (images) and the cron entry
-in `vercel.json`, which calls `/api/cron/publish` every ten minutes.
+### Where the file lives, and why it matters
+
+A SQLite file needs a disk that can be written to. That is the one real
+deployment question, and the answer depends on where the site runs.
+
+| Hosting | Database file | What survives a deploy |
+| --- | --- | --- |
+| Your machine | `./.data/cms.db` | Everything |
+| Docker, VPS, Railway, Fly | `CMS_DB_FILE=/data/cms.db` on a mounted volume | Everything, indefinitely |
+| Vercel | `/tmp/.data/cms.db`, chosen automatically | Everything until that instance goes cold, then it resets to the five seed articles |
+
+**Vercel's filesystem is read only apart from `/tmp`**, and `/tmp` is per
+instance and temporary. So on Vercel the whole site works, drafts and all, but
+a post written in the dashboard can disappear when the function restarts. That
+is fine for drafting and testing, and it is not fine for a blog you intend to
+keep.
+
+Two honest options, both simple:
+
+1. **Keep the blog on a host with a disk.** A small VPS, Railway or Fly with a
+   volume at `/data` and `CMS_DB_FILE=/data/cms.db` set. Nothing else changes:
+   the same code, the same file, and posts persist.
+2. **Stay on Vercel and commit your posts.** Write locally or on a host with a
+   disk, then copy `content/blog/*.md` from your posts and commit. They become
+   part of the seed set.
+
+If the disk is read only and no writable location exists at all, the site still
+serves every page: reads keep working and writes are skipped rather than thrown,
+so a reader never sees a 500 because the database could not record a view.
 
 ---
 

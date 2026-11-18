@@ -26,8 +26,7 @@ const POSTERS: Poster[] = [
   { index: "04", name: "ORREI", role: "property pages", crayon: "lagoon" },
   { index: "05", name: "Cypher", role: "lan control", crayon: "blush" },
   { index: "06", name: "Blueprint", role: "code intel", crayon: "night" },
-  { index: "07", name: "GitBot", role: "telegram bot", crayon: "tang" },
-  { index: "08", name: "PhoneDock", role: "device bridge", crayon: "leaf" },
+  { index: "07", name: "PhoneDock", role: "device bridge", crayon: "leaf" },
 ];
 
 export function PosterStrip({ reverse = false }: { reverse?: boolean }) {
