@@ -116,8 +116,9 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       <AnalyticsBeacon slug={post.slug} />
       <script
         type="application/ld+json"
-        // JSON.stringify of our own data, never user HTML.
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        // Structured data built from our own fields. Escaping "<" means a title
+        // can never close the script tag, which is the one real risk here.
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
       />
 
       <article className="mx-auto max-w-7xl px-5 pb-8 pt-32 sm:px-8 lg:pt-40">
@@ -336,6 +337,11 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       </div>
     </>
   );
+}
+
+/** JSON-LD, with "<" escaped so a title can never break out of the script tag. */
+function safeJsonLd(value: unknown): string {
+  return JSON.stringify(value).replace(/</g, "\\u003c");
 }
 
 /** Category and tag links share one slug shape. */
